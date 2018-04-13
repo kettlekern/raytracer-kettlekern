@@ -3,6 +3,6 @@
 using namespace std;
 
 
-void printScene() {
+void Scene::printScene() {
 
 }

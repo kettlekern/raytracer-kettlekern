@@ -12,7 +12,7 @@ class Object
 protected:
 	glm::vec3 color;
 	Material mat;
-	string typeName;
+	std::string name;
 
 public:
 	Object(glm::vec3 color, Material mat) : color(color), mat(mat) {}
@@ -36,7 +36,7 @@ protected:
 	float distance;
 	glm::vec3 center;
 public:
-	Sphere(glm::vec3 color, Material mat, glm::vec3 center, float distance) : __super::Object(color, mat), center(center), distance(distance) { typeName = "Sphere"; }
+	Sphere(glm::vec3 color, Material mat, glm::vec3 center, float distance) : Object(color, mat), center(center), distance(distance) { name = "Sphere"; }
 
 	float getRadius() {
 		return distance;
@@ -54,7 +54,7 @@ protected:
 	float distance;
 	glm::vec3 normal;
 public:
-	Plane(glm::vec3 color, Material mat, glm::vec3 normal, float distance) : __super::Object(color, mat), normal(normal), distance(distance) { typeName = "Plane"; }
+	Plane(glm::vec3 color, Material mat, glm::vec3 normal, float distance) : Object(color, mat), normal(normal), distance(distance) { name = "Plane"; }
 
 	float getDistance() {
 		return distance;

@@ -7,7 +7,7 @@
 
 std::string vec3ToString(const glm::vec3 & vec) {
 	std::string retval = "{";
-	retval += "" + to_string(vec.x) + " " + to_string(vec.y) + " " + to_string(vec.z) + "}";
+	retval += "" + std::to_string(vec.x) + " " + std::to_string(vec.y) + " " + std::to_string(vec.z) + "}";
 	return retval;
 }
 

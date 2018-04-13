@@ -4,6 +4,7 @@
 
 #include <string>
 #include <iostream>
+#include "Scene\Scene.h"
 
 
 

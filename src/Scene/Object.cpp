@@ -4,7 +4,7 @@
 using namespace std;
 
 string Object::toString() {
-	string retval = " - Type: " + typeName + "\n";
+	string retval = " - Type: " + name + "\n";
 	retval       += toStringLocal() +
 		            " - Color: " + vec3ToString(color) + "\n" +
 		            mat.toString();

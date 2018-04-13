@@ -9,6 +9,8 @@
 struct Light {
 	glm::vec3 location;
 	glm::vec3 color;
+
+	std::string toString();
 };
 
 struct Camera {
@@ -16,6 +18,8 @@ struct Camera {
 	glm::vec3 up;
 	glm::vec3 right;
 	glm::vec3 lookat;
+
+	std::string toString();
 };
 
 class Scene {
