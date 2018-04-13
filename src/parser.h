@@ -7,7 +7,7 @@
 #include "Scene\Scene.h"
 
 
-
+Scene* parseFile(std::string filename);
 
 
 

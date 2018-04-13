@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <glm/glm.hpp>
+#include "Parser.h"
 
 
 using namespace std;
@@ -11,11 +12,13 @@ using namespace std;
 
 int runCommand(int argc, char** argv) {
 	string command = argv[1];
+	string filename = argv[2];
+	Scene* scene = parseFile(filename);
 	if (command == "raycast") {
 		runRaycast(argc, argv);
 	}
 	else if (command == "sceneinfo") {
-		runSceneinfo(argc, argv);
+		scene->printScene();
 	}
 	else if (command == "pixelray") {
 		runPixelray(argc, argv);
