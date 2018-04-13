@@ -29,7 +29,7 @@ sphere { <3, 1, -6>, 2.3
 }
 
 sphere { <8, 0, 0>, 3
-  pigment { color rgbf <1.0, 1.0, 1.0, 0.95>}
+  pigment { color rgbf <1.0, 1.0, 1.0, 0.95> }
   finish { ambient 0.02 diffuse 0.4 specular 10.0 roughness 0.03 refraction 1.0 ior 1.33 }
 }
 

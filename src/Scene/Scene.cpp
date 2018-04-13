@@ -19,6 +19,7 @@ string Scene::lightsToString() {
 	for (Light* light : lights) {
 		retval += "\nLight[" + to_string(i++) + "]:\n" + light->toString();
 	}
+	return retval;
 }
 
 string Scene::objectsToString() {
@@ -27,6 +28,7 @@ string Scene::objectsToString() {
 	for (Object* object : objects) {
 		retval += "\nObject[" + to_string(i++) + "]:\n" + object->toString();
 	}
+	return retval;
 }
 
 void Scene::printScene() {

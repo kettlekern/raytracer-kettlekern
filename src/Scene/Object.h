@@ -16,6 +16,7 @@ protected:
 
 public:
 	Object(glm::vec3 color, Material mat) : color(color), mat(mat) {}
+	Object(glm::vec4 color, Material mat) : color(glm::vec3(color)), mat(mat) {}
 
 	glm::vec3 getColor() {
 		return color;
