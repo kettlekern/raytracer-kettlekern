@@ -6,6 +6,13 @@
 #include <vector>
 #include <string>
 #include "Material.h"
+#include "../Ray/Ray.h"
+
+struct Hit {
+	bool isHit;
+	Object* objHit;
+	int t;
+};
 
 class Object
 {
@@ -13,6 +20,8 @@ protected:
 	glm::vec3 color;
 	Material mat;
 	std::string name;
+	//returns the smallest positive root of the equation given by -b+-sqrt(b^2-4ac)/2a, or a negative number if neither is positive
+	float quadraticRoot(float a, float b, float c);
 
 public:
 	Object(glm::vec3 color, Material mat) : color(color), mat(mat) {}
@@ -26,21 +35,20 @@ public:
 		return mat;
 	}
 
-	std::string vec3ToString(glm::vec3 vec);
-
 	std::string toString();
 	virtual std::string toStringLocal() = 0;
+	virtual Hit collide(Ray* ray) = 0;
 };
 
 class Sphere : public Object {
 protected:
-	float distance;
+	float radius;
 	glm::vec3 center;
 public:
-	Sphere(glm::vec3 color, Material mat, glm::vec3 center, float distance) : Object(color, mat), center(center), distance(distance) { name = "Sphere"; }
+	Sphere(glm::vec3 color, Material mat, glm::vec3 center, float radius) : Object(color, mat), center(center), radius(radius) { name = "Sphere"; }
 
 	float getRadius() {
-		return distance;
+		return radius;
 	}
 
 	glm::vec3 getCenter() {
@@ -48,12 +56,14 @@ public:
 	}
 
 	std::string toStringLocal();
+	Hit collide(Ray* ray);
 };
 
 class Plane : public Object {
 protected:
 	float distance;
 	glm::vec3 normal;
+
 public:
 	Plane(glm::vec3 color, Material mat, glm::vec3 normal, float distance) : Object(color, mat), normal(normal), distance(distance) { name = "Plane"; }
 
@@ -66,6 +76,7 @@ public:
 	}
 
 	std::string toStringLocal();
+	Hit collide(Ray* ray);
 };
 
 

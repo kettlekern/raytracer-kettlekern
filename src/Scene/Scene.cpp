@@ -1,5 +1,8 @@
 #include "Scene.h"
 #include "VectorString.h"
+#include <glm/glm.hpp>
+#include <vector>
+#include "Object.h"
 #include <iostream>
 
 using namespace std;

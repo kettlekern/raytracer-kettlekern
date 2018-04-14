@@ -46,6 +46,8 @@ public:
 		camera.lookat = lookat;
 	}
 
+	std::vector<Object*> getObjects() { return objects; }
+
 	void addLight(glm::vec3 location, glm::vec3 color) {
 		lights.push_back(new Light(location, color));
 	}
@@ -53,6 +55,8 @@ public:
 	void addLight(Light* light) {
 		lights.push_back(light);
 	}
+
+	Camera getCamera() { return camera; }
 
 	void addObject(Object* object) {
 		objects.push_back(object);
