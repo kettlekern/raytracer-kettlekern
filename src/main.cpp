@@ -35,10 +35,10 @@ void parseFirstHit(int argc, char** argv, ImageCoords & image, Point & point) {
 	point.y = stoi(argv[6]);
 }
 
-std::string pixelrayToString(const Hit & val, Ray* ray, const ImageCoords & image) {
+std::string pixelrayToString(const Hit & val, Ray* ray, const Point & rayLoc) {
 	std::string retval;
 	if (val.isHit) {
-		retval += "Pixel: [" + to_string(image.width) + ", " + to_string(image.height) + "] " +
+		retval += "Pixel: [" + to_string(rayLoc.x) + ", " + to_string(rayLoc.y) + "] " +
 			"Ray: {" + to_string(ray->origin.x) + " " + to_string(ray->origin.y) + " " + to_string(ray->origin.z) + "} -> {" +
 			to_string(ray->direction.x) + " " + to_string(ray->direction.y) + " " + to_string(ray->direction.z) + "}\n";
 	}
@@ -84,7 +84,7 @@ int runCommand(int argc, char** argv) {
 		parsePixelray(argc, argv, image, point);
 		Ray* ray = genRay(image.width, image.height, scene, point.x, point.y);
 		Hit value = collide(scene, ray);
-		cout << pixelrayToString(value, ray, image);
+		cout << pixelrayToString(value, ray, point);
 	}
 	else if (command == "firsthit") {
 		parseFirstHit(argc, argv, image, point);

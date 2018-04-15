@@ -12,7 +12,7 @@ string Object::toString() {
 	string retval = " - Type: " + name + "\n";
 	retval       += toStringLocal() +
 		            " - Color: " + Parser::vec3ToString(color) + "\n" +
-		            mat.toString();
+		            mat.toString() + "\n";
 	return retval;
 }
 

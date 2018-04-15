@@ -23,7 +23,7 @@ Ray* genRay(int width, int height, Scene* scene, int i, int j) {
 		Us * camera.right +
 		Vs * camera.up +
 		focalLength * normalize(camera.lookat - camera.location);
-	return new Ray(camera.location, direction);
+	return new Ray(camera.location, normalize(direction));
 }
 
 Hit collide(Scene* scene, Ray* ray) {
