@@ -49,7 +49,7 @@ Hit collide(Scene* scene, Ray* ray) {
 }
 
 void castRays(int width, int height, Scene* scene) {
-	std::vector<glm::vec3> output;
+	std::vector<unsigned char> output;
 	std::vector<Ray*> rays = genRays(width, height, scene);
 	for (int i = 0; i < width; i++) {
 		for (int j = 0; j < height; j++) {
@@ -58,13 +58,17 @@ void castRays(int width, int height, Scene* scene) {
 			Hit val = collide(scene, rays[i * height + j]);
 			//if there is a hit, set the pixel color to the value of the object hit
 			if (val.isHit) {
-				output.push_back(val.color);
+				output.push_back((char)(val.color.r * 255));
+				output.push_back((char)(val.color.g * 255));
+				output.push_back((char)(val.color.b * 255));
 			}//Otherwise set the color to black
 			else {
-				output.push_back(glm::vec3(0,0,0));
+				output.push_back('\0');
+				output.push_back('\0');
+				output.push_back('\0');
 			}
 		}
 	}
 	//Draw the image	
-	stbi_write_png("output.png", width, height, 3, output.data(), sizeof(float)*3*width);
+	stbi_write_png("output.png", width, height, 3, output.data(), sizeof(char)*3*height);
 }
