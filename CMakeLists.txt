@@ -68,7 +68,7 @@ else()
   message(STATUS "GLM environment variable `GLM_INCLUDE_DIR` not found, GLM must be installed with the system")
 endif()
 
-option(sceneinfo "../Resources/beers.pov")
+option(sceneinfo "../Resources/simple.pov")
 
 
 # OS specific options and libraries
