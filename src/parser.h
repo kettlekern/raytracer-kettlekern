@@ -1,12 +1,11 @@
 #pragma once
-#ifndef __POV_FILE_PARSER_H_
-#define __POV_FILE_PARSER_H_
+#ifndef __POV_FILE_PARSER_H_473_
+#define __POV_FILE_PARSER_H_473_
 
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <regex>
 #include "Scene\Scene.h"
 
 

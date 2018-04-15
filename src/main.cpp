@@ -21,13 +21,13 @@ void parseRaycast(int argc, char** argv, Image & image) {
 	image.width = stoi(argv[3]);
 	image.height = stoi(argv[4]);
 }
-void parsePixelray(int argc, char** argv, Image & image, Point point) {
+void parsePixelray(int argc, char** argv, Image & image, Point & point) {
 	image.width = stoi(argv[3]);
 	image.height = stoi(argv[4]);
 	point.x = stoi(argv[5]);
 	point.y = stoi(argv[6]);
 }
-void parseFirstHit(int argc, char** argv, Image & image, Point point) {
+void parseFirstHit(int argc, char** argv, Image & image, Point & point) {
 	image.width = stoi(argv[3]);
 	image.height = stoi(argv[4]);
 	point.x = stoi(argv[5]);

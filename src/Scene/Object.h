@@ -1,18 +1,13 @@
 #pragma once
-#ifndef __SCENE_OBJECT_H_
-#define __SCENE_OBJECT_H_
+#ifndef __SCENE_OBJECT_H_473_
+#define __SCENE_OBJECT_H_473_
 
 #include <glm/glm.hpp>
 #include <vector>
 #include <string>
 #include "Material.h"
 #include "../Ray/Ray.h"
-
-struct Hit {
-	bool isHit;
-	Object* objHit;
-	int t;
-};
+#include "../Hit.h"
 
 class Object
 {
@@ -78,6 +73,5 @@ public:
 	std::string toStringLocal();
 	Hit collide(Ray* ray);
 };
-
 
 #endif

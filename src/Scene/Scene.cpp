@@ -1,5 +1,4 @@
 #include "Scene.h"
-#include "VectorString.h"
 #include <glm/glm.hpp>
 #include <vector>
 #include "Object.h"
@@ -7,12 +6,17 @@
 
 using namespace std;
 
+string Light::toString() {
+	return " - Location: " + Parser::vec3ToString(location) + "\n" +
+		   " - Color: " + Parser::vec3ToString(color) + "\n";
+}
+
 string Scene::cameraToString() {
 	string retval = "Camera:\n";
-	retval += " - Location: " + vec3ToString(camera.location) + "\n";
-	retval += " - Up: " + vec3ToString(camera.up) + "\n";
-	retval += " - Right: " + vec3ToString(camera.right) + "\n";
-	retval += " - Look at: " + vec3ToString(camera.lookat) + "\n";
+	retval += " - Location: " + Parser::vec3ToString(camera.location) + "\n";
+	retval += " - Up: " + Parser::vec3ToString(camera.up) + "\n";
+	retval += " - Right: " + Parser::vec3ToString(camera.right) + "\n";
+	retval += " - Look at: " + Parser::vec3ToString(camera.lookat) + "\n";
 	return retval;
 }
 

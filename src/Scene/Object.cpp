@@ -11,7 +11,7 @@ using namespace std;
 string Object::toString() {
 	string retval = " - Type: " + name + "\n";
 	retval       += toStringLocal() +
-		            " - Color: " + vec3ToString(color) + "\n" +
+		            " - Color: " + Parser::vec3ToString(color) + "\n" +
 		            mat.toString();
 	return retval;
 }
@@ -43,7 +43,8 @@ Hit Sphere::collide(Ray* ray) {
 	float root = quadraticRoot(a, b, c);
 	if (root >= 0) {
 		retval.isHit = true;
-		retval.objHit = this;
+		retval.mat = &(this->mat);
+		retval.objType = name;
 		retval.t = root;
 	}
 	else {
@@ -56,7 +57,8 @@ Hit Plane::collide(Ray* ray) {
 	Hit retval;
 	if (glm::dot(ray->direction, normal) > 0) {
 		retval.isHit = true;
-		retval.objHit = this;
+		retval.mat = &(this->mat);
+		retval.objType = name;
 		retval.t = (distance - glm::dot(ray->origin, normal))/glm::dot(ray->direction, normal);
 	}
 	else {
@@ -66,11 +68,11 @@ Hit Plane::collide(Ray* ray) {
 }
 
 std::string Sphere::toStringLocal() {
-	return " - Center: " + vec3ToString(center) + "\n" + 
+	return " - Center: " + Parser::vec3ToString(center) + "\n" +
 		   " - Radius: " + to_string(radius) + "\n";
 }
 
 std::string Plane::toStringLocal() {
-	return " - Normal: " + vec3ToString(normal) + "\n" +
+	return " - Normal: " + Parser::vec3ToString(normal) + "\n" +
 		   " - Distance: " + to_string(distance) + "\n";
 }

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __MATERIAL_H_
-#define __MATERIAL_H_
+#ifndef __MATERIAL_H_473_
+#define __MATERIAL_H_473_
 
 #include <glm/glm.hpp>
 #include <vector>

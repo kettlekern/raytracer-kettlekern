@@ -1,10 +1,11 @@
 #pragma once
-#ifndef __SCENE_H_
-#define __SCENE_H_
+#ifndef __SCENE_H_473_
+#define __SCENE_H_473_
 
 #include <glm/glm.hpp>
 #include <vector>
 #include "Object.h"
+#include "VectorString.h"
 
 struct Light {
 	glm::vec3 location;
@@ -20,8 +21,6 @@ struct Camera {
 	glm::vec3 up;
 	glm::vec3 right;
 	glm::vec3 lookat;
-
-	std::string toString();
 };
 
 class Scene {
@@ -40,7 +39,7 @@ public:
 	std::string objectsToString();
 
 	void setCamera(glm::vec3 location, glm::vec3 up, glm::vec3 right, glm::vec3 lookat) {
-		camera.location = location; 
+		camera.location = location;
 		camera.up = up;
 		camera.right = right;
 		camera.lookat = lookat;
