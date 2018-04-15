@@ -55,7 +55,7 @@ void castRays(int width, int height, Scene* scene) {
 		for (int j = 0; j < height; j++) {
 			//Cast the ray into the sceen
 			//std::cout << i * height + j << " ";
-			Hit val = collide(scene, rays[i * height + j]);
+			Hit val = collide(scene, rays[j * height + i]);
 			//if there is a hit, set the pixel color to the value of the object hit
 			if (val.isHit) {
 				output.push_back((char)(val.color.r * 255));
