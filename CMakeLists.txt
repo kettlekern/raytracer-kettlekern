@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.1)
 
 # Name of the project
-project(lab1)
+project(raytrace)
 set (CMAKE_CXX_STANDARD 11)
 
 # Use glob to get the list of all source files.
