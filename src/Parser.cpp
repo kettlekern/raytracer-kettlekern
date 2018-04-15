@@ -20,14 +20,14 @@ Scene* parseFile(string filename) {
 	istringstream fileStream(fileString.str());
 	Tokenizer* tokenizer = new Tokenizer(&fileStream);
 	//Read the first token
-	tokenizer->getToken();
+	tok = tokenizer->getToken();
 
 	while (!fileStream.eof()) {
 		//TODO: convert tok to lower case maybe
 		//Remove commented line
 		if (tok.substr(0, 2) == "//") {
 			string trashStr;
-			getline(fileStream, trashStr);
+			tokenizer->getLine(tok);
 		}
 		else if (tok == "camera") {
 			parseCamera(*tokenizer, scene);
@@ -46,7 +46,7 @@ Scene* parseFile(string filename) {
 			return scene;
 		}
 		//Read the next token
-		tokenizer->getToken();
+		tok = tokenizer->getToken();
 	}
 
 
@@ -56,16 +56,16 @@ Scene* parseFile(string filename) {
 glm::vec3 parseVec3(Tokenizer & tokenizer) {
 	string tok;
 	glm::vec3 returnVector;
-	tokenizer.getToken();
+	tok = tokenizer.getToken();
 	//Remove < and ,
 	tok = tok.substr(1, tok.length() - 1);
 	returnVector.x = stof(tok);
 	//Remove ,
-	tokenizer.getToken();
+	tok = tokenizer.getToken();
 	tok = tok.substr(0, tok.length() - 1);
 	returnVector.y = stof(tok);
 	//Remove > and , sometimes
-	tokenizer.getToken();
+	tok = tokenizer.getToken();
 	int i = 1;
 	if (tok.substr(tok.length() - 1, tok.length()) == ",") {
 		i = 2;
@@ -79,16 +79,16 @@ glm::vec3 parseVec3(Tokenizer & tokenizer) {
 glm::vec4 parseVec4(Tokenizer & tokenizer) {
 	string tok;
 	glm::vec4 returnVector;
-	tokenizer.getToken();
+	tok = tokenizer.getToken();
 	//Remove < and ,
 	tok = tok.substr(1, tok.length() - 1);
 	returnVector.x = stof(tok);
 	//Remove ,
-	tokenizer.getToken();
+	tok = tokenizer.getToken();
 	tok = tok.substr(0, tok.length() - 1);
 	returnVector.y = stof(tok);
 	//Remove ,
-	tokenizer.getToken();
+	tok = tokenizer.getToken();
 	tok = tok.substr(0, tok.length() - 1);
 	returnVector.z = stof(tok);
 	//Remove > and , sometimes
@@ -105,13 +105,13 @@ void parseCamera(Tokenizer & tokenizer, Scene* scene) {
 	string tok;
 	glm::vec3 location, up, right, lookat;
 	//TODO: add check to make sure all are set
-	tokenizer.getToken();
+	tok = tokenizer.getToken();
 	if (tok != "{") {
 		cout << "Bad camera in file\n";
 		return;
 	}
 	do {
-		tokenizer.getToken();
+		tok = tokenizer.getToken();
 		if (tok == "location") {
 			location = parseVec3(tokenizer);
 		}
@@ -141,18 +141,18 @@ void parseLightSource(Tokenizer & tokenizer, Scene* scene) {
 
 void parseSphere(Tokenizer & tokenizer, Scene* scene) {
 	string tok;
-	tokenizer.getToken();
+	tok = tokenizer.getToken();
 	if (tok != "{") {
 		cout << "Bad Sphere in file\n";
 		return;
 	}
 	glm::vec3 center = parseVec3(tokenizer);
-	tokenizer.getToken();
+	tok = tokenizer.getToken();
 	float radius = stof(tok);
 	glm::vec4 color;
 	Material material;
 	while (tok != "}") {
-		tokenizer.getToken();
+		tok = tokenizer.getToken();
 		if (tok == "pigment") {
 			color = parsePigment(tokenizer);
 		}
@@ -167,18 +167,18 @@ void parseSphere(Tokenizer & tokenizer, Scene* scene) {
 
 void parsePlane(Tokenizer & tokenizer, Scene* scene) {
 	string tok;
-	tokenizer.getToken();
+	tok = tokenizer.getToken();
 	if (tok != "{") {
 		cout << "Bad Plane in file\n";
 		return;
 	}
 	glm::vec3 normal = parseVec3(tokenizer);
-	tokenizer.getToken();
+	tok = tokenizer.getToken();
 	float offset = stof(tok);
 	glm::vec4 color;
 	Material material;
 	while (tok != "}") {
-		tokenizer.getToken();
+		tok = tokenizer.getToken();
 		if (tok == "pigment") {
 			color = parsePigment(tokenizer);
 		}
@@ -195,17 +195,17 @@ void parsePlane(Tokenizer & tokenizer, Scene* scene) {
 glm::vec4 parsePigment(Tokenizer & tokenizer) {
 	string tok;
 	glm::vec4 color;
-	tokenizer.getToken();
+	tok = tokenizer.getToken();
 	if (tok != "{") {
 		cerr << "Bad Pigment in file\n";
 		return color;
 	}
-	tokenizer.getToken();
+	tok = tokenizer.getToken();
 	if (tok != "color") {
 		cerr << "Bad Pigment in file\n";
 		return color;
 	}
-	tokenizer.getToken();
+	tok = tokenizer.getToken();
 	if (tok == "rgb") {
 		color = glm::vec4(parseVec3(tokenizer), 1.0f);
 	}
@@ -216,31 +216,34 @@ glm::vec4 parsePigment(Tokenizer & tokenizer) {
 		cerr << "Bad Pigment in file\n";
 		return color;
 	}
+	tokenizer.getToken();
 	return color;
 }
 
 Material parseFinish(Tokenizer & tokenizer) {
 	string tok;
 	Material mat;
-	tokenizer.getToken();
+	tok = tokenizer.getToken();
 	if (tok != "{") {
 		cerr << "Bad Pigment in file\n";
 		return mat;
 	}
-	tokenizer.getToken();
+	tok = tokenizer.getToken();
 	if (tok != "ambient") {
 		cerr << "Bad Pigment in file\n";
 		return mat;
 	}
-	tokenizer.getToken();
+	tok = tokenizer.getToken();
 	mat.ambient = stof(tok);
-	tokenizer.getToken();
+	tok = tokenizer.getToken();
 	if (tok != "diffuse") {
 		cerr << "Bad Pigment in file\n";
 		return mat;
 	}
-	tokenizer.getToken();
+	tok = tokenizer.getToken();
 	mat.diffuse = stof(tok);
+	//clear the "}"
+	tok = tokenizer.getToken();
 	//TODO: Add more material info here
 	return mat;
 }

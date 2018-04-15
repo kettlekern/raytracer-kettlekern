@@ -14,11 +14,16 @@ std::string Tokenizer::getToken() {
 		(*input) >> tok;
 	}
 	if (tok.substr(0, 1) == "{") {
-		tokens.push(tok.substr(1, tok.length()));
+		if (tok.length() > 1) {
+			tokens.push(tok.substr(1, tok.length()));
+			tok = "{";
+		}
 	}
-	else if (tok.substr(tok.length() - 1, tok.length()) == "}") {
-		tokens.push(tok.substr(tok.length() - 1, tok.length()));
-		tok = tok.substr(0, tok.length() - 1);
+	else if (tok.length() > 0 && tok.substr(tok.length() - 1, tok.length()) == "}") {
+		if (tok.length() > 1) {
+			tokens.push(tok.substr(tok.length() - 1, tok.length()));
+			tok = tok.substr(0, tok.length() - 1);
+		}
 	}
 
 	return tok;

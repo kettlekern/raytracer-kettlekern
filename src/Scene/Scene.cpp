@@ -21,7 +21,7 @@ string Scene::cameraToString() {
 }
 
 string Scene::lightsToString() {
-	string retval = lights.size() + " light(s)\n";
+	string retval = to_string(lights.size()) + " light(s)\n";
 	int i = 0;
 	for (Light* light : lights) {
 		retval += "\nLight[" + to_string(i++) + "]:\n" + light->toString();
@@ -30,7 +30,7 @@ string Scene::lightsToString() {
 }
 
 string Scene::objectsToString() {
-	string retval = objects.size() + " objects(s)\n";
+	string retval = to_string(objects.size()) + " Objects(s)\n";
 	int i = 0;
 	for (Object* object : objects) {
 		retval += "\nObject[" + to_string(i++) + "]:\n" + object->toString();
