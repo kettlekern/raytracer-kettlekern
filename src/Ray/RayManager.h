@@ -9,7 +9,8 @@
 #include "Ray.h"
 #include "../Scene/Scene.h"
 
-std::vector<Ray*> genRays(int width, int height, glm::vec3 origin, Scene* scene);
+std::vector<Ray*> genRays(int width, int height, Scene* scene);
+Ray* genRay(int width, int height, Scene* scene, int i, int j);
 Hit collide(Scene* scene, Ray* ray);
 
 #endif

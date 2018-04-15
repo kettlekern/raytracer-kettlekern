@@ -9,6 +9,7 @@ struct Hit {
 	bool isHit;
 	Material* mat;
 	std::string objType;
+	glm::vec3 color;
 	int t;
 };
 
