@@ -4,6 +4,7 @@
 
 #include <glm/glm.hpp>
 #include <vector>
+#include <string>
 #include "../Hit.h"
 #include "Ray.h"
 #include "../Scene/Scene.h"

@@ -3,6 +3,7 @@
 #define __MATERIAL_H_473_
 
 #include <glm/glm.hpp>
+#include <string>
 #include <vector>
 
 class Material
