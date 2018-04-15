@@ -8,7 +8,7 @@
 
 using namespace std;
 
-struct Image {
+struct ImageCoords {
 	int width;
 	int height;
 };
@@ -18,24 +18,24 @@ struct Point {
 	int y;
 };
 
-void parseRaycast(int argc, char** argv, Image & image) {
+void parseRaycast(int argc, char** argv, ImageCoords & image) {
 	image.width = stoi(argv[3]);
 	image.height = stoi(argv[4]);
 }
-void parsePixelray(int argc, char** argv, Image & image, Point & point) {
+void parsePixelray(int argc, char** argv, ImageCoords & image, Point & point) {
 	image.width = stoi(argv[3]);
 	image.height = stoi(argv[4]);
 	point.x = stoi(argv[5]);
 	point.y = stoi(argv[6]);
 }
-void parseFirstHit(int argc, char** argv, Image & image, Point & point) {
+void parseFirstHit(int argc, char** argv, ImageCoords & image, Point & point) {
 	image.width = stoi(argv[3]);
 	image.height = stoi(argv[4]);
 	point.x = stoi(argv[5]);
 	point.y = stoi(argv[6]);
 }
 
-std::string pixelrayToString(const Hit & val, Ray* ray, const Image & image) {
+std::string pixelrayToString(const Hit & val, Ray* ray, const ImageCoords & image) {
 	std::string retval;
 	if (val.isHit) {
 		retval += "Pixel: [" + to_string(image.width) + ", " + to_string(image.height) + "] " +
@@ -48,7 +48,7 @@ std::string pixelrayToString(const Hit & val, Ray* ray, const Image & image) {
 	return retval;
 }
 
-std::string firstHitToString(const Hit & val, Ray* ray, const Image & image) {
+std::string firstHitToString(const Hit & val, Ray* ray, const ImageCoords & image) {
 	std::string retval;
 	if (val.isHit) {
 		retval += "Pixel: [" + to_string(image.width) + ", " + to_string(image.height) + "] " +
@@ -71,10 +71,11 @@ int runCommand(int argc, char** argv) {
 	if (scene == nullptr) {
 		cout << "Could not parse file\n";
 	}
-	Image image;
+	ImageCoords image;
 	Point point;
 	if (command == "raycast") {
 		parseRaycast(argc, argv, image);
+		castRays(image.width, image.height, scene);
 	}
 	else if (command == "sceneinfo") {
 		scene->printScene();

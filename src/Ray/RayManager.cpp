@@ -1,4 +1,6 @@
 #include "RayManager.h"
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "../stb_image_write.h"
 
 std::vector<Ray*> genRays(int width, int height, Scene* scene) {
 	std::vector<Ray*> rays;
@@ -15,8 +17,8 @@ std::vector<Ray*> genRays(int width, int height, Scene* scene) {
 Ray* genRay(int width, int height, Scene* scene, int i, int j) {
 	float focalLength = 1;
 	Camera camera = scene->getCamera();
-	float Us = i + .5f / width - .5f;
-	float Vs = j + .5f / height - .5f;
+	float Us = (i + .5f) / width - .5f;
+	float Vs = (j + .5f) / height - .5f;
 	glm::vec3 direction =
 		Us * camera.right +
 		Vs * camera.up +
@@ -30,7 +32,7 @@ Hit collide(Scene* scene, Ray* ray) {
 	for (Object* obj : scene->getObjects()) {
 		//Needs more checks
 		temphit = obj->collide(ray);
-		if (hitVal.isHit = false) {
+		if (hitVal.isHit == false) {
 			//if the hit is in front of the camera
 			if (temphit.t > 0) {
 				hitVal = temphit;
@@ -44,4 +46,25 @@ Hit collide(Scene* scene, Ray* ray) {
 		}
 	}
 	return hitVal;
+}
+
+void castRays(int width, int height, Scene* scene) {
+	std::vector<glm::vec3> output;
+	std::vector<Ray*> rays = genRays(width, height, scene);
+	for (int i = 0; i < width; i++) {
+		for (int j = 0; j < height; j++) {
+			//Cast the ray into the sceen
+			//std::cout << i * height + j << " ";
+			Hit val = collide(scene, rays[i * height + j]);
+			//if there is a hit, set the pixel color to the value of the object hit
+			if (val.isHit) {
+				output.push_back(val.color);
+			}//Otherwise set the color to black
+			else {
+				output.push_back(glm::vec3(0,0,0));
+			}
+		}
+	}
+	//Draw the image	
+	stbi_write_png("output.png", width, height, 3, output.data(), sizeof(float)*3*width);
 }

@@ -39,7 +39,7 @@ Hit Sphere::collide(Ray* ray) {
 	glm::vec3 PominC = (ray->origin - center);
 	float a = glm::dot(ray->direction, ray->direction);
 	float b = 2 * glm::dot(ray->direction, PominC);
-	float c = glm::dot(PominC, PominC); - radius * radius;
+	float c = glm::dot(PominC, PominC) - radius * radius;
 	float root = quadraticRoot(a, b, c);
 	if (root >= 0) {
 		retval.isHit = true;
