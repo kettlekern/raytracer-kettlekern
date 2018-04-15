@@ -6,18 +6,18 @@ Scene* parseFile(string filename) {
 	Scene* scene = new Scene();
 	//Open file
 	ifstream file(filename);
-	string fileString;
+	stringstream fileString;
 	string tok;
 	if (file.is_open()) {
 		//dump file into a string
-		fileString = file.get();
+		fileString << file.rdbuf();
 	}
 	else { 
 		cout << "Could not open file"; 
 	}
 	file.close();
 	//Turn string into string stream
-	istringstream fileStream(fileString);
+	istringstream fileStream(fileString.str());
 
 	while (!fileStream.eof()) {
 		//TODO: convert tok to lower case maybe
@@ -58,9 +58,11 @@ glm::vec3 parseVec3(istringstream & stream) {
 	tok = tok.substr(1, tok.length() - 1);
 	returnVector.x = stof(tok);
 	//Remove ,
+	stream >> tok;
 	tok = tok.substr(0, tok.length() - 1);
 	returnVector.y = stof(tok);
 	//Remove > and , sometimes
+	stream >> tok;
 	int i = 1;
 	if (tok.substr(tok.length() - 1, tok.length()) == ",") {
 		i = 2;
@@ -79,9 +81,11 @@ glm::vec4 parseVec4(istringstream & stream) {
 	tok = tok.substr(1, tok.length() - 1);
 	returnVector.x = stof(tok);
 	//Remove ,
+	stream >> tok;
 	tok = tok.substr(0, tok.length() - 1);
 	returnVector.y = stof(tok);
 	//Remove ,
+	stream >> tok;
 	tok = tok.substr(0, tok.length() - 1);
 	returnVector.z = stof(tok);
 	//Remove > and , sometimes
@@ -117,7 +121,7 @@ void parseCamera(istringstream & stream, Scene* scene) {
 		else if (tok == "look_at") {
 			lookat = parseVec3(stream);
 		}
-		else {
+		else if (tok != "}") {
 			cout << "unknown token: " << tok << "\n";
 		}
 	} while (tok != "}");

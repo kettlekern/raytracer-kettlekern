@@ -38,6 +38,10 @@ int runCommand(int argc, char** argv) {
 	string command = argv[1];
 	string filename = argv[2];
 	Scene* scene = parseFile(filename);
+	if (scene == nullptr) {
+		cout << "Could not parse file\n";
+		_sleep(2000);
+	}
 	Image image;
 	Point point;
 	if (command == "raycast") {
