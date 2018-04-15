@@ -1,7 +1,8 @@
-cmake_minimum_required(VERSION 2.7)
+cmake_minimum_required(VERSION 3.1)
 
 # Name of the project
 project(lab1)
+set (CMAKE_CXX_STANDARD 11)
 
 # Use glob to get the list of all source files.
 file(GLOB_RECURSE SOURCES "src/*.cpp")
@@ -67,6 +68,7 @@ else()
   message(STATUS "GLM environment variable `GLM_INCLUDE_DIR` not found, GLM must be installed with the system")
 endif()
 
+option(sceneinfo "../Resources/beers.pov")
 
 
 # OS specific options and libraries

@@ -11,7 +11,7 @@ struct Light {
 	glm::vec3 location;
 	glm::vec3 color;
 
-	Light(glm::vec3 location, glm::vec3 color) :location(location), color(color) {}
+	Light(glm::vec3 location, glm::vec3 color) : location(location), color(color) {}
 
 	std::string toString();
 };
