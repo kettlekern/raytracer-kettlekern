@@ -78,5 +78,5 @@ std::string Sphere::toStringLocal() {
 
 std::string Plane::toStringLocal() {
 	return " - Normal: " + Parser::vec3ToString(normal) + "\n" +
-		   " - Distance: " + to_string(distance) + "\n";
+		   " - Distance: " + formatted_to_string(distance) + "\n";
 }
