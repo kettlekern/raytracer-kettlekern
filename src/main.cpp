@@ -48,10 +48,10 @@ std::string pixelrayToString(const Hit & val, Ray* ray, const Point & rayLoc) {
 	return retval;
 }
 
-std::string firstHitToString(const Hit & val, Ray* ray, const ImageCoords & image) {
+std::string firstHitToString(const Hit & val, Ray* ray, const Point & point) {
 	std::string retval;
 	if (val.isHit) {
-		retval += "Pixel: [" + formatted_to_string(image.width) + ", " + formatted_to_string(image.height) + "] " +
+		retval += "Pixel: [" + to_string(point.x) + ", " + to_string(point.y) + "] " +
 			"Ray: {" + formatted_to_string(ray->origin.x) + " " + formatted_to_string(ray->origin.y) + " " + formatted_to_string(ray->origin.z) + "} -> {" +
 			formatted_to_string(ray->direction.x) + " " + formatted_to_string(ray->direction.y) + " " + formatted_to_string(ray->direction.z) + "}\n";
 		retval += "T = " + formatted_to_string(val.t) + "\n";
@@ -91,7 +91,7 @@ int runCommand(int argc, char** argv) {
 		parseFirstHit(argc, argv, image, point);
 		Ray* ray = genRay(image.width, image.height, scene, point.x, point.y);
 		Hit value = collide(scene, ray);
-		cout << firstHitToString(value, ray, image);
+		cout << firstHitToString(value, ray, point);
 	}
 	else {
 		cout << "Unknown command: " << command << ", exiting.\n";

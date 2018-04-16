@@ -10,7 +10,7 @@ struct Hit {
 	Material* mat;
 	std::string objType;
 	glm::vec3 color;
-	int t;
+	float t;
 };
 
 #endif
