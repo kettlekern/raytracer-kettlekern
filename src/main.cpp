@@ -5,7 +5,6 @@
 #include "Parser.h"
 #include "Ray/RayManager.h"
 
-
 using namespace std;
 
 struct ImageCoords {
@@ -39,7 +38,7 @@ void parseFirstHit(int argc, char** argv, ImageCoords & image, Point & point) {
 std::string pixelrayToString(const Hit & val, Ray* ray, const Point & rayLoc) {
 	std::string retval;
 	if (val.isHit) {
-		retval += "Pixel: [" + formatted_to_string(rayLoc.x) + ", " + formatted_to_string(rayLoc.y) + "] " +
+		retval += "Pixel: [" + to_string(rayLoc.x) + ", " + to_string(rayLoc.y) + "] " +
 			"Ray: {" + formatted_to_string(ray->origin.x) + " " + formatted_to_string(ray->origin.y) + " " + formatted_to_string(ray->origin.z) + "} -> {" +
 			formatted_to_string(ray->direction.x) + " " + formatted_to_string(ray->direction.y) + " " + formatted_to_string(ray->direction.z) + "}\n";
 	}
