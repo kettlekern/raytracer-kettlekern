@@ -73,10 +73,10 @@ Hit Plane::collide(Ray* ray) {
 
 std::string Sphere::toStringLocal() {
 	return " - Center: " + Parser::vec3ToString(center) + "\n" +
-		   " - Radius: " + formatted_to_string(radius) + "\n";
+		   " - Radius: " + to_string(radius) + "\n";
 }
 
 std::string Plane::toStringLocal() {
 	return " - Normal: " + Parser::vec3ToString(normal) + "\n" +
-		   " - Distance: " + formatted_to_string(distance) + "\n";
+		   " - Distance: " + to_string(distance) + "\n";
 }

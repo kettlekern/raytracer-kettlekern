@@ -22,19 +22,19 @@ string Scene::cameraToString() {
 }
 
 string Scene::lightsToString() {
-	string retval = formatted_to_string(lights.size()) + " light(s)\n";
+	string retval = to_string(lights.size()) + " light(s)\n";
 	int i = 0;
 	for (Light* light : lights) {
-		retval += "\nLight[" + formatted_to_string(i++) + "]:\n" + light->toString();
+		retval += "\nLight[" + to_string(i++) + "]:\n" + light->toString();
 	}
 	return retval;
 }
 
 string Scene::objectsToString() {
-	string retval = formatted_to_string(objects.size()) + " objects(s)\n";
+	string retval = to_string(objects.size()) + " objects(s)\n";
 	int i = 0;
 	for (Object* object : objects) {
-		retval += "\nObject[" + formatted_to_string(i++) + "]:\n" + object->toString();
+		retval += "\nObject[" + to_string(i++) + "]:\n" + object->toString();
 	}
 	return retval;
 }
