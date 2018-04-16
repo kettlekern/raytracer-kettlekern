@@ -8,6 +8,7 @@
 #include "Material.h"
 #include "../Ray/Ray.h"
 #include "../Hit.h"
+#include "../FormattedToString.h"
 
 class Object
 {

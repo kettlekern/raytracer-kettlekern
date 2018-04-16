@@ -18,6 +18,7 @@ struct Point {
 	int y;
 };
 
+
 void parseRaycast(int argc, char** argv, ImageCoords & image) {
 	image.width = stoi(argv[3]);
 	image.height = stoi(argv[4]);
@@ -38,9 +39,9 @@ void parseFirstHit(int argc, char** argv, ImageCoords & image, Point & point) {
 std::string pixelrayToString(const Hit & val, Ray* ray, const Point & rayLoc) {
 	std::string retval;
 	if (val.isHit) {
-		retval += "Pixel: [" + to_string(rayLoc.x) + ", " + to_string(rayLoc.y) + "] " +
-			"Ray: {" + to_string(ray->origin.x) + " " + to_string(ray->origin.y) + " " + to_string(ray->origin.z) + "} -> {" +
-			to_string(ray->direction.x) + " " + to_string(ray->direction.y) + " " + to_string(ray->direction.z) + "}\n";
+		retval += "Pixel: [" + formatted_to_string(rayLoc.x) + ", " + formatted_to_string(rayLoc.y) + "] " +
+			"Ray: {" + formatted_to_string(ray->origin.x) + " " + formatted_to_string(ray->origin.y) + " " + formatted_to_string(ray->origin.z) + "} -> {" +
+			formatted_to_string(ray->direction.x) + " " + formatted_to_string(ray->direction.y) + " " + formatted_to_string(ray->direction.z) + "}\n";
 	}
 	else {
 		retval = "No Hit\n";
@@ -51,12 +52,12 @@ std::string pixelrayToString(const Hit & val, Ray* ray, const Point & rayLoc) {
 std::string firstHitToString(const Hit & val, Ray* ray, const ImageCoords & image) {
 	std::string retval;
 	if (val.isHit) {
-		retval += "Pixel: [" + to_string(image.width) + ", " + to_string(image.height) + "] " +
-			"Ray: {" + to_string(ray->origin.x) + " " + to_string(ray->origin.y) + " " + to_string(ray->origin.z) + "} -> {" +
-			to_string(ray->direction.x) + " " + to_string(ray->direction.y) + " " + to_string(ray->direction.z) + "}\n";
-		retval += "T = " + to_string(val.t) + "\n";
+		retval += "Pixel: [" + formatted_to_string(image.width) + ", " + formatted_to_string(image.height) + "] " +
+			"Ray: {" + formatted_to_string(ray->origin.x) + " " + formatted_to_string(ray->origin.y) + " " + formatted_to_string(ray->origin.z) + "} -> {" +
+			formatted_to_string(ray->direction.x) + " " + formatted_to_string(ray->direction.y) + " " + formatted_to_string(ray->direction.z) + "}\n";
+		retval += "T = " + formatted_to_string(val.t) + "\n";
 		retval += "Object Type: " + val.objType + "\n";
-		retval += "Color: " + to_string(val.color.x) + " " + to_string(val.color.y) + " " + to_string(val.color.z) + "\n";
+		retval += "Color: " + formatted_to_string(val.color.x) + " " + formatted_to_string(val.color.y) + " " + formatted_to_string(val.color.z) + "\n";
 	}
 	else {
 		retval = "No Hit\n";
@@ -67,6 +68,7 @@ std::string firstHitToString(const Hit & val, Ray* ray, const ImageCoords & imag
 int runCommand(int argc, char** argv) {
 	string command = argv[1];
 	string filename = argv[2];
+	cout.precision(4);
 	Scene* scene = parseFile(filename);
 	if (scene == nullptr) {
 		cout << "Could not parse file\n";

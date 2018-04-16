@@ -7,6 +7,7 @@
 #include <string>
 #include "Object.h"
 #include "VectorString.h"
+#include "../FormattedToString.h"
 
 struct Light {
 	glm::vec3 location;

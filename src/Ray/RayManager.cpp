@@ -4,10 +4,10 @@
 
 std::vector<Ray*> genRays(int width, int height, Scene* scene) {
 	std::vector<Ray*> rays;
-	for (int i = 0; i < width; i++) {
+	for (int i = 0; i < height; i++) {
 		//index + sub-pixel offset / image width - (bring image to (-.5,.5) from (0,1))
-		for (int j = 0; j < height; j++) {
-			rays.push_back(genRay(width, height, scene, i, j));
+		for (int j = 0; j < width; j++) {
+			rays.push_back(genRay(width, height, scene, j, i));
 		}
 	}
 
@@ -21,8 +21,8 @@ Ray* genRay(int width, int height, Scene* scene, int i, int j) {
 	float Vs = (j + .5f) / height - .5f;
 	glm::vec3 direction =
 		Us * camera.right +
-		Vs * camera.up +
-		focalLength * normalize(camera.lookat - camera.location);
+		Vs * camera.up -
+		focalLength * normalize(camera.location - camera.lookat);
 	return new Ray(camera.location, normalize(direction));
 }
 
@@ -48,6 +48,7 @@ Hit collide(Scene* scene, Ray* ray) {
 	return hitVal;
 }
 
+//Need to rotate geom by 90 deg clockwise
 void castRays(int width, int height, Scene* scene) {
 	std::vector<unsigned char> output;
 	std::vector<Ray*> rays = genRays(width, height, scene);
@@ -55,7 +56,7 @@ void castRays(int width, int height, Scene* scene) {
 		for (int j = 0; j < height; j++) {
 			//Cast the ray into the sceen
 			//std::cout << i * height + j << " ";
-			Hit val = collide(scene, rays[j * height + i]);
+			Hit val = collide(scene, rays[i * height + j]);
 			//if there is a hit, set the pixel color to the value of the object hit
 			if (val.isHit) {
 				output.push_back((char)(val.color.r * 255));
@@ -70,5 +71,5 @@ void castRays(int width, int height, Scene* scene) {
 		}
 	}
 	//Draw the image	
-	stbi_write_png("output.png", width, height, 3, output.data(), sizeof(char)*3*height);
+	stbi_write_png("output.png", width, height, 3, output.data(), sizeof(char)*3*width);
 }

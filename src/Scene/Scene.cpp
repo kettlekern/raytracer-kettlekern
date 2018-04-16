@@ -3,6 +3,7 @@
 #include <vector>
 #include "Object.h"
 #include <iostream>
+#include "../FormattedToString.h"
 
 using namespace std;
 
@@ -21,19 +22,19 @@ string Scene::cameraToString() {
 }
 
 string Scene::lightsToString() {
-	string retval = to_string(lights.size()) + " light(s)\n";
+	string retval = formatted_to_string(lights.size()) + " light(s)\n";
 	int i = 0;
 	for (Light* light : lights) {
-		retval += "\nLight[" + to_string(i++) + "]:\n" + light->toString();
+		retval += "\nLight[" + formatted_to_string(i++) + "]:\n" + light->toString();
 	}
 	return retval;
 }
 
 string Scene::objectsToString() {
-	string retval = to_string(objects.size()) + " Objects(s)\n";
+	string retval = formatted_to_string(objects.size()) + " objects(s)\n";
 	int i = 0;
 	for (Object* object : objects) {
-		retval += "\nObject[" + to_string(i++) + "]:\n" + object->toString();
+		retval += "\nObject[" + formatted_to_string(i++) + "]:\n" + object->toString();
 	}
 	return retval;
 }

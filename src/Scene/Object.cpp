@@ -18,8 +18,8 @@ string Object::toString() {
 
 float Object::quadraticRoot(float a, float b, float c) {
 	float first, second;
-	first = (-b + sqrt(b  * b - 4 * a * c)) / 2 * a;
-	second = (-b - sqrt(b  * b - 4 * a * c)) / 2 * a;
+	first = (-b + sqrt(b * b - 4 * a * c)) / (2 * a);
+	second = (-b - sqrt(b * b - 4 * a * c)) / (2 * a);
 	if (first < 0) {
 		return second;
 	}
@@ -58,7 +58,7 @@ Hit Plane::collide(Ray* ray) {
 	Hit retval;
 	if (glm::dot(ray->direction, normal) > 0) {
 		retval.t = (-distance - glm::dot(ray->origin, normal))/glm::dot(ray->direction, normal);
-		if (retval.t > 0) {
+		if (retval.t >= 0) {
 			retval.isHit = true;
 			retval.mat = &(this->mat);
 			retval.objType = name;
@@ -73,10 +73,10 @@ Hit Plane::collide(Ray* ray) {
 
 std::string Sphere::toStringLocal() {
 	return " - Center: " + Parser::vec3ToString(center) + "\n" +
-		   " - Radius: " + to_string(radius) + "\n";
+		   " - Radius: " + formatted_to_string(radius) + "\n";
 }
 
 std::string Plane::toStringLocal() {
 	return " - Normal: " + Parser::vec3ToString(normal) + "\n" +
-		   " - Distance: " + to_string(distance) + "\n";
+		   " - Distance: " + formatted_to_string(distance) + "\n";
 }

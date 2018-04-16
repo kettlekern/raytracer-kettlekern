@@ -8,6 +8,7 @@
 #include <sstream>
 #include "Scene/Scene.h"
 #include "Tokenizer.h"
+#include "FormattedToString.h"
 
 
 Scene* parseFile(std::string filename);

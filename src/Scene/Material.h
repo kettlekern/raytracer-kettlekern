@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <string>
 #include <vector>
+#include "../FormattedToString.h"
 
 class Material
 {

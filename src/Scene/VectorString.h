@@ -4,6 +4,7 @@
 
 #include <glm/glm.hpp>
 #include <string>
+#include "../FormattedToString.h"
 namespace Parser {
 	std::string vec3ToString(const glm::vec3 & vec);
 }
