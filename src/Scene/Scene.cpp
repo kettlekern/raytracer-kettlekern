@@ -31,7 +31,7 @@ string Scene::lightsToString() {
 }
 
 string Scene::objectsToString() {
-	string retval = to_string(objects.size()) + " objects(s)\n";
+	string retval = to_string(objects.size()) + " object(s)\n";
 	int i = 0;
 	for (Object* object : objects) {
 		retval += "\nObject[" + to_string(i++) + "]:\n" + object->toString();
