@@ -56,8 +56,9 @@ Hit Sphere::collide(Ray* ray) {
 
 Hit Plane::collide(Ray* ray) {
 	Hit retval;
-	if (glm::dot(ray->direction, normal) > 0) {
-		retval.t = (-distance - glm::dot(ray->origin, normal))/glm::dot(ray->direction, normal);
+	//Throw out values greater than or equal to 0
+	if (glm::dot(ray->direction, normal) < 0) {
+		retval.t = (distance - glm::dot(ray->origin, normal))/glm::dot(ray->direction, normal);
 		if (retval.t >= 0) {
 			retval.isHit = true;
 			retval.mat = &(this->mat);

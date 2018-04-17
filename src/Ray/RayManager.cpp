@@ -4,7 +4,8 @@
 
 std::vector<Ray*> genRays(int width, int height, Scene* scene) {
 	std::vector<Ray*> rays;
-	for (int i = height - 1; i >= 0; i--) {
+	//The image output we use tracks positions from top left to bottom right so the rays need to be in that order
+	for (int i = height - 1; i >= 0; --i) {
 		//index + sub-pixel offset / image width - (bring image to (-.5,.5) from (0,1))
 		for (int j = 0; j < width; j++) {
 			rays.push_back(genRay(width, height, scene, j, i));

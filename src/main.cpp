@@ -26,13 +26,11 @@ void parsePixelray(int argc, char** argv, ImageCoords & image, Point & point) {
 	image.width = stoi(argv[3]);
 	image.height = stoi(argv[4]);
 	point.x = stoi(argv[5]);
-	point.y = stoi(argv[6]);
+	//Because the image is flipped on output and so rays index from the top, not the bottom
+	point.y = image.width - stoi(argv[6]);
 }
 void parseFirstHit(int argc, char** argv, ImageCoords & image, Point & point) {
-	image.width = stoi(argv[3]);
-	image.height = stoi(argv[4]);
-	point.x = stoi(argv[5]);
-	point.y = stoi(argv[6]);
+	parsePixelray(argc, argv, image, point);
 }
 
 std::string pixelrayToString(const Hit & val, Ray* ray, const Point & rayLoc) {
