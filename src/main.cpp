@@ -27,16 +27,16 @@ void parsePixelray(int argc, char** argv, ImageCoords & image, Point & point) {
 	image.height = stoi(argv[4]);
 	point.x = stoi(argv[5]);
 	//Because the image is flipped on output and so rays index from the top, not the bottom
-	point.y = image.height - stoi(argv[6]);
+	point.y = image.height - stoi(argv[6]) - 1;
 }
 void parseFirstHit(int argc, char** argv, ImageCoords & image, Point & point) {
 	parsePixelray(argc, argv, image, point);
 }
 
-std::string pixelrayToString(const Hit & val, Ray* ray, const Point & rayLoc) {
+std::string pixelrayToString(const Hit & val, Ray* ray, const Point & rayLoc, int height) {
 	std::string retval;
 	if (val.isHit) {
-		retval += "Pixel: [" + to_string(rayLoc.x) + ", " + to_string(rayLoc.y) + "] " +
+		retval += "Pixel: [" + to_string(rayLoc.x) + ", " + to_string(height - rayLoc.y - 1) + "] " +
 			"Ray: {" + formatted_to_string(ray->origin.x) + " " + formatted_to_string(ray->origin.y) + " " + formatted_to_string(ray->origin.z) + "} -> {" +
 			formatted_to_string(ray->direction.x) + " " + formatted_to_string(ray->direction.y) + " " + formatted_to_string(ray->direction.z) + "}\n";
 	}
@@ -46,10 +46,10 @@ std::string pixelrayToString(const Hit & val, Ray* ray, const Point & rayLoc) {
 	return retval;
 }
 
-std::string firstHitToString(const Hit & val, Ray* ray, const Point & point) {
+std::string firstHitToString(const Hit & val, Ray* ray, const Point & point, int height) {
 	std::string retval;
 	if (val.isHit) {
-		retval += "Pixel: [" + to_string(point.x) + ", " + to_string(point.y) + "] " +
+		retval += "Pixel: [" + to_string(point.x) + ", " + to_string(height - point.y - 1) + "] " +
 			"Ray: {" + formatted_to_string(ray->origin.x) + " " + formatted_to_string(ray->origin.y) + " " + formatted_to_string(ray->origin.z) + "} -> {" +
 			formatted_to_string(ray->direction.x) + " " + formatted_to_string(ray->direction.y) + " " + formatted_to_string(ray->direction.z) + "}\n";
 		retval += "T = " + formatted_to_string(val.t) + "\n";
@@ -83,13 +83,13 @@ int runCommand(int argc, char** argv) {
 		parsePixelray(argc, argv, image, point);
 		Ray* ray = genRay(image.width, image.height, scene, point.x, point.y);
 		Hit value = collide(scene, ray);
-		cout << pixelrayToString(value, ray, point);
+		cout << pixelrayToString(value, ray, point, image.height);
 	}
 	else if (command == "firsthit") {
 		parseFirstHit(argc, argv, image, point);
 		Ray* ray = genRay(image.width, image.height, scene, point.x, point.y);
 		Hit value = collide(scene, ray);
-		cout << firstHitToString(value, ray, point);
+		cout << firstHitToString(value, ray, point, image.height);
 	}
 	else {
 		cout << "Unknown command: " << command << ", exiting.\n";
