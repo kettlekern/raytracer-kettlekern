@@ -27,7 +27,7 @@ void parsePixelray(int argc, char** argv, ImageCoords & image, Point & point) {
 	image.height = stoi(argv[4]);
 	point.x = stoi(argv[5]);
 	//Because the image is flipped on output and so rays index from the top, not the bottom
-	point.y = image.width - stoi(argv[6]);
+	point.y = image.height - stoi(argv[6]);
 }
 void parseFirstHit(int argc, char** argv, ImageCoords & image, Point & point) {
 	parsePixelray(argc, argv, image, point);
