@@ -26,6 +26,17 @@ void parseRaycast(int argc, char** argv, ImageCoords & image) {
 	image.width = stoi(argv[3]);
 	image.height = stoi(argv[4]);
 }
+
+void parseRender(int argc, char** argv, ImageCoords & image, bool* isAltBRDF) {
+	image.width = stoi(argv[3]);
+	image.height = stoi(argv[4]);
+	if (argc > 4) {
+		if (argv[5] == "-altbrdf") {
+			*isAltBRDF = true;
+		}
+	}
+}
+
 void parsePixelray(int argc, char** argv, ImageCoords & image, Point & point) {
 	image.width = stoi(argv[3]);
 	image.height = stoi(argv[4]);
@@ -39,14 +50,9 @@ void parseFirstHit(int argc, char** argv, ImageCoords & image, Point & point) {
 
 std::string pixelrayToString(const Hit & val, Ray* ray, const Point & rayLoc, int height) {
 	std::string retval;
-	//if (val.isHit) {
-		retval += "Pixel: [" + to_string(rayLoc.x) + ", " + to_string(rayLoc.y) + "] " +
+	retval += "Pixel: [" + to_string(rayLoc.x) + ", " + to_string(rayLoc.y) + "] " +
 			"Ray: {" + formatted_to_string(ray->origin.x) + " " + formatted_to_string(ray->origin.y) + " " + formatted_to_string(ray->origin.z) + "} -> {" +
 			formatted_to_string(ray->direction.x) + " " + formatted_to_string(ray->direction.y) + " " + formatted_to_string(ray->direction.z) + "}\n";
-	//}
-	//else {
-	//	retval = "No Hit\n";
-	//}
 	return retval;
 }
 
@@ -78,7 +84,12 @@ int runCommand(int argc, char** argv) {
 	Point point;
 	if (command == "raycast") {
 		parseRaycast(argc, argv, image);
-		castRays(image.width, image.height, scene);
+		castRays(image.width, image.height, scene, false);
+	}
+	else if (command == "render") {
+		bool isAltBRDF = false;
+		parseRender(argc, argv, image, &isAltBRDF);
+		castRays(image.width, image.height, scene, isAltBRDF);
 	}
 	else if (command == "sceneinfo") {
 		scene->printScene();

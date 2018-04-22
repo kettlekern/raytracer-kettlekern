@@ -18,8 +18,6 @@ add_executable(${CMAKE_PROJECT_NAME} ${SOURCES} ${HEADERS})
 
 
 
-
-
 # Add GLM
 # Get the GLM environment variable. Since GLM is a header-only library, we
 # just need to add it to the include directory.

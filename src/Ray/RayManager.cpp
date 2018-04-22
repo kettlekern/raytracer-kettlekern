@@ -49,14 +49,12 @@ Hit collide(Scene* scene, Ray* ray) {
 	return hitVal;
 }
 
-//Need to rotate geom by 90 deg clockwise
-void castRays(int width, int height, Scene* scene) {
+void castRays(int width, int height, Scene* scene, bool useCookTorrance) {
 	std::vector<unsigned char> output;
 	std::vector<Ray*> rays = genRays(width, height, scene);
 	for (int i = 0; i < width; i++) {
 		for (int j = 0; j < height; j++) {
 			//Cast the ray into the sceen
-			//std::cout << i * height + j << " ";
 			Hit val = collide(scene, rays[i * height + j]);
 			//if there is a hit, set the pixel color to the value of the object hit
 			if (val.isHit) {
