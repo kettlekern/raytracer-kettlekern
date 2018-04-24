@@ -1,6 +1,6 @@
 #include "Parser.h"
-#include "Scene\Sphere.h"
-#include "Scene\Plane.h"
+#include "Scene/Sphere.h"
+#include "Scene/Plane.h"
 
 using namespace std;
 
