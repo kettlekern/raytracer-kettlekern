@@ -41,9 +41,18 @@ void parsePixelray(int argc, char** argv, ImageCoords & image, Point & point) {
 	image.width = stoi(argv[3]);
 	image.height = stoi(argv[4]);
 	point.x = stoi(argv[5]);
-	//Because the image is flipped on output and so rays index from the top, not the bottom
 	point.y = stoi(argv[6]);
 }
+
+void parsePixelcolor(int argc, char** argv, ImageCoords & image, Point & point, bool* isAltBRDF) {
+	parsePixelray(argc, argv, image, point);
+	if (argc > 6) {
+		if (argv[7] == "-altbrdf") {
+			*isAltBRDF = true;
+		}
+	}
+}
+
 void parseFirstHit(int argc, char** argv, ImageCoords & image, Point & point) {
 	parsePixelray(argc, argv, image, point);
 }
@@ -53,6 +62,18 @@ std::string pixelrayToString(const Hit & val, Ray* ray, const Point & rayLoc, in
 	retval += "Pixel: [" + to_string(rayLoc.x) + ", " + to_string(rayLoc.y) + "] " +
 			"Ray: {" + formatted_to_string(ray->origin.x) + " " + formatted_to_string(ray->origin.y) + " " + formatted_to_string(ray->origin.z) + "} -> {" +
 			formatted_to_string(ray->direction.x) + " " + formatted_to_string(ray->direction.y) + " " + formatted_to_string(ray->direction.z) + "}\n";
+	return retval;
+}
+
+std::string pixelcolorToString(const Hit & val, Ray* ray, const Point & rayLoc, int height, bool isAltBRDF) {
+	std::string retval;
+	std::string BRDFType = isAltBRDF ? "Cook-Torrance" : "Blinn-Phong";
+	retval += pixelrayToString(val, ray, rayLoc, height);
+	retval += "T = " + formatted_to_string(val.t) + "\n";
+	retval += "Object Type: " + val.objType + "\n";
+	retval += "BRDF: " + BRDFType + "\n";
+	//TODO: update this and pass in a fragment instead
+	retval += "Color: " + formatted_to_string(val.color.x) + "\n";
 	return retval;
 }
 
@@ -90,6 +111,13 @@ int runCommand(int argc, char** argv) {
 		bool isAltBRDF = false;
 		parseRender(argc, argv, image, &isAltBRDF);
 		castRays(image.width, image.height, scene, isAltBRDF);
+	}
+	else if (command == "pixelcolor") {
+		bool isAltBRDF = false;
+		parsePixelcolor(argc, argv, image, point, &isAltBRDF);
+		Ray* ray = genRay(image.width, image.height, scene, point.x, point.y);
+		Hit value = collide(scene, ray);
+		cout << pixelcolorToString(value, ray, point, image.height, isAltBRDF);
 	}
 	else if (command == "sceneinfo") {
 		scene->printScene();
