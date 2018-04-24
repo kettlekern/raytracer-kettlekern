@@ -1,6 +1,7 @@
 #include "RayManager.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "../stb_image_write.h"
+#include "../Scene/Buffer.h"
 
 std::vector<Ray*> genRays(int width, int height, Scene* scene) {
 	std::vector<Ray*> rays;
@@ -49,7 +50,7 @@ Hit collide(Scene* scene, Ray* ray) {
 	return hitVal;
 }
 
-void castRays(int width, int height, Scene* scene, bool useCookTorrance) {
+void castRays(int width, int height, Scene* scene) {
 	std::vector<unsigned char> output;
 	std::vector<Ray*> rays = genRays(width, height, scene);
 	for (int i = 0; i < width; i++) {
@@ -70,5 +71,21 @@ void castRays(int width, int height, Scene* scene, bool useCookTorrance) {
 		}
 	}
 	//Draw the image	
-	stbi_write_png("output.png", width, height, 3, output.data(), sizeof(char)*3*width);
+	stbi_write_png("output.png", width, height, 3, output.data(), sizeof(char) * 3 * width);
+}
+
+void renderScene(int width, int height, Scene* scene, bool useCookTorrance) {
+	std::vector<Ray*> rays = genRays(width, height, scene);
+	Buffer fragBuf(width, height);
+	for (int i = 0; i < width; i++) {
+		for (int j = 0; j < height; j++) {
+			//Cast the ray into the sceen
+			Hit val = collide(scene, rays[i * height + j]);
+			Fragment* frag = new Fragment(val);
+			frag->computeLighting((&frag->BlinnPhong), scene->getLights());
+			fragBuf.push_back(frag);
+		}
+	}
+	//Draw the image	
+	stbi_write_png("output.png", width, height, 3, fragBuf.toArray(), sizeof(char) * 3 * width);
 }

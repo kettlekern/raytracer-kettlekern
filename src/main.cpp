@@ -105,12 +105,12 @@ int runCommand(int argc, char** argv) {
 	Point point;
 	if (command == "raycast") {
 		parseRaycast(argc, argv, image);
-		castRays(image.width, image.height, scene, false);
+		castRays(image.width, image.height, scene);
 	}
 	else if (command == "render") {
 		bool isAltBRDF = false;
 		parseRender(argc, argv, image, &isAltBRDF);
-		castRays(image.width, image.height, scene, isAltBRDF);
+		renderScene(image.width, image.height, scene, isAltBRDF);
 	}
 	else if (command == "pixelcolor") {
 		bool isAltBRDF = false;

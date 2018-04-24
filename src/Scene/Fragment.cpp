@@ -7,13 +7,13 @@ glm::vec3 Fragment::CookTorrance(const std::vector<Light *> & lights) {
 	vec3 color = vec3(0, 0, 0);
 	for (Light* light : lights) {
 		//Change this to use a cook-torrance lighting model instead
-		color += BlinnPhongObject(position, obj->getNormal(position), vec3(0, 0, 0), light->color, light->color, light->shine, cam->location, light->location, light->color);
+		color += BlinnPhongObject(position, obj->getNormal(position), vec3(0, 0, 0), light->color, light->color, cam->location, light->location, light->color, light->shine);
 	}
 	return color;
 }
 
 //This is pretty much shader code for blinn phong and should have similar properties to fragment shader code
-glm::vec3 Fragment::BlinnPhongObject(vec3 position, vec3 normal, vec3 ambient, vec3 diffuseColor, vec3 specularColor, float shine, vec3 cameraPos, vec3 lightPos, vec3 lightColor) {
+glm::vec3 Fragment::BlinnPhongObject(vec3 position, vec3 normal, vec3 ambient, vec3 diffuseColor, vec3 specularColor, vec3 cameraPos, vec3 lightPos, vec3 lightColor, float shine) {
 	vec3 viewDir = normalize(cameraPos - position);
 
 	vec3 lightDir = normalize(lightPos - position);
@@ -32,7 +32,7 @@ glm::vec3 Fragment::BlinnPhongObject(vec3 position, vec3 normal, vec3 ambient, v
 glm::vec3 Fragment::BlinnPhong(const std::vector<Light *> & lights) {
 	vec3 color = vec3(0,0,0);
 	for (Light* light : lights) {
-		color += BlinnPhongObject(position, obj->getNormal(position), vec3(0, 0, 0), light->color, light->color, light->shine, cam->location, light->location, light->color);
+		color += BlinnPhongObject(position, obj->getNormal(position), vec3(0, 0, 0), light->color, light->color, cam->location, light->location, light->color, light->shine);
 	}
 	return color;
 }

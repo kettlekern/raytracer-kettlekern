@@ -13,6 +13,7 @@
 std::vector<Ray*> genRays(int width, int height, Scene* scene);
 Ray* genRay(int width, int height, Scene* scene, int i, int j);
 Hit collide(Scene* scene, Ray* ray);
-void castRays(int width, int height, Scene* scene, bool useCookTorrance);
+void castRays(int width, int height, Scene* scene);
+void renderScene(int width, int height, Scene* scene, bool useCookTorrance);
 
 #endif

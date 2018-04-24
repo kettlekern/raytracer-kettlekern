@@ -63,6 +63,8 @@ public:
 
 	Camera getCamera() { return camera; }
 
+	std::vector<Light*> getLights() { return lights; }
+
 	void addObject(Object* object) {
 		objects.push_back(object);
 	}
