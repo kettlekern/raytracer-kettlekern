@@ -76,13 +76,20 @@ void castRays(int width, int height, Scene* scene) {
 
 void renderScene(int width, int height, Scene* scene, bool useCookTorrance) {
 	std::vector<Ray*> rays = genRays(width, height, scene);
+	//Create a buffer that holds the fragments
 	Buffer fragBuf(width, height);
+	Fragment* frag;
+	//Store the function to light the fragmetn with
+	auto func = &(frag->BlinnPhong);
+	if (useCookTorrance) {
+		func = &(frag->CookTorrance);
+	}
 	for (int i = 0; i < width; i++) {
 		for (int j = 0; j < height; j++) {
 			//Cast the ray into the sceen
 			Hit val = collide(scene, rays[i * height + j]);
-			Fragment* frag = new Fragment(val);
-			frag->computeLighting((&frag->BlinnPhong), scene->getLights());
+			frag = new Fragment(val);
+			frag->computeLighting(func, scene->getLights());
 			fragBuf.push_back(frag);
 		}
 	}
