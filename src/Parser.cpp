@@ -231,21 +231,29 @@ Material parseFinish(Tokenizer & tokenizer) {
 		return mat;
 	}
 	tok = tokenizer.getToken();
-	if (tok != "ambient") {
-		cerr << "Bad Pigment in file\n";
-		return mat;
+	while (tok != "}") {
+		if (tok == "ambient") {
+			tok = tokenizer.getToken();
+			mat.ambient = stof(tok);
+		}
+		else if (tok == "diffuse") {
+			tok = tokenizer.getToken();
+			mat.diffuse = stof(tok);
+		}
+		else if (tok == "specular") {
+			tok = tokenizer.getToken();
+			mat.specular = stof(tok);
+		}
+		else if (tok == "roughness") {
+			tok = tokenizer.getToken();
+			mat.roughness = stof(tok);
+		}
+		else if (tok == "ior") {
+			tok = tokenizer.getToken();
+			mat.ior = stof(tok);
+		}
+		//TODO: Add more material info here
+		tok = tokenizer.getToken();
 	}
-	tok = tokenizer.getToken();
-	mat.ambient = stof(tok);
-	tok = tokenizer.getToken();
-	if (tok != "diffuse") {
-		cerr << "Bad Pigment in file\n";
-		return mat;
-	}
-	tok = tokenizer.getToken();
-	mat.diffuse = stof(tok);
-	//clear the "}"
-	tok = tokenizer.getToken();
-	//TODO: Add more material info here
 	return mat;
 }

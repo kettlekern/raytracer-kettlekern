@@ -14,6 +14,9 @@ public:
 	Material(float ambient, float diffuse) : ambient(ambient), diffuse(diffuse) {}
 	float ambient;
 	float diffuse;
+	float specular;
+	float roughness;
+	float ior;
 
 	std::string toString();
 };
