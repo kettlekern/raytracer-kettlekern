@@ -1,4 +1,6 @@
 #include "Fragment.h"
+#include "../Ray/RayManager.h"
+#define EPS 0.5f
 
 using namespace glm;
 
@@ -61,17 +63,28 @@ vec3 Fragment::clampColor(vec3 color) {
 	return color;
 }
 
-bool inShadow(Light* light) {
-	return false;
+bool Fragment::inShadow(Light* light, Scene* scene) {
+	bool shadow = false;
+	vec3 direction = normalize(light->location - position);
+	Ray* ray = new Ray(position + EPS * direction, direction);
+	Hit hit = collide(scene, ray);
+	//The length of this vector is the number of itterations of the direction it takes to reach the light from the fragment
+	//Because the direction vector has length = 1, this value is the t value to the light from the fragment
+	float lightT = length(light->location - position);
+	if (hit.isHit && hit.t <= lightT) {
+		shadow = true;
+	}
+	delete(ray);
+	return shadow;
 }
 
-vec3 Fragment::BlinnPhong(const std::vector<Light *> & lights) {
+vec3 Fragment::BlinnPhong(Scene* scene) {
 	vec3 color = vec3(0,0,0);
 	vec3 ambient = vec3(0, 0, 0);
 	if (isHit()) {
 		ambient = obj->getColor() * 0.2f;
-		for (Light* light : lights) {
-			if (!inShadow(light)) {
+		for (Light* light : scene->getLights()) {
+			if (!inShadow(light, scene)) {
 				color += (vec3(1.0f) - ambient) * BlinnPhongObject(position, obj->getNormal(position), obj->getColor(), obj->getColor(), cam.location, light->location, clampColor(light->color), light->shine);
 			}
 		}
@@ -88,7 +101,7 @@ void Fragment::computeLighting(glm::vec3 (*lighting)(const std::vector<Light *> 
 void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode) {
 	switch (lightMode) {
 	case BLINN_PHONG:
-		color = BlinnPhong(scene->getLights());
+		color = BlinnPhong(scene);
 		break;
 	case COOK_TORRANCE:
 		color = CookTorrance(scene->getLights());
