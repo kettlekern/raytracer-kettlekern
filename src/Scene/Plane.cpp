@@ -5,22 +5,16 @@
 #include "../Ray/Ray.h"
 #include "VectorString.h"
 
-Hit Plane::collide(Ray* ray) {
-	Hit retval;
+float Plane::collide(Ray* ray) {
+	float t;
 	//Throw out values greater than or equal to 0
-	if (glm::dot(ray->direction, normal) < 0) {
-		retval.t = (distance - glm::dot(ray->origin, normal))/glm::dot(ray->direction, normal);
-		if (retval.t >= 0) {
-			retval.isHit = true;
-			retval.mat = &(this->mat);
-			retval.objType = name;
-			retval.color = color;
-		}
+	if (glm::dot(ray->direction, normal) < 0.0f) {
+		t = (distance - glm::dot(ray->origin, normal))/glm::dot(ray->direction, normal);
 	}
 	else {
-		retval.isHit = false;
+		t = -1.0f;
 	}
-	return retval;
+	return t;
 }
 
 std::string Plane::toStringLocal() {

@@ -32,8 +32,9 @@ class Fragment {
 
 
 public:
-	Fragment(Hit hit) {}
+	Fragment(const Hit & hit, Scene* scene);
 	void colorFrag(Scene* scene, LIGHTMODE lightingType);
+	bool isHit() { return obj != nullptr; }
 	glm::vec3 getColor() { return color; }
 	glm::vec3 getPosition() { return position; }
 };

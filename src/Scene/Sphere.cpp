@@ -5,24 +5,13 @@
 #include "../Ray/Ray.h"
 #include "VectorString.h"
 
-Hit Sphere::collide(Ray* ray) {
-	Hit retval;
+float Sphere::collide(Ray* ray) {
 	glm::vec3 PominC = (ray->origin - center);
-	float a = glm::dot(ray->direction, ray->direction);
+	//Because the dot product of a normalized vector with itself is 1, we can simplify a to 1
+	float a = 1; // glm::dot(ray->direction, ray->direction);
 	float b = 2 * glm::dot(ray->direction, PominC);
 	float c = glm::dot(PominC, PominC) - radius * radius;
-	float root = quadraticRoot(a, b, c);
-	if (root >= 0) {
-		retval.isHit = true;
-		retval.mat = &(this->mat);
-		retval.objType = name;
-		retval.color = color;
-		retval.t = root;
-	}
-	else {
-		retval.isHit = false;
-	}
-	return retval;
+	return quadraticRoot(a, b, c);
 }
 
 std::string Sphere::toStringLocal() {

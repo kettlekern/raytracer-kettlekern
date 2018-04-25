@@ -22,7 +22,7 @@ public:
 	}
 
 	std::string toStringLocal();
-	Hit collide(Ray* ray);
+	float collide(Ray* ray);
 	glm::vec3 getNormal(glm::vec3 position) {
 		return normal;
 	}

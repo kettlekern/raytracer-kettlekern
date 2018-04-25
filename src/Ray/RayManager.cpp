@@ -28,17 +28,29 @@ Ray* genRay(int width, int height, Scene* scene, int i, int j) {
 	return new Ray(camera.location, normalize(direction));
 }
 
+Hit setHit(float t, Object* obj) {
+	Hit hitVal;
+	hitVal.isHit = (t > 0);
+	if (hitVal.isHit) {
+		hitVal.t = t;
+		hitVal.color = obj->getColor();
+		hitVal.obj = obj;
+		hitVal.objType = obj->getName();
+		hitVal.mat = obj->getMaterial();
+	}
+	return hitVal;
+}
+
 Hit collide(Scene* scene, Ray* ray) {
 	Hit hitVal, temphit;
 	hitVal.isHit = false;
+	float t;
 	for (Object* obj : scene->getObjects()) {
 		//Needs more checks
-		temphit = obj->collide(ray);
-		if (hitVal.isHit == false) {
-			//if the hit is in front of the camera
-			if (temphit.t > 0) {
-				hitVal = temphit;
-			}
+		t = obj->collide(ray);
+		temphit = setHit(t, obj);
+		if (!hitVal.isHit) {
+			hitVal = temphit;
 		}
 		else if (temphit.isHit) {
 			//if the hit is in front of the camera and closer than previous
@@ -88,7 +100,7 @@ void renderScene(int width, int height, Scene* scene, bool useCookTorrance) {
 		for (int j = 0; j < height; j++) {
 			//Cast the ray into the sceen
 			Hit val = collide(scene, rays[i * height + j]);
-			frag = new Fragment(val);
+			frag = new Fragment(val, scene);
 			frag->colorFrag(scene, lightMode);
 			fragBuf.push_back(frag);
 		}
