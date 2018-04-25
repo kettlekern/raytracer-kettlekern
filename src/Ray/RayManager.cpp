@@ -28,7 +28,7 @@ Ray* genRay(int width, int height, Scene* scene, int i, int j) {
 	return new Ray(camera.location, normalize(direction));
 }
 
-Hit setHit(float t, Object* obj) {
+Hit setHit(float t, Object* obj, Ray* ray) {
 	Hit hitVal;
 	hitVal.isHit = (t > 0);
 	if (hitVal.isHit) {
@@ -37,6 +37,7 @@ Hit setHit(float t, Object* obj) {
 		hitVal.obj = obj;
 		hitVal.objType = obj->getName();
 		hitVal.mat = obj->getMaterial();
+		hitVal.position = ray->origin + t * ray->direction;
 	}
 	return hitVal;
 }
@@ -48,7 +49,7 @@ Hit collide(Scene* scene, Ray* ray) {
 	for (Object* obj : scene->getObjects()) {
 		//Needs more checks
 		t = obj->collide(ray);
-		temphit = setHit(t, obj);
+		temphit = setHit(t, obj, ray);
 		if (!hitVal.isHit) {
 			hitVal = temphit;
 		}

@@ -9,7 +9,7 @@ Fragment::Fragment(const Hit & hit, Scene* scene) {
 		color = hit.color;
 		mat = hit.mat;
 		t = hit.t;
-		cam = &scene->getCamera();
+		cam = scene->getCamera();
 		obj = hit.obj;
 	}
 	else {
@@ -25,7 +25,7 @@ glm::vec3 Fragment::CookTorrance(const std::vector<Light *> & lights) {
 	if (isHit()) {
 		for (Light* light : lights) {
 			//Change this to use a cook-torrance lighting model instead
-			color += BlinnPhongObject(position, obj->getNormal(position), vec3(0, 0, 0), light->color, light->color, cam->location, light->location, light->color, light->shine);
+			color += BlinnPhongObject(position, obj->getNormal(position), vec3(0, 0, 0), light->color, light->color, cam.location, light->location, light->color, light->shine);
 		}
 	}
 	return color;
@@ -38,7 +38,7 @@ glm::vec3 Fragment::BlinnPhongObject(vec3 position, vec3 normal, vec3 ambient, v
 	vec3 lightDir = normalize(lightPos - position);
 	vec3 H = normalize(lightPos + viewDir);
 	//I think this is off by a bit
-	float attenuation = clamp(1.0 / pow(length(lightPos - position), 3.0), 0.0, 1.0);
+	float attenuation = 1.0f;//clamp(1.0 / pow(length(lightPos - position), 3.0), 0.0, 1.0);
 
 	vec3 diffuse = glm::max(dot(normal, lightDir), 0.0f) * diffuseColor * lightColor;
 	vec3 specular = glm::max(specularColor * lightColor * pow(glm::dot(normal, H), shine), 0.0f);
@@ -52,7 +52,7 @@ glm::vec3 Fragment::BlinnPhong(const std::vector<Light *> & lights) {
 	vec3 color = vec3(0,0,0);
 	if (isHit()) {
 		for (Light* light : lights) {
-			color += BlinnPhongObject(position, obj->getNormal(position), vec3(0, 0, 0), light->color, light->color, cam->location, light->location, light->color, light->shine);
+			color += BlinnPhongObject(position, obj->getNormal(position), vec3(0, 0, 0), obj->getColor(), obj->getColor(), cam.location, light->location, light->color, light->shine);
 		}
 	}
 	return color;

@@ -21,7 +21,7 @@ class Fragment {
 	Material mat;
 	float t;
 	Object* obj;
-	Camera* cam;
+	Camera cam;
 	//Color the fragment using the Cook-Torrance lighting approximation 
 	glm::vec3 CookTorrance(const std::vector<Light *> & lights);
 	//Color the fragment using the blinn-phong lighting approximation 

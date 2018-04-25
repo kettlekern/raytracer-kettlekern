@@ -1,5 +1,7 @@
 #include "Buffer.h"
 
+using namespace std;
+
 Fragment* Buffer::getFragment(int width, int height) {
 	return fragBuffer[width*this->width + height];
 }
@@ -17,10 +19,10 @@ unsigned char* Buffer::toArray(){
 	unsigned char* colArray = (unsigned char*)malloc(width*height*3);
 	//Could also make a vector with the colors as elements, but this is more efficent.
 	for (int i = 0; i < width*height; i++) {
-		//This assumes that the color in fragments is scaled from 0-255, may change later.
-		colArray[3 * i] = fragBuffer[i]->getColor().r;
-		colArray[3 * i + 1] = fragBuffer[i]->getColor().g;
-		colArray[3 * i + 2] = fragBuffer[i]->getColor().b;
+		//This assumes that the color in fragments is scaled from 0-1, may change later.
+		colArray[3 * i] = fragBuffer[i]->getColor().r * 255;
+		colArray[3 * i + 1] = fragBuffer[i]->getColor().g * 255;
+		colArray[3 * i + 2] = fragBuffer[i]->getColor().b * 255;
 	}
 	return colArray;
 }
