@@ -45,7 +45,7 @@ vec3 Fragment::BlinnPhongObject(vec3 position, vec3 normal, vec3 diffuseColor, v
 	vec3 diffuse = glm::max(dot(normal, lightDir), 0.0f) * diffuseColor * lightColor;
 	vec3 specular = vec3(0.0f);
 	if (shine > 0.0f) {
-		specular = glm::max(specularColor * lightColor * pow(glm::dot(normal, H), shine), 0.0f);
+		specular = specularColor * lightColor * glm::max(pow(glm::dot(normal, H), shine), 0.0f);
 	}
 
 	vec3 lighting = (diffuse + specular) * attenuation;
@@ -89,7 +89,7 @@ vec3 Fragment::BlinnPhong(Scene* scene) {
 		ambient = obj->getColor() * ambientAmount;
 		for (Light* light : scene->getLights()) {
 			if (!inShadow(light, scene)) {
-				color += (1.0f - ambientAmount) * BlinnPhongObject(position, obj->getNormal(position), obj->getColor(), obj->getColor(), cam.location, light->location, clampColor(light->color * 2.0f / 3.0f), mat.specular);
+				color += (1 - ambientAmount) * BlinnPhongObject(position, obj->getNormal(position), obj->getColor(), obj->getColor(), cam.location, light->location, clampColor(light->color), mat.roughness == 0 ? 0.0f : pow(2 / mat.roughness, 2) - 2);
 			}
 		}
 	}
