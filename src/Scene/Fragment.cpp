@@ -68,7 +68,7 @@ vec3 Fragment::BlinnPhong(const std::vector<Light *> & lights) {
 	if (isHit()) {
 		ambient = obj->getColor() * 0.2f;
 		for (Light* light : lights) {
-			color += (vec3(1.0f) - ambient) * BlinnPhongObject(position, obj->getNormal(position), obj->getColor(), obj->getColor(), cam.location, light->location, light->color, light->shine);
+			color += (vec3(1.0f) - ambient) * BlinnPhongObject(position, obj->getNormal(position), obj->getColor(), obj->getColor(), cam.location, light->location, clampColor(light->color), light->shine);
 		}
 	}
 	color += ambient;
