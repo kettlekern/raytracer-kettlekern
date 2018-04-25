@@ -1,6 +1,6 @@
 #include "Fragment.h"
 #include "../Ray/RayManager.h"
-#define EPS 0.5f
+#define EPS 0.05f
 
 using namespace glm;
 
@@ -43,7 +43,10 @@ vec3 Fragment::BlinnPhongObject(vec3 position, vec3 normal, vec3 diffuseColor, v
 	float attenuation = 1.0f;//clamp(1.0 / pow(length(lightPos - position), 3.0), 0.0, 1.0);
 
 	vec3 diffuse = glm::max(dot(normal, lightDir), 0.0f) * diffuseColor * lightColor;
-	vec3 specular = glm::max(specularColor * lightColor * pow(glm::dot(normal, H), shine), 0.0f);
+	vec3 specular = vec3(0.0f);
+	if (shine > 0) {
+		specular = glm::max(specularColor * lightColor * pow(glm::dot(normal, H), shine), 0.0f);
+	}
 
 	vec3 lighting = (diffuse + specular) * attenuation;
 
@@ -81,11 +84,12 @@ bool Fragment::inShadow(Light* light, Scene* scene) {
 vec3 Fragment::BlinnPhong(Scene* scene) {
 	vec3 color = vec3(0,0,0);
 	vec3 ambient = vec3(0, 0, 0);
+	float ambientAmount = 0.4f;
 	if (isHit()) {
-		ambient = obj->getColor() * 0.2f;
+		ambient = obj->getColor() * ambientAmount;
 		for (Light* light : scene->getLights()) {
 			if (!inShadow(light, scene)) {
-				color += (vec3(1.0f) - ambient) * BlinnPhongObject(position, obj->getNormal(position), obj->getColor(), obj->getColor(), cam.location, light->location, clampColor(light->color * 0.5f), light->shine);
+				color += (1.0f - ambientAmount) * BlinnPhongObject(position, obj->getNormal(position), obj->getColor(), obj->getColor(), cam.location, light->location, clampColor(light->color * 2.0f / 3.0f), light->shine);
 			}
 		}
 	}
