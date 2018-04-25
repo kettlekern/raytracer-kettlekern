@@ -59,20 +59,10 @@ glm::vec3 parseVec3(Tokenizer & tokenizer) {
 	string tok;
 	glm::vec3 returnVector;
 	tok = tokenizer.getToken();
-	//Remove < and ,
-	tok = tok.substr(1, tok.length() - 1);
 	returnVector.x = stof(tok);
-	//Remove ,
 	tok = tokenizer.getToken();
-	tok = tok.substr(0, tok.length() - 1);
 	returnVector.y = stof(tok);
-	//Remove > and , sometimes
 	tok = tokenizer.getToken();
-	int i = 1;
-	if (tok.substr(tok.length() - 1, tok.length()) == ",") {
-		i = 2;
-	}
-	tok = tok.substr(0, tok.length() - i);
 	returnVector.z = stof(tok);
 	return returnVector;
 
@@ -82,23 +72,11 @@ glm::vec4 parseVec4(Tokenizer & tokenizer) {
 	string tok;
 	glm::vec4 returnVector;
 	tok = tokenizer.getToken();
-	//Remove < and ,
-	tok = tok.substr(1, tok.length() - 1);
 	returnVector.x = stof(tok);
-	//Remove ,
 	tok = tokenizer.getToken();
-	tok = tok.substr(0, tok.length() - 1);
 	returnVector.y = stof(tok);
-	//Remove ,
 	tok = tokenizer.getToken();
-	tok = tok.substr(0, tok.length() - 1);
 	returnVector.z = stof(tok);
-	//Remove > and , sometimes
-	int i = 1;
-	if (tok.substr(tok.length() - 1, tok.length()) == ",") {
-		i = 2;
-	}
-	tok = tok.substr(0, tok.length() - i);
 	returnVector.w = stof(tok);
 	return returnVector;
 }
