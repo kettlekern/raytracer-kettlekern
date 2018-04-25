@@ -79,17 +79,17 @@ void renderScene(int width, int height, Scene* scene, bool useCookTorrance) {
 	//Create a buffer that holds the fragments
 	Buffer fragBuf(width, height);
 	Fragment* frag;
-	//Store the function to light the fragmetn with
-	auto func = &(frag->BlinnPhong);
+	auto lightMode = BLINN_PHONG;
 	if (useCookTorrance) {
-		func = &(frag->CookTorrance);
+		lightMode = COOK_TORRANCE;
 	}
+
 	for (int i = 0; i < width; i++) {
 		for (int j = 0; j < height; j++) {
 			//Cast the ray into the sceen
 			Hit val = collide(scene, rays[i * height + j]);
 			frag = new Fragment(val);
-			frag->computeLighting(func, scene->getLights());
+			frag->colorFrag(scene, lightMode);
 			fragBuf.push_back(frag);
 		}
 	}

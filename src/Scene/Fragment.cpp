@@ -40,3 +40,16 @@ glm::vec3 Fragment::BlinnPhong(const std::vector<Light *> & lights) {
 void Fragment::computeLighting(glm::vec3 (*lighting)(const std::vector<Light *> & lights), const std::vector<Light *> & lights) {
 	color = (*lighting)(lights);
 }
+
+void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode) {
+	switch (lightMode) {
+	case BLINN_PHONG:
+		color = BlinnPhong(scene->getLights());
+		break;
+	case COOK_TORRANCE:
+		color = CookTorrance(scene->getLights());
+		break;
+	default:
+
+	}
+}
