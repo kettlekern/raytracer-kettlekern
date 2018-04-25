@@ -12,12 +12,8 @@
 struct Light {
 	glm::vec3 location;
 	glm::vec3 color;
-	float shine;
 
-	Light(glm::vec3 location, glm::vec3 color) : location(location), color(color) {
-		shine = -1.0f;
-	}
-	Light(glm::vec3 location, glm::vec3 color, float shine) : location(location), color(color), shine(shine) {}
+	Light(glm::vec3 location, glm::vec3 color) : location(location), color(color) {}
 
 	std::string toString();
 };

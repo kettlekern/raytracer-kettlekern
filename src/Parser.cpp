@@ -248,6 +248,10 @@ Material parseFinish(Tokenizer & tokenizer) {
 			tok = tokenizer.getToken();
 			mat.roughness = stof(tok);
 		}
+		else if (tok == "metallic") {
+			tok = tokenizer.getToken();
+			mat.metallic = stof(tok);
+		}
 		else if (tok == "ior") {
 			tok = tokenizer.getToken();
 			mat.ior = stof(tok);
