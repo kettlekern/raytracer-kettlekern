@@ -85,7 +85,7 @@ vec3 Fragment::BlinnPhong(Scene* scene) {
 		ambient = obj->getColor() * 0.2f;
 		for (Light* light : scene->getLights()) {
 			if (!inShadow(light, scene)) {
-				color += (vec3(1.0f) - ambient) * BlinnPhongObject(position, obj->getNormal(position), obj->getColor(), obj->getColor(), cam.location, light->location, clampColor(light->color), light->shine);
+				color += (vec3(1.0f) - ambient) * BlinnPhongObject(position, obj->getNormal(position), obj->getColor(), obj->getColor(), cam.location, light->location, clampColor(light->color * 0.3f), light->shine);
 			}
 		}
 	}
