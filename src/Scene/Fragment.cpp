@@ -36,7 +36,7 @@ vec3 Fragment::BlinnPhongObject(vec3 position, vec3 normal, vec3 diffuseColor, v
 	vec3 viewDir = normalize(cameraPos - position);
 
 	vec3 lightDir = normalize(lightPos - position);
-	vec3 H = normalize(lightPos + viewDir);
+	vec3 H = normalize(lightDir + viewDir);
 	//I think this is off by a bit
 	float attenuation = 1.0f;//clamp(1.0 / pow(length(lightPos - position), 3.0), 0.0, 1.0);
 
@@ -68,7 +68,7 @@ vec3 Fragment::BlinnPhong(const std::vector<Light *> & lights) {
 	if (isHit()) {
 		ambient = obj->getColor() * 0.2f;
 		for (Light* light : lights) {
-			color += BlinnPhongObject(position, obj->getNormal(position), obj->getColor(), obj->getColor(), cam.location, light->location, light->color, light->shine);
+			color += (vec3(1.0f) - ambient) * BlinnPhongObject(position, obj->getNormal(position), obj->getColor(), obj->getColor(), cam.location, light->location, light->color, light->shine);
 		}
 	}
 	color += ambient;
