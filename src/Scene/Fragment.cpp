@@ -18,18 +18,47 @@ Fragment::Fragment(const Hit & hit, Scene* scene) {
 		color = vec3(0, 0, 0);
 		obj = nullptr;
 	}
-	
-
 }
 
-glm::vec3 Fragment::CookTorrance(const std::vector<Light *> & lights) {
+glm::vec3 Fragment::CookTorranceDiffuse(float Kd, vec3 normal, vec3 lightDir, vec3 diffuseColor, vec3 lightColor) {
+	return lightColor * diffuseColor * (Kd * glm::dot(normal, lightDir));
+}
+
+void Fragment::CookTorranceF(float ior, float &F, const glm::vec3 &viewDir, const glm::vec3 &H)
+{
+	float Fo = pow(ior - 1, 2) / pow(ior + 1, 2);
+	F = Fo + (1 - Fo) * pow(1 - glm::dot(viewDir, H), .5);
+}
+
+glm::vec3 Fragment::CookTorranceSpecular(float Ks, vec3 normal, vec3 lightDir, vec3 viewDir, vec3 specularColor, vec3 lightColor, glm::vec3 H, float ior) {
+	float D, F, G;
+	CookTorranceF(ior, F, viewDir, H);
+	return lightColor * specularColor * Ks * D * F * G / (4 * glm::dot(normal, viewDir));
+}
+
+glm::vec3 Fragment::CookTorranceObject(glm::vec3 position, glm::vec3 normal, glm::vec3 diffuseColor, glm::vec3 specularColor, glm::vec3 cameraPos, glm::vec3 lightPos, glm::vec3 lightColor, float shine, float ior) {
+	vec3 lightDir = normalize(lightPos - position);
+	vec3 viewDir = normalize(cameraPos - position);
+	vec3 H = normalize(lightDir + viewDir);
+
+
+	return CookTorranceDiffuse(1 - shine, normal, lightDir, diffuseColor, lightColor) + specularColor * CookTorranceSpecular(shine, normal, viewDir, lightDir, viewDir, lightColor, H, ior);
+}
+
+glm::vec3 Fragment::CookTorrance(Scene* scene) {
 	vec3 color = vec3(0, 0, 0);
+	vec3 ambient;
+	float ambientAmount = 0.3f;
 	if (isHit()) {
-		for (Light* light : lights) {
-			//Change this to use a cook-torrance lighting model instead
-			color += BlinnPhongObject(position, obj->getNormal(position), light->color, light->color, cam.location, light->location, light->color, mat.specular);
+		ambient = obj->getColor() * ambientAmount;
+		for (Light* light : scene->getLights()) {
+			if (!inShadow(light, scene)) {
+				color += CookTorranceObject(position, obj->getNormal(position), obj->getColor(), obj->getColor(), cam.location, light->location, clampColor(light->color * 2.0f / 3.0f), mat.specular, mat.ior);
+			}
 		}
 	}
+	color += ambient;
+	color = clampColor(color);
 	return color;
 }
 
@@ -108,7 +137,7 @@ void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode) {
 		color = BlinnPhong(scene);
 		break;
 	case COOK_TORRANCE:
-		color = CookTorrance(scene->getLights());
+		color = CookTorrance(scene);
 		break;
 	}
 }
