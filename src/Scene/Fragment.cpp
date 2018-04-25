@@ -61,6 +61,9 @@ vec3 Fragment::clampColor(vec3 color) {
 	return color;
 }
 
+bool inShadow(Light* light) {
+	return false;
+}
 
 vec3 Fragment::BlinnPhong(const std::vector<Light *> & lights) {
 	vec3 color = vec3(0,0,0);
@@ -68,7 +71,9 @@ vec3 Fragment::BlinnPhong(const std::vector<Light *> & lights) {
 	if (isHit()) {
 		ambient = obj->getColor() * 0.2f;
 		for (Light* light : lights) {
-			color += (vec3(1.0f) - ambient) * BlinnPhongObject(position, obj->getNormal(position), obj->getColor(), obj->getColor(), cam.location, light->location, clampColor(light->color), light->shine);
+			if (!inShadow(light)) {
+				color += (vec3(1.0f) - ambient) * BlinnPhongObject(position, obj->getNormal(position), obj->getColor(), obj->getColor(), cam.location, light->location, clampColor(light->color), light->shine);
+			}
 		}
 	}
 	color += ambient;

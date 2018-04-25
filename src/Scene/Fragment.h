@@ -23,6 +23,7 @@ class Fragment {
 	Object* obj;
 	Camera cam;
 	glm::vec3 clampColor(glm::vec3 color);
+	bool inShadow(Light* light);
 	//Color the fragment using the Cook-Torrance lighting approximation 
 	glm::vec3 CookTorrance(const std::vector<Light *> & lights);
 	//Color the fragment using the blinn-phong lighting approximation 
