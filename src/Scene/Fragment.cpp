@@ -84,7 +84,7 @@ bool Fragment::inShadow(Light* light, Scene* scene) {
 vec3 Fragment::BlinnPhong(Scene* scene) {
 	vec3 color = vec3(0,0,0);
 	vec3 ambient = vec3(0, 0, 0);
-	float ambientAmount = 0.4f;
+	float ambientAmount = 0.3f;
 	if (isHit()) {
 		ambient = obj->getColor() * ambientAmount;
 		for (Light* light : scene->getLights()) {
