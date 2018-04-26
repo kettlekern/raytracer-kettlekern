@@ -5,7 +5,6 @@
 #include "Parser.h"
 #include "Ray/RayManager.h"
 #include "Scene/Fragment.h"
-#include "main.h"
 
 using namespace std;
 
