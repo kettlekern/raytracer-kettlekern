@@ -31,7 +31,7 @@ void parseRender(int argc, char** argv, ImageCoords & image, bool* isAltBRDF) {
 	image.width = stoi(argv[3]);
 	image.height = stoi(argv[4]);
 	string str = "-altbrdf";
-	if (argc > 4) {
+	if (argc > 5) {
 		if (str.compare(argv[5]) == 0) {
 			*isAltBRDF = true;
 		}
@@ -48,7 +48,7 @@ void parsePixelray(int argc, char** argv, ImageCoords & image, Point & point) {
 void parsePixelcolor(int argc, char** argv, ImageCoords & image, Point & point, bool* isAltBRDF) {
 	parsePixelray(argc, argv, image, point);
 	string str = "-altbrdf";
-	if (argc > 6) {
+	if (argc > 7) {
 		if (str.compare(argv[7]) == 0) {
 			*isAltBRDF = true;
 		}
