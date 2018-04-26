@@ -78,7 +78,7 @@ std::string pixelcolorToString(const Hit & val, Ray* ray, Scene* scene, const Po
 	retval += "Object Type: " + val.objType + "\n";
 	retval += "BRDF: " + BRDFType + "\n";
 	//TODO: update this and pass in a fragment instead
-	retval += "Color: (" + to_string((int)(frag.getColor().r * 255)) + ", " + to_string((int)(frag.getColor().g * 255)) + ", " + to_string((int)(frag.getColor().b * 255)) + ")\n";
+	retval += "Color: (" + to_string((int)(frag.getColor().r * 255)) + ", " + to_string((int)(frag.getColor().g * 255)) + ", " + to_string((int)(frag.getColor().b * 255 + 0.5f)) + ")\n";
 	return retval;
 }
 
