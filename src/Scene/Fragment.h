@@ -27,10 +27,12 @@ class Fragment {
 	//Color the fragment using the Cook-Torrance lighting approximation 
 	glm::vec3 CookTorrance(Scene* scene);
 	glm::vec3 CookTorranceDiffuse(float Kd, glm::vec3 normal, glm::vec3 lightDir, glm::vec3 diffuseColor, glm::vec3 lightColor);
-	void CookTorranceF(float ior, float &F, const glm::vec3 &viewDir, const glm::vec3 &H);
-	glm::vec3 CookTorranceSpecular(float Ks, glm::vec3 normal, glm::vec3 lightDir, glm::vec3 viewDir, glm::vec3 specularColor, glm::vec3 lightColor, glm::vec3 H, float ior);
+	void CookTorranceFresnel(float ior, float &F, const glm::vec3 &viewDir, const glm::vec3 &H);
+	glm::vec3 CookTorranceSpecular(float Ks, glm::vec3 normal, glm::vec3 lightDir, glm::vec3 viewDir, glm::vec3 specularColor, glm::vec3 lightColor, glm::vec3 H, float ior, float roughness);
 
-	glm::vec3 CookTorranceObject(glm::vec3 position, glm::vec3 normal, glm::vec3 diffuseColor, glm::vec3 specularColor, glm::vec3 cameraPos, glm::vec3 lightPos, glm::vec3 lightColor, float shine, float ior);
+	void CookTorranceD(float roughness, float &D, glm::vec3 &normal, glm::vec3 &H);
+
+	glm::vec3 CookTorranceObject(glm::vec3 position, glm::vec3 normal, glm::vec3 diffuseColor, glm::vec3 specularColor, glm::vec3 cameraPos, glm::vec3 lightPos, glm::vec3 lightColor, float shine, float ior, float specular);
 	//Color the fragment using the blinn-phong lighting approximation 
 	glm::vec3 BlinnPhong(Scene* scene);
 	glm::vec3 BlinnPhongObject(glm::vec3 position, glm::vec3 normal, glm::vec3 diffuseColor, glm::vec3 specularColor, glm::vec3 cameraPos, glm::vec3 lightPos, glm::vec3 lightColor, float shine, float diffuse, float specular);
