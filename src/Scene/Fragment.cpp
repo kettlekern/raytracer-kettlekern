@@ -47,7 +47,7 @@ float Fragment::CookTorranceG(float alphasq, const glm::vec3 & normal, const glm
 glm::vec3 Fragment::CookTorranceSpecular(float Ks, vec3 normal, vec3 lightDir, vec3 viewDir, vec3 specularColor, vec3 lightColor, glm::vec3 H, float ior, float roughness) {
 	float D, F, G;
 	//alpha is roughness squared, to square that again and you get alphasq = roughness^4
-	float alphasq = pow(roughness, 2);
+	float alphasq = pow(roughness, 4);
 	CookTorranceFresnel(ior, F, viewDir, H);
 	CookTorranceD(alphasq, D, normal, H);
 	G = CookTorranceG(alphasq, normal, H, viewDir) + CookTorranceG(alphasq, normal, H, lightDir);
@@ -136,7 +136,7 @@ vec3 Fragment::BlinnPhong(Scene* scene) {
 		ambient = obj->getColor() * ambientAmount;
 		for (Light* light : scene->getLights()) {
 			if (!inShadow(light, scene)) {
-				color += BlinnPhongObject(position, obj->getNormal(position), obj->getColor(), obj->getColor(), cam.location, light->location, light->color, mat.roughness == 0 ? 0.0f : pow(2 / mat.roughness, 2) - 2, mat.diffuse, mat.specular);
+				color += BlinnPhongObject(position, obj->getNormal(position), obj->getColor(), obj->getColor(), cam.location, light->location, light->color, mat.roughness == 0 ? 0.0f : 2 / pow(mat.roughness, 2) - 2, mat.diffuse, mat.specular);
 			}
 		}
 	}
