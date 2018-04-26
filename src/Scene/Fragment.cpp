@@ -63,7 +63,7 @@ glm::vec3 Fragment::CookTorrance(Scene* scene) {
 }
 
 //This is pretty much shader code for blinn phong and should have similar properties to fragment shader code
-vec3 Fragment::BlinnPhongObject(vec3 position, vec3 normal, vec3 diffuseColor, vec3 specularColor, vec3 cameraPos, vec3 lightPos, vec3 lightColor, float shine) {
+vec3 Fragment::BlinnPhongObject(vec3 position, vec3 normal, vec3 diffuseColor, vec3 specularColor, vec3 cameraPos, vec3 lightPos, vec3 lightColor, float shine, float diff, float spec) {
 	vec3 viewDir = normalize(cameraPos - position);
 
 	vec3 lightDir = normalize(lightPos - position);
@@ -71,10 +71,10 @@ vec3 Fragment::BlinnPhongObject(vec3 position, vec3 normal, vec3 diffuseColor, v
 	//I think this is off by a bit
 	float attenuation = 1.0f;//clamp(1.0 / pow(length(lightPos - position), 3.0), 0.0, 1.0);
 
-	vec3 diffuse = glm::max(dot(normal, lightDir), 0.0f) * diffuseColor * lightColor;
+	vec3 diffuse = diff * glm::max(dot(normal, lightDir), 0.0f) * diffuseColor * lightColor;
 	vec3 specular = vec3(0.0f);
 	if (shine > 0.0f) {
-		specular = glm::max(specularColor * lightColor * pow(glm::dot(normal, H), shine), 0.0f);
+		specular = spec * specularColor * lightColor * glm::max(pow(glm::dot(normal, H), shine), 0.0f);
 	}
 
 	vec3 lighting = (diffuse + specular) * attenuation;
@@ -113,12 +113,12 @@ bool Fragment::inShadow(Light* light, Scene* scene) {
 vec3 Fragment::BlinnPhong(Scene* scene) {
 	vec3 color = vec3(0,0,0);
 	vec3 ambient = vec3(0, 0, 0);
-	float ambientAmount = 0.3f;
+	float ambientAmount = mat.ambient;
 	if (isHit()) {
 		ambient = obj->getColor() * ambientAmount;
 		for (Light* light : scene->getLights()) {
 			if (!inShadow(light, scene)) {
-				color += (1.0f - ambientAmount) * BlinnPhongObject(position, obj->getNormal(position), obj->getColor(), obj->getColor(), cam.location, light->location, clampColor(light->color * 2.0f / 3.0f), mat.specular);
+				color += BlinnPhongObject(position, obj->getNormal(position), obj->getColor(), obj->getColor(), cam.location, light->location, light->color, mat.roughness == 0 ? 0.0f : pow(2 / mat.roughness, 2) - 2, mat.diffuse, mat.specular);
 			}
 		}
 	}
