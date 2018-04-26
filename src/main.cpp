@@ -4,6 +4,8 @@
 #include <glm/glm.hpp>
 #include "Parser.h"
 #include "Ray/RayManager.h"
+#include "Scene/Fragment.h"
+#include "main.h"
 
 using namespace std;
 
@@ -67,15 +69,17 @@ std::string pixelrayToString(const Hit & val, Ray* ray, const Point & rayLoc, in
 	return retval;
 }
 
-std::string pixelcolorToString(const Hit & val, Ray* ray, const Point & rayLoc, int height, bool isAltBRDF) {
+std::string pixelcolorToString(const Hit & val, Ray* ray, Scene* scene, const Point & rayLoc, int height, bool isAltBRDF) {
 	std::string retval;
 	std::string BRDFType = isAltBRDF ? "Cook-Torrance" : "Blinn-Phong";
+	Fragment frag(val, scene);
+	frag.colorFrag(scene, isAltBRDF ? COOK_TORRANCE : BLINN_PHONG);
 	retval += pixelrayToString(val, ray, rayLoc, height);
 	retval += "T = " + formatted_to_string(val.t) + "\n";
 	retval += "Object Type: " + val.objType + "\n";
 	retval += "BRDF: " + BRDFType + "\n";
 	//TODO: update this and pass in a fragment instead
-	retval += "Color: " + formatted_to_string(val.color.x) + "\n";
+	retval += "Color: (" + to_string((int)(frag.getColor().r * 255)) + ", " + to_string((int)(frag.getColor().g * 255)) + ", " + to_string((int)(frag.getColor().b * 255)) + ")\n";
 	return retval;
 }
 
@@ -119,7 +123,7 @@ int runCommand(int argc, char** argv) {
 		parsePixelcolor(argc, argv, image, point, &isAltBRDF);
 		Ray* ray = genRay(image.width, image.height, scene, point.x, point.y);
 		Hit value = collide(scene, ray);
-		cout << pixelcolorToString(value, ray, point, image.height, isAltBRDF);
+		cout << pixelcolorToString(value, ray, scene, point, image.height, isAltBRDF);
 	}
 	else if (command == "sceneinfo") {
 		scene->printScene();

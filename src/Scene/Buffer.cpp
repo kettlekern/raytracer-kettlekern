@@ -14,6 +14,7 @@ void Buffer::push_back(Fragment* frag) {
 	fragBuffer.push_back(frag);
 }
 
+//This functions leaks memory, but since it is only ever called at the end of a program I don't have to care for now
 unsigned char* Buffer::toArray(){
 	//make_shared does not support arrays until c++17 and you need an external library for it then, so we will just manage the memory ourselves for now
 	unsigned char* colArray = (unsigned char*)malloc(width*height*3);
