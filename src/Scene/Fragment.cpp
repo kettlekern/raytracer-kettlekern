@@ -41,7 +41,7 @@ void Fragment::CookTorranceD(float alphasq, float &D, const glm::vec3 & normal, 
 float Fragment::CookTorranceG(float alphasq, const glm::vec3 & normal, const glm::vec3 & H, const glm::vec3 & VorL)
 {
 	float clamped = glm::clamp(glm::dot(VorL, H) / glm::dot(VorL, normal), 0.0f, 1.0f);
-	return clamped * 2 / (1 + sqrt(1 + alphasq * (1 - pow(glm::dot(VorL, normal), 2) / pow(glm::dot(VorL, normal), 2))));
+	return clamped * 2 / (1 + sqrt(1 + alphasq * ((1 - pow(glm::dot(VorL, normal), 2)) / pow(glm::dot(VorL, normal), 2))));
 }
 
 glm::vec3 Fragment::CookTorranceSpecular(float Ks, vec3 normal, vec3 lightDir, vec3 viewDir, vec3 specularColor, vec3 lightColor, glm::vec3 H, float ior, float roughness) {
@@ -51,7 +51,7 @@ glm::vec3 Fragment::CookTorranceSpecular(float Ks, vec3 normal, vec3 lightDir, v
 	CookTorranceFresnel(ior, F, viewDir, H);
 	CookTorranceD(alphasq, D, normal, H);
 	G = CookTorranceG(alphasq, normal, H, viewDir) + CookTorranceG(alphasq, normal, H, lightDir);
-	return lightColor * specularColor * Ks * D * F * G / (4 * glm::clamp(glm::dot(normal, viewDir), 0.001f, 1.0f));
+	return lightColor * specularColor * Ks * D * F * G / (4 * glm::clamp(glm::dot(normal, viewDir), 0.0f, 1.0f));
 }
 
 glm::vec3 Fragment::CookTorranceObject(glm::vec3 position, glm::vec3 normal, glm::vec3 diffuseColor, glm::vec3 specularColor, glm::vec3 cameraPos, glm::vec3 lightPos, glm::vec3 lightColor, float roughness, float ior, float specular, float diffuse) {
