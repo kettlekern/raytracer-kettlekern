@@ -1,4 +1,4 @@
 TODO:
-	Spheres are too bright and planes are too dark... I'm not sure how this happened.
+	Cook Torrance sort of working, metal values on materials dont do anything yet and they should be doing something, but im unsure as to what they should do
 	
-	Cook Torrance not implemented yet, should be easy to do though
+	I think fresnel is making some strange artifacting happen
