@@ -32,7 +32,7 @@ glm::vec3 Fragment::CookTorranceDiffuse(float Kd, vec3 normal, vec3 lightDir, ve
 void Fragment::CookTorranceFresnel(float ior, float &F, const glm::vec3 &viewDir, const glm::vec3 &H)
 {
 	float Fo = pow(ior - 1.0f, 2) / pow(ior + 1.0f, 2);
-	F = Fo + (1 - Fo) * pow(1 - cdot(viewDir, H), .5);
+	F = Fo + (1 - Fo) * pow(1 - cdot(viewDir, H), 5);
 }
 
 //This is using GGX
