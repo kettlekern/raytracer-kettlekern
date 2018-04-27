@@ -3,7 +3,7 @@
 using namespace std;
 
 vector<string> Tokenizer::split(string str, string delim) {
-	string temp = str;
+	string temp2, temp = str;
 	int index = str.find(delim);
 	vector<string> retval;
 	if (index < 0) {
@@ -12,11 +12,12 @@ vector<string> Tokenizer::split(string str, string delim) {
 	else {
 		while (temp.length() > temp.find(delim)) {
 			index = temp.find(delim);
+			temp2 = temp;
 			temp = temp.substr(0, temp.find(delim));
 			if (temp != "") {
 				retval.push_back(temp);
 			}
-			temp = str.substr(index + delim.length(), str.length() - 1);
+			temp = temp2.substr(index + delim.length(), temp2.length() - 1);
 			if (temp != "" && !(temp.length() > temp.find(delim))) {
 				retval.push_back(temp);
 			}
@@ -37,19 +38,20 @@ void Tokenizer::addSplit(const std::string & delim, vector<std::string> &vec)
 
 void Tokenizer::readInput() {
 	string tok;
-	//Read the input from the stream
-	(*input) >> tok;
-	//clean the input of unwanted characters
-	vector<string> vec = split(tok, ",");
-	//After the first read, the next reads get more complex, so this method is used for subsequent characters
-	addSplit("<", vec);
-	addSplit(">", vec);
+	while (tokens.empty()) {
+		//Read the input from the stream
+		(*input) >> tok;
+		//clean the input of unwanted characters
+		vector<string> vec = split(tok, ",");
+		//After the first read, the next reads get more complex, so this method is used for subsequent characters
+		addSplit("<", vec);
+		addSplit(">", vec);
 
-	//Put the input into the queue
-	for (const auto & str : vec) {
-		tokens.push(str);
+		//Put the input into the queue
+		for (const auto & str : vec) {
+			tokens.push(str);
+		}
 	}
-	
 }
 
 std::string Tokenizer::getToken() {

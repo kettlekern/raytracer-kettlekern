@@ -15,6 +15,7 @@ Scene* parseFile(std::string filename);
 void parseCamera(Tokenizer & fileStream, Scene* scene);
 void parseLightSource(Tokenizer & fileStream, Scene* scene);
 void parseSphere(Tokenizer & fileStream, Scene* scene);
+void parseTriangle(Tokenizer & fileStream, Scene* scene);
 void parsePlane(Tokenizer & fileStream, Scene* scene);
 glm::vec4 parsePigment(Tokenizer & fileStream);
 Material parseFinish(Tokenizer & fileStream);

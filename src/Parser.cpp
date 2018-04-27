@@ -1,6 +1,7 @@
 #include "Parser.h"
 #include "Scene/Sphere.h"
 #include "Scene/Plane.h"
+#include "Scene/Triangle.h"
 
 using namespace std;
 
@@ -42,6 +43,9 @@ Scene* parseFile(string filename) {
 		}
 		else if (tok == "plane") {
 			parsePlane(*tokenizer, scene);
+		}
+		else if (tok == "triangle") {
+			parseTriangle(*tokenizer, scene);
 		}
 		else {
 			cout << "Bad file\n" << tok << "\n";
@@ -169,6 +173,32 @@ void parsePlane(Tokenizer & tokenizer, Scene* scene) {
 		}
 	}
 	scene->addObject(new Plane(color, material, normal, offset));
+}
+
+void parseTriangle(Tokenizer & tokenizer, Scene* scene) {
+	string tok;
+	tok = tokenizer.getToken();
+	if (tok != "{") {
+		cout << "Bad Triangle in file\n";
+		return;
+	}
+	glm::vec3 pointA = parseVec3(tokenizer);
+	glm::vec3 pointB = parseVec3(tokenizer);
+	glm::vec3 pointC = parseVec3(tokenizer);
+	glm::vec4 color;
+	Material material;
+	while (tok != "}") {
+		tok = tokenizer.getToken();
+		if (tok == "pigment") {
+			color = parsePigment(tokenizer);
+		}
+		else if (tok == "finish") {
+			material = parseFinish(tokenizer);
+		}
+		else { //unknown token
+		}
+	}
+	scene->addObject(new Triangle(color, material, pointA, pointB, pointC));
 }
 
 
