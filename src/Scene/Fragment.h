@@ -41,6 +41,8 @@ class Fragment {
 	void computeLighting(glm::vec3(*lighting)(const std::vector<Light *> & lights), const std::vector<Light *> & lights);
 	//returns the dot product of the first and second clamped between 0 and 1
 	float cdot(glm::vec3 first, glm::vec3 second);
+	//returns 1 if val > 0, 0 otherwise
+	int chiPos(float val);
 
 public:
 	Fragment(const Hit & hit, Scene* scene);

@@ -38,14 +38,23 @@ void Fragment::CookTorranceFresnel(float ior, float &F, const glm::vec3 &viewDir
 //This is using GGX
 void Fragment::CookTorranceD(float alphasq, float &D, const glm::vec3 & normal, const glm::vec3 & H)
 {
-	D = cdot(normal, H) * alphasq / (PI * pow(pow(cdot(normal, H), 2) * (alphasq - 1) + 1, 2));
+	D = chiPos(cdot(normal, H)) * alphasq / (PI * pow(pow(cdot(normal, H), 2) * (alphasq - 1) + 1, 2));
+}
+
+int Fragment::chiPos(float val) {
+	if (val > 0) {
+		return 1;
+	}
+	else {
+		return 0;
+	}
 }
 
 //This is using GGX
 float Fragment::CookTorranceG(float alphasq, const glm::vec3 & normal, const glm::vec3 & H, const glm::vec3 & VorL)
 {
-	float clamped = glm::clamp(cdot(VorL, H) / cdot(VorL, normal), 0.0f, 1.0f);
-	return clamped * 2 / (1 + sqrt(1 + alphasq * ((1 - pow(cdot(VorL, normal), 2)) / pow(cdot(VorL, normal), 2))));
+	float chi = chiPos(cdot(VorL, H) / cdot(VorL, normal));
+	return chi * 2 / (1 + sqrt(1 + alphasq * ((1 - pow(cdot(VorL, normal), 2)) / pow(cdot(VorL, normal), 2))));
 }
 
 glm::vec3 Fragment::CookTorranceSpecular(float Ks, vec3 normal, vec3 lightDir, vec3 viewDir, vec3 specularColor, vec3 lightColor, glm::vec3 H, float ior, float roughness) {
