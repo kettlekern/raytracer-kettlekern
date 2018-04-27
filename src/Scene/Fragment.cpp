@@ -63,7 +63,7 @@ glm::vec3 Fragment::CookTorranceObject(glm::vec3 position, glm::vec3 normal, glm
 	vec3 viewDir = normalize(cameraPos - position);
 	vec3 H = normalize(lightDir + viewDir);
 
-	return CookTorranceDiffuse(diffuse, normal, lightDir, diffuseColor, lightColor) + CookTorranceSpecular(specular, normal, viewDir, lightDir, viewDir, lightColor, H, ior, roughness);
+	return CookTorranceDiffuse(diffuse, normal, lightDir, diffuseColor, lightColor) + CookTorranceSpecular(specular, normal, lightDir, viewDir, specularColor, lightColor, H, ior, roughness);
 }
 
 glm::vec3 Fragment::CookTorrance(Scene* scene) {
