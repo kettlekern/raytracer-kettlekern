@@ -64,7 +64,7 @@ glm::vec3 Fragment::CookTorranceSpecular(float Ks, vec3 normal, vec3 lightDir, v
 	CookTorranceFresnel(ior, F, viewDir, H);
 	CookTorranceD(alphasq, D, normal, H);
 	G = CookTorranceG(alphasq, normal, H, viewDir) * CookTorranceG(alphasq, normal, H, lightDir);
-	return lightColor * specularColor * Ks * D * F * G / (4 * cdot(normal, viewDir));
+	return lightColor * Ks * D * F * G / (4 * cdot(normal, viewDir));
 }
 
 glm::vec3 Fragment::CookTorranceObject(glm::vec3 position, glm::vec3 normal, glm::vec3 diffuseColor, glm::vec3 specularColor, glm::vec3 cameraPos, glm::vec3 lightPos, glm::vec3 lightColor, float roughness, float ior, float specular, float diffuse) {
@@ -95,9 +95,9 @@ glm::vec3 Fragment::CookTorrance(Scene* scene) {
 //This is pretty much shader code for blinn phong and should have similar properties to fragment shader code
 vec3 Fragment::BlinnPhongObject(vec3 position, vec3 normal, vec3 diffuseColor, vec3 specularColor, vec3 cameraPos, vec3 lightPos, vec3 lightColor, float shine, float diff, float spec) {
 	vec3 viewDir = normalize(cameraPos - position);
-
 	vec3 lightDir = normalize(lightPos - position);
 	vec3 H = normalize(lightDir + viewDir);
+
 	//I think this is off by a bit
 	float attenuation = 1.0f;//clamp(1.0 / pow(length(lightPos - position), 3.0), 0.0, 1.0);
 
