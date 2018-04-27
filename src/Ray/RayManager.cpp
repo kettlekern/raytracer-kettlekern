@@ -1,7 +1,7 @@
 #include "RayManager.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "../stb_image_write.h"
-#include "../Scene/Buffer.h"
+#include "../Renderer/Buffer.h"
 
 std::vector<Ray*> genRays(int width, int height, Scene* scene) {
 	std::vector<Ray*> rays;

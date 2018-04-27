@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 #include "Parser.h"
 #include "Ray/RayManager.h"
-#include "Scene/Fragment.h"
+#include "Renderer/Fragment.h"
 
 using namespace std;
 

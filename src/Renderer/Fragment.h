@@ -3,9 +3,9 @@
 #define __FRAGMENT_473_
 #include <glm/glm.hpp>
 #include <vector>
-#include "Material.h"
-#include "Object.h"
-#include "Scene.h"
+#include "../Scene/Material.h"
+#include "../Scene/Object.h"
+#include "../Scene/Scene.h"
 #include "../Hit.h"
 
 //May want to hide this in a namespace
