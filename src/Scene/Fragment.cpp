@@ -25,6 +25,15 @@ float Fragment::cdot(vec3 first, vec3 second) {
 	return glm::clamp(glm::dot(first, second), 0.0f, 1.0f);
 }
 
+int Fragment::chiPos(float val) {
+	if (val > 0) {
+		return 1;
+	}
+	else {
+		return 0;
+	}
+}
+
 glm::vec3 Fragment::CookTorranceDiffuse(float Kd, vec3 normal, vec3 lightDir, vec3 diffuseColor, vec3 lightColor) {
 	return lightColor * diffuseColor * Kd * cdot(normal, lightDir);
 }
@@ -41,19 +50,10 @@ void Fragment::CookTorranceD(float alphasq, float &D, const glm::vec3 & normal, 
 	D = chiPos(cdot(normal, H)) * alphasq / (PI * pow(pow(cdot(normal, H), 2) * (alphasq - 1) + 1, 2));
 }
 
-int Fragment::chiPos(float val) {
-	if (val > 0) {
-		return 1;
-	}
-	else {
-		return 0;
-	}
-}
-
 //This is using GGX
 float Fragment::CookTorranceG(float alphasq, const glm::vec3 & normal, const glm::vec3 & H, const glm::vec3 & VorL)
 {
-	float chi = chiPos(cdot(VorL, H) / cdot(VorL, normal));
+	int chi = chiPos(cdot(VorL, H) / cdot(VorL, normal));
 	return chi * 2 / (1 + sqrt(1 + alphasq * ((1 - pow(cdot(VorL, normal), 2)) / pow(cdot(VorL, normal), 2))));
 }
 
