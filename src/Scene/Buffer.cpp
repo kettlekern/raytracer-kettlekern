@@ -21,9 +21,9 @@ unsigned char* Buffer::toArray(){
 	//Could also make a vector with the colors as elements, but this is more efficent.
 	for (int i = 0; i < width*height; i++) {
 		//This assumes that the color in fragments is scaled from 0-1, may change later.
-		colArray[3 * i] = fragBuffer[i]->getColor().r * 255;
-		colArray[3 * i + 1] = fragBuffer[i]->getColor().g * 255;
-		colArray[3 * i + 2] = fragBuffer[i]->getColor().b * 255;
+		colArray[3 * i] = (unsigned char) (fragBuffer[i]->getColor().r * 255);
+		colArray[3 * i + 1] = (unsigned char)(fragBuffer[i]->getColor().g * 255);
+		colArray[3 * i + 2] = (unsigned char)(fragBuffer[i]->getColor().b * 255);
 	}
 	return colArray;
 }
