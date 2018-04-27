@@ -29,7 +29,7 @@ class Fragment {
 	glm::vec3 CookTorranceDiffuse(float Kd, glm::vec3 normal, glm::vec3 lightDir, glm::vec3 diffuseColor, glm::vec3 lightColor);
 	glm::vec3 CookTorranceSpecular(float Ks, glm::vec3 normal, glm::vec3 lightDir, glm::vec3 viewDir, glm::vec3 specularColor, glm::vec3 lightColor, glm::vec3 H, float ior, float roughness);
 
-	void CookTorranceFresnel(float ior, float &F, const glm::vec3 &viewDir, const glm::vec3 &H);
+	float CookTorranceFresnel(float ior, const glm::vec3 &viewDir, const glm::vec3 &H);
 	float CookTorranceD(float alphasq, const glm::vec3 & normal, const glm::vec3 & H);
 	float CookTorranceG(float alphasq, const glm::vec3 & normal, const glm::vec3 & H, const glm::vec3 & VorL);
 

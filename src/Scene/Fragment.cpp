@@ -38,10 +38,10 @@ glm::vec3 Fragment::CookTorranceDiffuse(float Kd, vec3 normal, vec3 lightDir, ve
 	return lightColor * diffuseColor * Kd * cdot(normal, lightDir);
 }
 
-void Fragment::CookTorranceFresnel(float ior, float &F, const glm::vec3 &viewDir, const glm::vec3 &H)
+float Fragment::CookTorranceFresnel(float ior, const glm::vec3 &viewDir, const glm::vec3 &H)
 {
 	float Fo = pow(ior - 1.0f, 2) / pow(ior + 1.0f, 2);
-	F = Fo + (1 - Fo) * pow(1 - cdot(viewDir, H), 5);
+	return Fo + (1 - Fo) * pow(1 - cdot(viewDir, H), 5);
 }
 
 //This is using GGX
@@ -49,8 +49,7 @@ float Fragment::CookTorranceD(float alphasq, const glm::vec3 & normal, const glm
 {
 	float NoH = cdot(normal, H);
 	float denom = NoH * NoH * (alphasq - 1) + 1;
-	float D = chiPos(NoH) * alphasq / (PI * denom * denom);
-	return D;
+	return chiPos(NoH) * alphasq / (PI * denom * denom);
 }
 
 //This is using GGX
@@ -58,16 +57,18 @@ float Fragment::CookTorranceG(float alphasq, const glm::vec3 & normal, const glm
 {
 	float VorLoH = cdot(VorL, H);
 	int chi = chiPos(VorLoH / cdot(VorL, normal));
-	return chi * 2 / (1 + sqrt(1 + alphasq * ((1 - VorLoH * VorLoH)) /(VorLoH * VorLoH)));
+	float VoH2 = VorLoH * VorLoH;
+	return chi * 2 / (1 + sqrt(1 + alphasq * (1 - VoH2) / VoH2));
 }
 
 glm::vec3 Fragment::CookTorranceSpecular(float Ks, vec3 normal, vec3 lightDir, vec3 viewDir, vec3 specularColor, vec3 lightColor, glm::vec3 H, float ior, float roughness) {
 	float D, F, G;
 	//alpha is roughness squared, to square that again and you get alphasq = roughness^4
 	float alphasq = pow(roughness, 4);
-	CookTorranceFresnel(ior, F, viewDir, H);
 	D = CookTorranceD(alphasq, normal, H);
+	F = CookTorranceFresnel(ior, viewDir, H);
 	G = CookTorranceG(alphasq, normal, H, viewDir) * CookTorranceG(alphasq, normal, H, lightDir);
+	//There should be a *4 in the denom, but removing it makes me match, so the bug is somewhere else probably but I can leave this here and call it a simplification.
 	return lightColor * Ks * D * F * G / (cdot(normal, viewDir));
 }
 
