@@ -66,7 +66,7 @@ glm::vec3 Fragment::CookTorranceSpecular(float Ks, vec3 normal, vec3 lightDir, v
 	//alpha is roughness squared, to square that again and you get alphasq = roughness^4
 	float alphasq = pow(roughness, 4);
 	CookTorranceFresnel(ior, F, viewDir, H);
-	D = CookTorranceD(alphasq, normal, H);
+	D = 2 * CookTorranceD(alphasq, normal, H);
 	G = CookTorranceG(alphasq, normal, H, viewDir) * CookTorranceG(alphasq, normal, H, lightDir);
 	return lightColor * Ks * D * F * G / (4 * cdot(normal, viewDir));
 }
