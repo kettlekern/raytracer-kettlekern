@@ -260,6 +260,10 @@ Material parseFinish(Tokenizer & tokenizer) {
 			tok = tokenizer.getToken();
 			mat.metallic = stof(tok);
 		}
+		else if (tok == "refraction") {
+			tok = tokenizer.getToken();
+			mat.refraction = stof(tok);
+		}
 		else if (tok == "ior") {
 			tok = tokenizer.getToken();
 			mat.ior = stof(tok);
