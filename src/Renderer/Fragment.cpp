@@ -69,7 +69,7 @@ glm::vec3 Fragment::CookTorranceSpecular(float Ks, vec3 normal, vec3 lightDir, v
 	F = CookTorranceFresnel(ior, viewDir, H);
 	G = CookTorranceG(alphasq, normal, H, viewDir) * CookTorranceG(alphasq, normal, H, lightDir);
 	//There should be a *4 in the denom, but removing it makes me match, so the bug is somewhere else probably but I can leave this here and call it a simplification.
-	return lightColor * Ks * D * F * G / (cdot(normal, viewDir));
+	return lightColor * Ks * D * F * G / (4 * cdot(normal, viewDir));
 }
 
 glm::vec3 Fragment::CookTorranceObject(glm::vec3 position, glm::vec3 normal, glm::vec3 diffuseColor, glm::vec3 specularColor, glm::vec3 cameraPos, glm::vec3 lightPos, glm::vec3 lightColor, float roughness, float ior, float specular, float diffuse) {
