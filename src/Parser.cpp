@@ -81,6 +81,7 @@ glm::vec4 parseVec4(Tokenizer & tokenizer) {
 	returnVector.y = stof(tok);
 	tok = tokenizer.getToken();
 	returnVector.z = stof(tok);
+	tok = tokenizer.getToken();
 	returnVector.w = stof(tok);
 	return returnVector;
 }
@@ -235,7 +236,7 @@ Material parseFinish(Tokenizer & tokenizer) {
 	Material mat;
 	tok = tokenizer.getToken();
 	if (tok != "{") {
-		cerr << "Bad Pigment in file\n";
+		cerr << "Bad Finish in file\n";
 		return mat;
 	}
 	tok = tokenizer.getToken();
@@ -263,6 +264,10 @@ Material parseFinish(Tokenizer & tokenizer) {
 		else if (tok == "refraction") {
 			tok = tokenizer.getToken();
 			mat.refraction = stof(tok);
+		}
+		else if (tok == "reflection") {
+			tok = tokenizer.getToken();
+			mat.reflection = stof(tok);
 		}
 		else if (tok == "ior") {
 			tok = tokenizer.getToken();

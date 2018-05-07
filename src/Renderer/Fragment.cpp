@@ -201,10 +201,11 @@ vec3 Fragment::CalcReflectionColor(Scene * scene, LIGHTMODE lightMode, int maxBo
 {
 	//rayDir = -viewDir
 	vec3 rayDir = normalize(position - rayOrigin);
+	vec3 normal = obj->getNormal(position);
 
 	//glm function that calculates the reflection vector given a direction and normal
-	vec3 reflectionVector = reflect(rayDir, obj->getNormal(position));
-	Ray* ray = new Ray(position, reflectionVector);
+	vec3 reflectionVector = reflect(rayDir, normal);
+	Ray* ray = new Ray(position + EPS * normal, reflectionVector);
 
 	//Do the cast and color for the new fragment
 	Hit hit = collide(scene, ray);
