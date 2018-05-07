@@ -21,7 +21,8 @@ class Fragment {
 	Material mat;
 	float t;
 	Object* obj;
-	Camera cam;
+	glm::vec3 rayOrigin;
+
 	glm::vec3 clampColor(glm::vec3 color);
 	bool inShadow(Light* light, Scene* scene);
 	//Color the fragment using the Cook-Torrance lighting approximation 
@@ -45,9 +46,14 @@ class Fragment {
 	float cdot(glm::vec3 first, glm::vec3 second);
 	//returns 1 if val > 0, 0 otherwise
 	int chiPos(float val);
+	glm::vec3 CalcReflectionColor(Scene * scene, LIGHTMODE lightMode, int maxBounces);
+	glm::vec3 CalcLocalColor(Scene * scene, LIGHTMODE lightMode);
+	void colorFrag(Scene* scene, LIGHTMODE lightingType, int maxBounces);
 
 public:
-	Fragment(const Hit & hit, Scene* scene);
+	Fragment(const Hit & hit, Scene* scene, Ray* ray);
+
+	//This should only be called externally, and only once. Use the bounce counting version for all other calls.
 	void colorFrag(Scene* scene, LIGHTMODE lightingType);
 	bool isHit() { return obj != nullptr; }
 	glm::vec3 getColor() { return color; }

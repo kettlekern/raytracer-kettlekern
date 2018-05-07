@@ -100,8 +100,10 @@ void renderScene(int width, int height, Scene* scene, bool useCookTorrance) {
 	for (int i = 0; i < width; i++) {
 		for (int j = 0; j < height; j++) {
 			//Cast the ray into the sceen
-			Hit val = collide(scene, rays[i * height + j]);
-			frag = new Fragment(val, scene);
+			int rayIndex = i * height + j;
+			//Fragment is a more robust hit object, mostly a wrapper for old code
+			Hit val = collide(scene, rays[rayIndex]);
+			frag = new Fragment(val, scene, rays[rayIndex]);
 			frag->colorFrag(scene, lightMode);
 			fragBuf.push_back(frag);
 		}

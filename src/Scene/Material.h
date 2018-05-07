@@ -14,11 +14,12 @@ public:
 	float diffuse;
 	float specular;
 	float roughness;
+	float ior;
 	float metallic;
 	float refraction;
-	float ior;
+	float reflection;
 
-	Material() { ambient = 0; diffuse = 0; specular = 0.0f; roughness = 0.0f; ior = 1.0f; metallic = 0.0f; refraction = 0.0f; }
+	Material() { ambient = 0; diffuse = 0; specular = 0.0f; roughness = 0.0f; ior = 1.0f; metallic = 0.0f; refraction = 0.0f; reflection = 0.0f; }
 	
 	std::string toString();
 };

@@ -2,17 +2,19 @@
 #include "../Ray/RayManager.h"
 #define EPS 0.05f
 #define PI 3.14159265f
+#define MAX_BOUNCES 6
+#define CLEAR_COLOR glm::vec3(0.0f, 0.0f, 0.0f)
 
 using namespace glm;
 
-Fragment::Fragment(const Hit & hit, Scene* scene) {
+Fragment::Fragment(const Hit & hit, Scene* scene, Ray* ray) {
 	if (hit.isHit) {
 		position = hit.position;
 		//Compute this later
 		color = hit.color;
 		mat = hit.mat;
 		t = hit.t;
-		cam = scene->getCamera();
+		rayOrigin = ray->origin;
 		obj = hit.obj;
 	}
 	else {
@@ -81,15 +83,11 @@ glm::vec3 Fragment::CookTorranceObject(glm::vec3 position, glm::vec3 normal, glm
 }
 
 glm::vec3 Fragment::CookTorrance(Scene* scene) {
-	vec3 color = vec3(0, 0, 0);
-	vec3 ambient;
-	float ambientAmount = mat.ambient;
-	if (isHit()) {
-		ambient = obj->getColor() * ambientAmount;
-		for (Light* light : scene->getLights()) {
-			if (!inShadow(light, scene)) {
-				color += CookTorranceObject(position, obj->getNormal(position), obj->getColor(), obj->getColor(), cam.location, light->location, light->color, mat.roughness, mat.ior, mat.specular, mat.diffuse);
-			}
+	vec3 color = CLEAR_COLOR;
+	vec3 ambient = obj->getColor() * mat.ambient;
+	for (Light* light : scene->getLights()) {
+		if (!inShadow(light, scene)) {
+			color += CookTorranceObject(position, obj->getNormal(position), obj->getColor(), obj->getColor(), rayOrigin, light->location, light->color, mat.roughness, mat.ior, mat.specular, mat.diffuse);
 		}
 	}
 	color += ambient;
@@ -99,6 +97,7 @@ glm::vec3 Fragment::CookTorrance(Scene* scene) {
 
 //This is pretty much shader code for blinn phong and should have similar properties to fragment shader code
 vec3 Fragment::BlinnPhongObject(vec3 position, vec3 normal, vec3 diffuseColor, vec3 specularColor, vec3 cameraPos, vec3 lightPos, vec3 lightColor, float shine, float diff, float spec) {
+	vec3 lighting;
 	vec3 viewDir = normalize(cameraPos - position);
 	vec3 lightDir = normalize(lightPos - position);
 	vec3 H = normalize(lightDir + viewDir);
@@ -112,7 +111,7 @@ vec3 Fragment::BlinnPhongObject(vec3 position, vec3 normal, vec3 diffuseColor, v
 		specular = spec * specularColor * lightColor * glm::max(pow(glm::dot(normal, H), shine), 0.0f);
 	}
 
-	vec3 lighting = (diffuse + specular) * attenuation;
+	lighting = (diffuse + specular) * attenuation;
 
 	return lighting;
 }
@@ -145,16 +144,15 @@ bool Fragment::inShadow(Light* light, Scene* scene) {
 	return shadow;
 }
 
-vec3 Fragment::BlinnPhong(Scene* scene) {
-	vec3 color = vec3(0,0,0);
-	vec3 ambient = vec3(0, 0, 0);
+vec3 Fragment::BlinnPhong(Scene* scene) 
+{
+	vec3 color = CLEAR_COLOR;
+	vec3 ambient = CLEAR_COLOR;
 	float ambientAmount = mat.ambient;
-	if (isHit()) {
-		ambient = obj->getColor() * ambientAmount;
-		for (Light* light : scene->getLights()) {
-			if (!inShadow(light, scene)) {
-				color += BlinnPhongObject(position, obj->getNormal(position), obj->getColor(), obj->getColor(), cam.location, light->location, light->color, mat.roughness == 0 ? 0.0f : 2 / pow(mat.roughness, 2) - 2, mat.diffuse, mat.specular);
-			}
+	ambient = obj->getColor() * ambientAmount;
+	for (Light* light : scene->getLights()) {
+		if (!inShadow(light, scene)) {
+			color += BlinnPhongObject(position, obj->getNormal(position), obj->getColor(), obj->getColor(), rayOrigin, light->location, light->color, mat.roughness == 0 ? 0.0f : 2 / pow(mat.roughness, 2) - 2, mat.diffuse, mat.specular);
 		}
 	}
 	color += ambient;
@@ -162,11 +160,32 @@ vec3 Fragment::BlinnPhong(Scene* scene) {
 	return color;
 }
 
-void Fragment::computeLighting(glm::vec3 (*lighting)(const std::vector<Light *> & lights), const std::vector<Light *> & lights) {
+void Fragment::computeLighting(glm::vec3 (*lighting)(const std::vector<Light *> & lights), const std::vector<Light *> & lights) 
+{
 	color = (*lighting)(lights);
 }
 
-void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode) {
+void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode) 
+{
+	colorFrag(scene, lightMode, MAX_BOUNCES);
+}
+
+void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode, int maxBounces)
+{
+	color = CLEAR_COLOR;
+	//Put a limit on the number of times light can bounce in the scene to stop infinite recursion
+	if (maxBounces > 0 && isHit()) {
+		maxBounces--;
+		color = (1 - mat.reflection) * CalcLocalColor(scene, lightMode);
+		if (mat.reflection > 0.0f) {
+			color += mat.reflection * CalcReflectionColor(scene, lightMode, maxBounces);
+		}
+	}
+}
+
+vec3 Fragment::CalcLocalColor(Scene * scene, LIGHTMODE lightMode)
+{
+	vec3 color;
 	switch (lightMode) {
 	case BLINN_PHONG:
 		color = BlinnPhong(scene);
@@ -175,4 +194,23 @@ void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode) {
 		color = CookTorrance(scene);
 		break;
 	}
+	return color;
+}
+
+vec3 Fragment::CalcReflectionColor(Scene * scene, LIGHTMODE lightMode, int maxBounces)
+{
+	//rayDir = -viewDir
+	vec3 rayDir = normalize(position - rayOrigin);
+
+	//glm function that calculates the reflection vector given a direction and normal
+	vec3 reflectionVector = reflect(rayDir, obj->getNormal(position));
+	Ray* ray = new Ray(position, reflectionVector);
+
+	//Do the cast and color for the new fragment
+	Hit hit = collide(scene, ray);
+	Fragment reflectFrag(hit, scene, ray);
+	reflectFrag.colorFrag(scene, lightMode, maxBounces);
+
+	delete(ray);
+	return reflectFrag.color;
 }

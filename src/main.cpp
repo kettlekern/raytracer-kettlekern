@@ -71,7 +71,7 @@ std::string pixelrayToString(const Hit & val, Ray* ray, const Point & rayLoc, in
 std::string pixelcolorToString(const Hit & val, Ray* ray, Scene* scene, const Point & rayLoc, int height, bool isAltBRDF) {
 	std::string retval;
 	std::string BRDFType = isAltBRDF ? "Cook-Torrance" : "Blinn-Phong";
-	Fragment frag(val, scene);
+	Fragment frag(val, scene, ray);
 	frag.colorFrag(scene, isAltBRDF ? COOK_TORRANCE : BLINN_PHONG);
 	retval += pixelrayToString(val, ray, rayLoc, height);
 	retval += "T = " + formatted_to_string(val.t) + "\n";
