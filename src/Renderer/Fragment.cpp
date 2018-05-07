@@ -2,7 +2,7 @@
 #include "../Ray/RayManager.h"
 #define EPS 0.05f
 #define PI 3.14159265f
-#define MAX_BOUNCES 6
+#define MAX_BOUNCES 3
 #define CLEAR_COLOR glm::vec3(0.0f, 0.0f, 0.0f)
 
 using namespace glm;
