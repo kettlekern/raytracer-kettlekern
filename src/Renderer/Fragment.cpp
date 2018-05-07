@@ -2,7 +2,7 @@
 #include "../Ray/RayManager.h"
 #define EPS 0.05f
 #define PI 3.14159265f
-#define MAX_BOUNCES 3
+#define MAX_BOUNCES 6
 #define CLEAR_COLOR glm::vec3(0.0f, 0.0f, 0.0f)
 
 using namespace glm;
@@ -160,11 +160,6 @@ vec3 Fragment::BlinnPhong(Scene* scene)
 	return color;
 }
 
-void Fragment::computeLighting(glm::vec3 (*lighting)(const std::vector<Light *> & lights), const std::vector<Light *> & lights) 
-{
-	color = (*lighting)(lights);
-}
-
 void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode) 
 {
 	colorFrag(scene, lightMode, MAX_BOUNCES);
@@ -175,11 +170,22 @@ void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode, int maxBounces)
 	color = CLEAR_COLOR;
 	//Put a limit on the number of times light can bounce in the scene to stop infinite recursion
 	if (maxBounces > 0 && isHit()) {
+		vec3 localColor = vec3(0.0f);
+		vec3 reflectionColor = vec3(0.0f);
+		vec3 refractionColor = vec3(0.0f);
+		float localAmount, reflectionAmount, refractionAmount;
 		maxBounces--;
-		color = (1 - mat.reflection) * CalcLocalColor(scene, lightMode);
+		localColor = (1 - mat.reflection) * CalcLocalColor(scene, lightMode);
 		if (mat.reflection > 0.0f) {
-			color += mat.reflection * CalcReflectionColor(scene, lightMode, maxBounces);
+			reflectionColor = mat.reflection * CalcReflectionColor(scene, lightMode, maxBounces);
 		}
+		if (mat.refraction > 0.0f) {
+			refractionColor = CalcRefractionColor(scene, lightMode, maxBounces);
+		}
+		localAmount = 1 - mat.reflection;
+		reflectionAmount = mat.reflection;
+		refractionAmount = mat.refraction;
+		color = localColor * localAmount + reflectionColor * reflectionAmount + refractionColor * refractionAmount;
 	}
 }
 
@@ -205,6 +211,7 @@ vec3 Fragment::CalcReflectionColor(Scene * scene, LIGHTMODE lightMode, int maxBo
 
 	//glm function that calculates the reflection vector given a direction and normal
 	vec3 reflectionVector = reflect(rayDir, normal);
+	//Offset the position so the ray does not collide with the current object
 	Ray* ray = new Ray(position + EPS * normal, reflectionVector);
 
 	//Do the cast and color for the new fragment
@@ -214,4 +221,11 @@ vec3 Fragment::CalcReflectionColor(Scene * scene, LIGHTMODE lightMode, int maxBo
 
 	delete(ray);
 	return reflectFrag.color;
+}
+
+vec3 Fragment::CalcRefractionColor(Scene * scene, LIGHTMODE lightMode, int maxBounces)
+{
+	vec3 color = CLEAR_COLOR;
+
+	return color;
 }

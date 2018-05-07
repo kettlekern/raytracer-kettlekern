@@ -35,26 +35,29 @@ class Fragment {
 	float CookTorranceG(float alphasq, const glm::vec3 & normal, const glm::vec3 & H, const glm::vec3 & VorL);
 
 	glm::vec3 CookTorranceObject(glm::vec3 position, glm::vec3 normal, glm::vec3 diffuseColor, glm::vec3 specularColor, glm::vec3 cameraPos, glm::vec3 lightPos, glm::vec3 lightColor, float roughness, float ior, float specular, float diffuse);
+	
 	//Color the fragment using the blinn-phong lighting approximation 
 	glm::vec3 BlinnPhong(Scene* scene);
 	glm::vec3 BlinnPhongObject(glm::vec3 position, glm::vec3 normal, glm::vec3 diffuseColor, glm::vec3 specularColor, glm::vec3 cameraPos, glm::vec3 lightPos, glm::vec3 lightColor, float shine, float diffuse, float specular);
-	//Color the fragment using the given lighting algorithm
-	void computeLighting(glm::vec3(*lighting)(const std::vector<Light *> & lights), const std::vector<Light *> & lights);
 	
 	//TODO: Extract these functions from this class maybe
 	//returns the dot product of the first and second clamped between 0 and 1
 	float cdot(glm::vec3 first, glm::vec3 second);
 	//returns 1 if val > 0, 0 otherwise
 	int chiPos(float val);
-	glm::vec3 CalcReflectionColor(Scene * scene, LIGHTMODE lightMode, int maxBounces);
-	glm::vec3 CalcLocalColor(Scene * scene, LIGHTMODE lightMode);
+
 	void colorFrag(Scene* scene, LIGHTMODE lightingType, int maxBounces);
+	glm::vec3 CalcLocalColor(Scene * scene, LIGHTMODE lightMode);
+	glm::vec3 CalcReflectionColor(Scene * scene, LIGHTMODE lightMode, int maxBounces);
+	glm::vec3 CalcRefractionColor(Scene * scene, LIGHTMODE lightMode, int maxBounces);
 
 public:
 	Fragment(const Hit & hit, Scene* scene, Ray* ray);
 
 	//This should only be called externally, and only once. Use the bounce counting version for all other calls.
 	void colorFrag(Scene* scene, LIGHTMODE lightingType);
+
+
 	bool isHit() { return obj != nullptr; }
 	glm::vec3 getColor() { return color; }
 	glm::vec3 getPosition() { return position; }
