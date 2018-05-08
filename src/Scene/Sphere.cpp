@@ -19,6 +19,6 @@ std::string Sphere::toStringLocal() {
 		   " - Radius: " + formatted_to_string(radius) + "\n";
 }
 
-glm::vec3 Sphere::getNormal(glm::vec3 position) {
+glm::vec3 Sphere::getNormal(glm::vec3 position, glm::vec3 rayDirection) {
 	return glm::normalize(position - center);
 }

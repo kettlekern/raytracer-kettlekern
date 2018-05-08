@@ -34,7 +34,7 @@ public:
 
 	std::string toString();
 	virtual std::string toStringLocal() = 0;
-	virtual glm::vec3 getNormal(glm::vec3 position) = 0;
+	virtual glm::vec3 getNormal(glm::vec3 position, glm::vec3 rayDirection) = 0;
 	//Instead of returning a hit object, return a float and collect the rest of the information in the calling function
 	virtual float collide(Ray* ray) = 0;
 };

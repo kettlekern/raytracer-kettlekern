@@ -15,7 +15,7 @@ float Triangle::checkDeterminant(Ray * ray, float detA, glm::vec3 first, glm::ve
 
 float Triangle::collide(Ray* ray) {
 	float t;
-	glm::vec3 normal = getNormal(pointC);
+	glm::vec3 normal = getNormal(pointC, ray->direction);
 	//Throw out values greater than or equal to 0, this is the same as a plane check and is here to make checks faster
 	if (glm::dot(ray->direction, normal) < 0.0f) {
 		//maybe calculate the subtracted vectors only once and store them
@@ -48,10 +48,14 @@ std::string Triangle::toStringLocal() {
 	return " - Point A: " + Parser::vec3ToString(pointA) + "\n" +
 		   " - Point B: " + Parser::vec3ToString(pointB) + "\n" +
 		   " - Point C: " + Parser::vec3ToString(pointC) + "\n" + 
-		   " - Normal : " + Parser::vec3ToString(getNormal(pointC)) + "\n";
+		   " - Normal : " + Parser::vec3ToString(getNormal(pointC, pointC)) + "\n";
 }
 
 //The argument passed in is ignored, only used for spheres
-glm::vec3 Triangle::getNormal(glm::vec3 position) {
-	return glm::normalize(glm::cross(pointB - pointA, pointC - pointA));
+glm::vec3 Triangle::getNormal(glm::vec3 position, glm::vec3 rayDirection) {
+	glm::vec3 normal = glm::normalize(glm::cross(pointB - pointA, pointC - pointA));
+	if (glm::dot(normal, rayDirection) > 0) {
+		normal = -normal;
+	}
+	return normal;
 }

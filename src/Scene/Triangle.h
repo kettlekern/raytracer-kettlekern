@@ -14,7 +14,7 @@ public:
 
 	std::string toStringLocal();
 	float collide(Ray* ray);
-	glm::vec3 getNormal(glm::vec3 position);
+	glm::vec3 getNormal(glm::vec3 position, glm::vec3 rayDirection);
 };
 
 #endif

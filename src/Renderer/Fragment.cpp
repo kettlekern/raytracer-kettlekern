@@ -84,9 +84,10 @@ glm::vec3 Fragment::CookTorranceObject(glm::vec3 position, glm::vec3 normal, glm
 
 glm::vec3 Fragment::CookTorrance(Scene* scene) {
 	vec3 color = CLEAR_COLOR;
+	vec3 rayDir = normalize(position - rayOrigin);
 	for (Light* light : scene->getLights()) {
 		if (!inShadow(light, scene)) {
-			color += CookTorranceObject(position, obj->getNormal(position), obj->getColor(), obj->getColor(), rayOrigin, light->location, light->color, mat.roughness, mat.ior, mat.specular, mat.diffuse);
+			color += CookTorranceObject(position, obj->getNormal(position, rayDir), obj->getColor(), obj->getColor(), rayOrigin, light->location, light->color, mat.roughness, mat.ior, mat.specular, mat.diffuse);
 		}
 	}
 	color += calcAmbientLight();
@@ -146,10 +147,11 @@ bool Fragment::inShadow(Light* light, Scene* scene) {
 vec3 Fragment::BlinnPhong(Scene* scene) 
 {
 	vec3 color = CLEAR_COLOR;
-	vec3 ambient = CLEAR_COLOR; 
+	vec3 ambient = CLEAR_COLOR;
+	vec3 rayDir = normalize(position - rayOrigin);
 	for (Light* light : scene->getLights()) {
 		if (!inShadow(light, scene)) {
-			color += BlinnPhongObject(position, obj->getNormal(position), obj->getColor(), obj->getColor(), rayOrigin, light->location, light->color, mat.roughness == 0 ? 0.0f : 2 / pow(mat.roughness, 2) - 2, mat.diffuse, mat.specular);
+			color += BlinnPhongObject(position, obj->getNormal(position, rayDir), obj->getColor(), obj->getColor(), rayOrigin, light->location, light->color, mat.roughness == 0 ? 0.0f : 2 / pow(mat.roughness, 2) - 2, mat.diffuse, mat.specular);
 		}
 	}
 	color += calcAmbientLight();
@@ -209,7 +211,7 @@ vec3 Fragment::calcReflectionColor(Scene * scene, LIGHTMODE lightMode, int maxBo
 {
 	//rayDir = -viewDir
 	vec3 rayDir = normalize(position - rayOrigin);
-	vec3 normal = obj->getNormal(position);
+	vec3 normal = obj->getNormal(position, rayDir);
 
 	//glm function that calculates the reflection vector given a direction and normal
 	vec3 reflectionVector = normalize(reflect(rayDir, normal));
