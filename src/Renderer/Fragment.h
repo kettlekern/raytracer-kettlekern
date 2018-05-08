@@ -17,7 +17,7 @@ enum LIGHTMODE {
 
 class Fragment {
 	glm::vec3 position;
-	glm::vec3 color;
+	glm::vec3 fragColor;
 	Material mat;
 	float t;
 	Object* obj;
@@ -40,6 +40,8 @@ class Fragment {
 	glm::vec3 BlinnPhong(Scene* scene);
 	glm::vec3 BlinnPhongObject(glm::vec3 position, glm::vec3 normal, glm::vec3 diffuseColor, glm::vec3 specularColor, glm::vec3 cameraPos, glm::vec3 lightPos, glm::vec3 lightColor, float shine, float diffuse, float specular);
 	
+	glm::vec3 calcAmbientLight();
+
 	//TODO: Extract these functions from this class maybe
 	//returns the dot product of the first and second clamped between 0 and 1
 	float cdot(glm::vec3 first, glm::vec3 second);
@@ -47,9 +49,9 @@ class Fragment {
 	int chiPos(float val);
 
 	void colorFrag(Scene* scene, LIGHTMODE lightingType, int maxBounces);
-	glm::vec3 CalcLocalColor(Scene * scene, LIGHTMODE lightMode);
-	glm::vec3 CalcReflectionColor(Scene * scene, LIGHTMODE lightMode, int maxBounces);
-	glm::vec3 CalcRefractionColor(Scene * scene, LIGHTMODE lightMode, int maxBounces);
+	glm::vec3 calcLocalColor(Scene * scene, LIGHTMODE lightMode);
+	glm::vec3 calcReflectionColor(Scene * scene, LIGHTMODE lightMode, int maxBounces);
+	glm::vec3 calcRefractionColor(Scene * scene, LIGHTMODE lightMode, int maxBounces);
 
 public:
 	Fragment(const Hit & hit, Scene* scene, Ray* ray);
@@ -59,7 +61,7 @@ public:
 
 
 	bool isHit() { return obj != nullptr; }
-	glm::vec3 getColor() { return color; }
+	glm::vec3 getColor() { return fragColor; }
 	glm::vec3 getPosition() { return position; }
 };
 
