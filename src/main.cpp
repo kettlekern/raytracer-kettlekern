@@ -133,6 +133,15 @@ int runCommand(int argc, char** argv) {
 		Hit value = collide(scene, ray);
 		cout << pixelrayToString(value, ray, point, image.height);
 	}
+	else if (command == "printrays") {
+		parsePixelray(argc, argv, image, point);
+		Ray* ray = genRay(image.width, image.height, scene, point.x, point.y);
+		Hit value = collide(scene, ray);
+		Fragment frag(value, scene, ray);
+		cout << pixelcolorToString(value, ray, scene, point, image.height, false);
+		frag.colorFrag(scene, BLINN_PHONG, true);
+		_sleep(7000);
+	}
 	else if (command == "firsthit") {
 		parseFirstHit(argc, argv, image, point);
 		Ray* ray = genRay(image.width, image.height, scene, point.x, point.y);

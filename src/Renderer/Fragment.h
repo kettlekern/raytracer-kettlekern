@@ -7,6 +7,7 @@
 #include "../Scene/Object.h"
 #include "../Scene/Scene.h"
 #include "../Hit.h"
+#include "../Ray/Ray.h"
 
 //May want to hide this in a namespace
 enum LIGHTMODE {
@@ -21,7 +22,7 @@ class Fragment {
 	Material mat;
 	float t;
 	Object* obj;
-	glm::vec3 rayOrigin;
+	Ray* ray;
 
 	glm::vec3 clampColor(glm::vec3 color);
 	bool inShadow(Light* light, Scene* scene);
@@ -49,20 +50,23 @@ class Fragment {
 	int chiPos(float val);
 
 	void colorFrag(Scene* scene, LIGHTMODE lightingType, int maxBounces);
+	void colorFrag(Scene* scene, LIGHTMODE lightingType, int maxBounces, bool verbose);
 	glm::vec3 calcLocalColor(Scene * scene, LIGHTMODE lightMode);
-	glm::vec3 calcReflectionColor(Scene * scene, LIGHTMODE lightMode, int maxBounces);
-	glm::vec3 calcRefractionColor(Scene * scene, LIGHTMODE lightMode, int maxBounces);
+	glm::vec3 calcReflectionColor(Scene * scene, LIGHTMODE lightMode, int maxBounces, bool verbose);
+	glm::vec3 calcRefractionColor(Scene * scene, LIGHTMODE lightMode, int maxBounces, bool verbose);
 
 public:
 	Fragment(const Hit & hit, Scene* scene, Ray* ray);
 
 	//This should only be called externally, and only once. Use the bounce counting version for all other calls.
 	void colorFrag(Scene* scene, LIGHTMODE lightingType);
+	void colorFrag(Scene* scene, LIGHTMODE lightingType, bool verbose);
 
 
 	bool isHit() { return obj != nullptr; }
 	glm::vec3 getColor() { return fragColor; }
 	glm::vec3 getPosition() { return position; }
+	std::string toString();
 };
 
 

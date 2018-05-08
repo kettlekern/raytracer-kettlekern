@@ -1,5 +1,6 @@
 #include "Fragment.h"
 #include "../Ray/RayManager.h"
+#include "../Scene/VectorString.h"
 #define EPS 0.05f
 #define PI 3.14159265f
 #define MAX_BOUNCES 3
@@ -14,11 +15,11 @@ Fragment::Fragment(const Hit & hit, Scene* scene, Ray* ray) {
 		fragColor = hit.color;
 		mat = hit.mat;
 		t = hit.t;
-		rayOrigin = ray->origin;
 		obj = hit.obj;
+		this->ray = ray;
 	}
 	else {
-		fragColor = vec3(0, 0, 0);
+		fragColor = CLEAR_COLOR;
 		obj = nullptr;
 	}
 }
@@ -84,10 +85,9 @@ glm::vec3 Fragment::CookTorranceObject(glm::vec3 position, glm::vec3 normal, glm
 
 glm::vec3 Fragment::CookTorrance(Scene* scene) {
 	vec3 color = CLEAR_COLOR;
-	vec3 rayDir = normalize(position - rayOrigin);
 	for (Light* light : scene->getLights()) {
 		if (!inShadow(light, scene)) {
-			color += CookTorranceObject(position, obj->getNormal(position, rayDir), obj->getColor(), obj->getColor(), rayOrigin, light->location, light->color, mat.roughness, mat.ior, mat.specular, mat.diffuse);
+			color += CookTorranceObject(position, obj->getNormal(position, ray->direction), obj->getColor(), obj->getColor(), ray->origin, light->location, light->color, mat.roughness, mat.ior, mat.specular, mat.diffuse);
 		}
 	}
 	color += calcAmbientLight();
@@ -148,10 +148,9 @@ vec3 Fragment::BlinnPhong(Scene* scene)
 {
 	vec3 color = CLEAR_COLOR;
 	vec3 ambient = CLEAR_COLOR;
-	vec3 rayDir = normalize(position - rayOrigin);
 	for (Light* light : scene->getLights()) {
 		if (!inShadow(light, scene)) {
-			color += BlinnPhongObject(position, obj->getNormal(position, rayDir), obj->getColor(), obj->getColor(), rayOrigin, light->location, light->color, mat.roughness == 0 ? 0.0f : 2 / pow(mat.roughness, 2) - 2, mat.diffuse, mat.specular);
+			color += BlinnPhongObject(position, obj->getNormal(position, ray->direction), obj->getColor(), obj->getColor(), ray->origin, light->location, light->color, mat.roughness == 0 ? 0.0f : 2 / pow(mat.roughness, 2) - 2, mat.diffuse, mat.specular);
 		}
 	}
 	color += calcAmbientLight();
@@ -164,12 +163,43 @@ vec3 Fragment::calcAmbientLight()
 	return obj->getColor() * mat.ambient;
 }
 
-void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode) 
+std::string Fragment::toString()
 {
-	colorFrag(scene, lightMode, MAX_BOUNCES);
+	vec3 normal = obj->getNormal(position, ray->direction);
+	float localAmount = (1 - mat.reflection) * (1 - mat.refraction);
+	float reflectionAmount = mat.reflection  * (1 - mat.refraction);
+	float refractionAmount = mat.refraction;
+	std::string str = "             Ray: " + Parser::vec3ToString(ray->origin) + " -> " + Parser::vec3ToString(ray->direction) + "\n";
+	str += "      Hit Object: " + obj->getName() + "\n";
+	str += "    Intersection: " + Parser::vec3ToString(position) + " at T = " + formatted_to_string(t) + "\n";
+	str += "          Normal: " + Parser::vec3ToString(normal) + "\n";
+	str += "     Final Color: " + Parser::vec3ToString(fragColor) + "\n";
+	str += "         Ambient: " + Parser::vec3ToString(vec3(mat.ambient)) + "\n";
+	str += "         Diffuse: " + Parser::vec3ToString(vec3(mat.diffuse)) + "\n";
+	str += "        Specular: " + Parser::vec3ToString(vec3(mat.specular)) + "\n";
+	str += "      Reflection: " + Parser::vec3ToString(normalize(reflect(ray->direction, normal))) + "\n";
+	str += "      Refraction: " + Parser::vec3ToString(normalize(refract(ray->direction, normal, ray->ior / mat.ior))) + "\n";
+	str += "   Contrabutions: " + formatted_to_string(localAmount) + " Local, " + formatted_to_string(reflectionAmount) + " Reflection, " + formatted_to_string(refractionAmount) + " Transmission\n";
+
+	return str;
+}
+
+void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode)
+{
+	colorFrag(scene, lightMode, MAX_BOUNCES, false);
+}
+
+void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode, bool verbose)
+{
+	colorFrag(scene, lightMode, MAX_BOUNCES, verbose);
 }
 
 void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode, int maxBounces)
+{
+	colorFrag(scene, lightMode, maxBounces, false);
+}
+
+void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode, int maxBounces, bool verbose)
 {
 	fragColor = CLEAR_COLOR;
 	//Put a limit on the number of times light can bounce in the scene to stop infinite recursion
@@ -181,15 +211,18 @@ void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode, int maxBounces)
 		maxBounces--;
 		localColor = calcLocalColor(scene, lightMode);
 		if (mat.reflection > 0.0f) {
-			reflectionColor = calcReflectionColor(scene, lightMode, maxBounces);
+			reflectionColor = calcReflectionColor(scene, lightMode, maxBounces, verbose);
 		}
 		if (mat.refraction > 0.0f) {
-			refractionColor = calcRefractionColor(scene, lightMode, maxBounces);
+			refractionColor = calcRefractionColor(scene, lightMode, maxBounces, verbose);
 		}
 		localAmount = (1 - mat.reflection) * (1 - mat.refraction);
 		reflectionAmount = mat.reflection  * (1 - mat.refraction);
 		refractionAmount = mat.refraction;
 		fragColor = localColor * localAmount + reflectionColor * reflectionAmount + refractionColor * refractionAmount;
+	}
+	if (verbose) {
+		std::cout << toString();
 	}
 }
 
@@ -207,27 +240,25 @@ vec3 Fragment::calcLocalColor(Scene * scene, LIGHTMODE lightMode)
 	return color;
 }
 
-vec3 Fragment::calcReflectionColor(Scene * scene, LIGHTMODE lightMode, int maxBounces)
+vec3 Fragment::calcReflectionColor(Scene * scene, LIGHTMODE lightMode, int maxBounces, bool verbose)
 {
-	//rayDir = -viewDir
-	vec3 rayDir = normalize(position - rayOrigin);
-	vec3 normal = obj->getNormal(position, rayDir);
+	vec3 normal = obj->getNormal(position, ray->direction);
 
 	//glm function that calculates the reflection vector given a direction and normal
-	vec3 reflectionVector = normalize(reflect(rayDir, normal));
+	vec3 reflectionVector = normalize(reflect(ray->direction, normal));
 	//Offset the position so the ray does not collide with the current object
 	Ray* ray = new Ray(position + EPS * normal, reflectionVector);
 
 	//Do the cast and color for the new fragment
 	Hit hit = collide(scene, ray);
 	Fragment reflectFrag(hit, scene, ray);
-	reflectFrag.colorFrag(scene, lightMode, maxBounces);
+	reflectFrag.colorFrag(scene, lightMode, maxBounces, verbose);
 
 	delete(ray);
 	return reflectFrag.fragColor;
 }
 
-vec3 Fragment::calcRefractionColor(Scene * scene, LIGHTMODE lightMode, int maxBounces)
+vec3 Fragment::calcRefractionColor(Scene * scene, LIGHTMODE lightMode, int maxBounces, bool verbose)
 {
 	vec3 color = CLEAR_COLOR;
 
