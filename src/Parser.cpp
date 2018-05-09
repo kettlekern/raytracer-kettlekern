@@ -142,7 +142,7 @@ void parseSphere(Tokenizer & tokenizer, Scene* scene) {
 			color = parsePigment(tokenizer);
 		}
 		else if (tok == "finish") {
-			material = parseFinish(tokenizer);
+			material = parseFinish(tokenizer, color.a);
 		}
 		else { //unknown token
 		}
@@ -168,7 +168,7 @@ void parsePlane(Tokenizer & tokenizer, Scene* scene) {
 			color = parsePigment(tokenizer);
 		}
 		else if (tok == "finish") {
-			material = parseFinish(tokenizer);
+			material = parseFinish(tokenizer, color.a);
 		}
 		else { //unknown token
 		}
@@ -194,7 +194,7 @@ void parseTriangle(Tokenizer & tokenizer, Scene* scene) {
 			color = parsePigment(tokenizer);
 		}
 		else if (tok == "finish") {
-			material = parseFinish(tokenizer);
+			material = parseFinish(tokenizer, color.a);
 		}
 		else { //unknown token
 		}
@@ -218,7 +218,7 @@ glm::vec4 parsePigment(Tokenizer & tokenizer) {
 	}
 	tok = tokenizer.getToken();
 	if (tok == "rgb") {
-		color = glm::vec4(parseVec3(tokenizer), 1.0f);
+		color = glm::vec4(parseVec3(tokenizer), 0.0f);
 	}
 	else if (tok == "rgbf") {
 		color = parseVec4(tokenizer);
@@ -232,8 +232,13 @@ glm::vec4 parsePigment(Tokenizer & tokenizer) {
 }
 
 Material parseFinish(Tokenizer & tokenizer) {
+	return parseFinish(tokenizer, 0.0f);
+}
+
+Material parseFinish(Tokenizer & tokenizer, float refraction) {
 	string tok;
 	Material mat;
+	mat.refraction = refraction;
 	tok = tokenizer.getToken();
 	if (tok != "{") {
 		cerr << "Bad Finish in file\n";
@@ -260,10 +265,6 @@ Material parseFinish(Tokenizer & tokenizer) {
 		else if (tok == "metallic") {
 			tok = tokenizer.getToken();
 			mat.metallic = stof(tok);
-		}
-		else if (tok == "refraction") {
-			tok = tokenizer.getToken();
-			mat.refraction = stof(tok);
 		}
 		else if (tok == "reflection") {
 			tok = tokenizer.getToken();

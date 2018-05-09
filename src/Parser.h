@@ -18,6 +18,7 @@ void parseSphere(Tokenizer & fileStream, Scene* scene);
 void parseTriangle(Tokenizer & fileStream, Scene* scene);
 void parsePlane(Tokenizer & fileStream, Scene* scene);
 glm::vec4 parsePigment(Tokenizer & fileStream);
+Material parseFinish(Tokenizer & fileStream, float refraction);
 Material parseFinish(Tokenizer & fileStream);
 
 
