@@ -232,7 +232,7 @@ void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode, int maxBounces, bool
 			refractionColor = calcRefractionColor(scene, lightMode, maxBounces, verbose);
 		}
 		localAmount = (1 - mat.reflection) * (1 - mat.refraction);
-		reflectionAmount = (mat.reflection / 2) * (1 - mat.refraction);
+		reflectionAmount = mat.reflection * (1 - mat.refraction);
 		refractionAmount = mat.refraction;
 		fragColor = localColor * localAmount + reflectionColor * reflectionAmount + refractionColor * refractionAmount;
 	}
