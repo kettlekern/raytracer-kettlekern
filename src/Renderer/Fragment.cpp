@@ -165,6 +165,15 @@ vec3 Fragment::calcAmbientLight()
 
 std::string Fragment::toString()
 {
+	float ior1 = ray->ior;
+	float ior2 = mat.ior;
+	//Remove this if/else if objects in other objects is supported
+	//May need to account for floating point precision
+	if (ior1 == ior2) {
+		//In the current system, we can assume this will occur only when exiting an object into air.
+		//If moving from an object into air, ior2 = 1.0.
+		ior2 = 1.0f;
+	}
 	vec3 normal = obj->getNormal(position, ray->direction);
 	float localAmount = (1 - mat.reflection) * (1 - mat.refraction);
 	float reflectionAmount = mat.reflection  * (1 - mat.refraction);
@@ -178,7 +187,7 @@ std::string Fragment::toString()
 	str += "         Diffuse: " + Parser::vec3ToString(vec3(mat.diffuse)) + "\n";
 	str += "        Specular: " + Parser::vec3ToString(vec3(mat.specular)) + "\n";
 	str += "      Reflection: " + Parser::vec3ToString(normalize(reflect(ray->direction, normal))) + "\n";
-	str += "      Refraction: " + Parser::vec3ToString(normalize(refract(ray->direction, normal, ray->ior / mat.ior))) + "\n";
+	str += "      Refraction: " + Parser::vec3ToString(normalize(calcRefractionVector(ray->direction, normal, ray->ior, mat.ior))) + "\n";
 	str += "   Contrabutions: " + formatted_to_string(localAmount) + " Local, " + formatted_to_string(reflectionAmount) + " Reflection, " + formatted_to_string(refractionAmount) + " Transmission\n";
 
 	return str;
@@ -288,11 +297,10 @@ vec3 Fragment::calcRefractionColor(Scene * scene, LIGHTMODE lightMode, int maxBo
 
 glm::vec3 Fragment::calcRefractionVector(glm::vec3 direction, glm::vec3 normal, float ior1, float ior2)
 {
-	vec3 result;
 	float n1overn2 = ior1 / ior2;
 	float DdotN = glm::dot(direction, normal);
-	result = n1overn2 * (direction - DdotN * normal) - normal * glm::sqrt(1 - n1overn2 * n1overn2 * (1 - DdotN * DdotN));
-	return result;
+	vec3 result = n1overn2 * (direction - DdotN * normal) - normal * glm::sqrt(1 - n1overn2 * n1overn2 * (1 - DdotN * DdotN));
+	return normalize(result);
 }
 
 
