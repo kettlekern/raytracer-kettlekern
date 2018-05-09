@@ -25,6 +25,7 @@ class Fragment {
 	Ray* ray;
 
 	glm::vec3 clampColor(glm::vec3 color);
+	void clampColor();
 	bool inShadow(Light* light, Scene* scene);
 	//Color the fragment using the Cook-Torrance lighting approximation 
 	glm::vec3 CookTorrance(Scene* scene);
@@ -63,7 +64,6 @@ public:
 	//This should only be called externally, and only once. Use the bounce counting version for all other calls.
 	void colorFrag(Scene* scene, LIGHTMODE lightingType);
 	void colorFrag(Scene* scene, LIGHTMODE lightingType, bool verbose);
-
 
 	bool isHit() { return obj != nullptr; }
 	glm::vec3 getColor() { return fragColor; }

@@ -91,7 +91,6 @@ glm::vec3 Fragment::CookTorrance(Scene* scene) {
 		}
 	}
 	color += calcAmbientLight();
-	color = clampColor(color);
 	return color;
 }
 
@@ -154,7 +153,6 @@ vec3 Fragment::BlinnPhong(Scene* scene)
 		}
 	}
 	color += calcAmbientLight();
-	color = clampColor(color);
 	return color;
 }
 
@@ -202,11 +200,13 @@ std::string Fragment::toString()
 void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode)
 {
 	colorFrag(scene, lightMode, MAX_BOUNCES, false);
+	clampColor();
 }
 
 void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode, bool verbose)
 {
 	colorFrag(scene, lightMode, MAX_BOUNCES, verbose);
+	clampColor();
 }
 
 void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode, int maxBounces)
@@ -313,4 +313,7 @@ glm::vec3 Fragment::calcRefractionVector(glm::vec3 direction, glm::vec3 normal, 
 	return normalize(result);
 }
 
-
+void Fragment::clampColor()
+{
+	fragColor = clampColor(fragColor);
+}

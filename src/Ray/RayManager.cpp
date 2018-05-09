@@ -19,8 +19,8 @@ std::vector<Ray*> genRays(int width, int height, Scene* scene) {
 Ray* genRay(int width, int height, Scene* scene, int i, int j) {
 	float focalLength = 1;
 	Camera camera = scene->getCamera();
-	float Us = (i + .5f) / width - .5f;
-	float Vs = (j + .5f) / height - .5f;
+	float Us = (i + 0.5f) / width - 0.5f;
+	float Vs = (j + 0.5f) / height - 0.5f;
 	glm::vec3 direction =
 		Us * camera.right +
 		Vs * camera.up -
