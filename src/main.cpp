@@ -139,7 +139,7 @@ int runCommand(int argc, char** argv) {
 		Hit value = collide(scene, ray);
 		Fragment frag(value, scene, ray);
 		cout << pixelcolorToString(value, ray, scene, point, image.height, false);
-		//frag.colorFrag(scene, BLINN_PHONG, true);
+		frag.colorFrag(scene, BLINN_PHONG, true);
 	}
 	else if (command == "firsthit") {
 		parseFirstHit(argc, argv, image, point);
