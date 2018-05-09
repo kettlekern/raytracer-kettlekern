@@ -1,4 +1,4 @@
 TODO:
 	Reflections do not color properly
 	
-	Refraction not implemented
+	Refractions do not color properly
