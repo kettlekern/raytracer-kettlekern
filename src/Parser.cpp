@@ -204,8 +204,8 @@ void parseTriangle(Tokenizer & tokenizer, Scene* scene) {
 
 
 glm::vec4 parsePigment(Tokenizer & tokenizer) {
-	string tok;
 	glm::vec4 color;
+	string tok;
 	tok = tokenizer.getToken();
 	if (tok != "{") {
 		cerr << "Bad Pigment in file\n";
@@ -236,8 +236,8 @@ Material parseFinish(Tokenizer & tokenizer) {
 }
 
 Material parseFinish(Tokenizer & tokenizer, float refraction) {
-	string tok;
 	Material mat;
+	string tok;
 	mat.refraction = refraction;
 	tok = tokenizer.getToken();
 	if (tok != "{") {
