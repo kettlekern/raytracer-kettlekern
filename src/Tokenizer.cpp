@@ -2,7 +2,7 @@
 
 using namespace std;
 
-vector<string> Tokenizer::split(string str, string delim) {
+vector<string> Tokenizer::split(string str, string delim, bool add) {
 	string temp2, temp = str;
 	int index = str.find(delim);
 	vector<string> retval;
@@ -17,6 +17,9 @@ vector<string> Tokenizer::split(string str, string delim) {
 			if (temp != "") {
 				retval.push_back(temp);
 			}
+			if (add) {
+				retval.push_back(delim);
+			}
 			temp = temp2.substr(index + delim.length(), temp2.length() - 1);
 			if (temp != "" && !(temp.length() > temp.find(delim))) {
 				retval.push_back(temp);
@@ -26,11 +29,11 @@ vector<string> Tokenizer::split(string str, string delim) {
 	return retval;
 }
 
-void Tokenizer::addSplit(const std::string & delim, vector<std::string> &vec)
+void Tokenizer::addSplit(const std::string & delim, vector<std::string> &vec, bool add)
 {
 	vector<string> temp1, temp2;
 	for (string str : vec) {
-		temp1 = split(str, delim);
+		temp1 = split(str, delim, add);
 		temp2.insert(temp2.end(), temp1.begin(), temp1.end());
 	}
 	vec = temp2;
@@ -42,10 +45,12 @@ void Tokenizer::readInput() {
 		//Read the input from the stream
 		(*input) >> tok;
 		//clean the input of unwanted characters
-		vector<string> vec = split(tok, ",");
+		vector<string> vec = split(tok, ",", false);
 		//After the first read, the next reads get more complex, so this method is used for subsequent characters
-		addSplit("<", vec);
-		addSplit(">", vec);
+		addSplit("<", vec, false);
+		addSplit(">", vec, false);
+		addSplit("{", vec, true);
+		addSplit("}", vec, true);
 
 		//Put the input into the queue
 		for (const auto & str : vec) {
@@ -62,19 +67,6 @@ std::string Tokenizer::getToken() {
 	tok = tokens.front();
 	if (!tokens.empty()) {
 		tokens.pop();
-	}
-
-	if (tok.substr(0, 1) == "{") {
-		if (tok.length() > 1) {
-			tokens.push(tok.substr(1, tok.length()));
-			tok = "{";
-		}
-	}
-	else if (tok.length() > 0 && tok.substr(tok.length() - 1, tok.length()) == "}") {
-		if (tok.length() > 1) {
-			tokens.push(tok.substr(tok.length() - 1, tok.length()));
-			tok = tok.substr(0, tok.length() - 1);
-		}
 	}
 
 	return tok;
