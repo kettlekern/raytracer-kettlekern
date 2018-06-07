@@ -270,7 +270,7 @@ vec3 Fragment::calcReflectionColor(Scene * scene, LIGHTMODE lightMode, int maxBo
 	reflectFrag.colorFrag(scene, lightMode, maxBounces, verbose);
 
 	delete(ray);
-	return reflectFrag.fragColor;
+	return obj->getColor() * reflectFrag.fragColor;
 }
 
 vec3 Fragment::calcRefractionColor(Scene * scene, LIGHTMODE lightMode, int maxBounces, bool verbose)

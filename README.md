@@ -1,5 +1,11 @@
+Reflections now color properly, needed to weight reflections by the current object's color
+Refractions seem to color properly
+
 TODO:
-	Reflections do not color properly
-	I think this is because in the target code the reflection amount is only calculated on the specular part of the object, where My solution calculates the reflection on the whole of the object
-	
-	Refractions seem to color properly
+	Implement boxes
+	Implement transforms/scales/rotations
+	Implement beers/Fresnel/super sampling
+	Implement spacial data structure
+	Implement AA
+	Implement Global Illumination
+	Pick another feature and add it
