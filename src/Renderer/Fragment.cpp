@@ -1,7 +1,7 @@
 #include "Fragment.h"
 #include "../Ray/RayManager.h"
 #include "../Scene/VectorString.h"
-#define EPS 0.001f
+#define EPS 0.0001f
 #define PI 3.14159265f
 #define MAX_BOUNCES 6
 #define CLEAR_COLOR glm::vec3(0.0f, 0.0f, 0.0f)
@@ -312,6 +312,9 @@ vec3 Fragment::calcRefractionColor(Scene * scene, LIGHTMODE lightMode, int maxBo
 		Fragment refractFrag = Fragment(hit, scene, newRay);
 		refractFrag.colorFrag(scene, lightMode, maxBounces, verbose);
 		retColor = refractFrag.fragColor;
+		if (entering()) {
+			retColor *= obj->getColor();
+		}
 	}
 	return retColor;
 }
