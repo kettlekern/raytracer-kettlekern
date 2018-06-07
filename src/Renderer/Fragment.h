@@ -22,7 +22,7 @@ class Fragment {
 	Material mat;
 	float t;
 	Object* obj;
-	Ray* ray;
+	Ray ray;
 
 	glm::vec3 clampColor(glm::vec3 color);
 	void clampColor();
@@ -59,7 +59,7 @@ class Fragment {
 	glm::vec3 calcRefractionVector(glm::vec3 direction, glm::vec3 normal, float ior1, float ior2);
 
 public:
-	Fragment(const Hit & hit, Scene* scene, Ray* ray);
+	Fragment(const Hit & hit, Scene* scene, Ray ray);
 
 	//This should only be called externally, and only once. Use the bounce counting version for all other calls.
 	void colorFrag(Scene* scene, LIGHTMODE lightingType);

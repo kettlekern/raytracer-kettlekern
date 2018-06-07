@@ -8,7 +8,7 @@
 
 using namespace glm;
 
-Fragment::Fragment(const Hit & hit, Scene* scene, Ray* ray) {
+Fragment::Fragment(const Hit & hit, Scene* scene, Ray ray) {
 	if (hit.isHit) {
 		position = hit.position;
 		//Compute this later
@@ -87,7 +87,7 @@ glm::vec3 Fragment::CookTorrance(Scene* scene) {
 	vec3 color = CLEAR_COLOR;
 	for (Light* light : scene->getLights()) {
 		if (!inShadow(light, scene)) {
-			color += CookTorranceObject(position, obj->getNormal(position, ray->direction), obj->getColor(), obj->getColor(), ray->origin, light->location, light->color, mat.roughness, mat.ior, mat.specular, mat.diffuse);
+			color += CookTorranceObject(position, obj->getNormal(position, ray.direction), obj->getColor(), obj->getColor(), ray.origin, light->location, light->color, mat.roughness, mat.ior, mat.specular, mat.diffuse);
 		}
 	}
 	color += calcAmbientLight();
@@ -149,7 +149,7 @@ vec3 Fragment::BlinnPhong(Scene* scene)
 	vec3 ambient = CLEAR_COLOR;
 	for (Light* light : scene->getLights()) {
 		if (!inShadow(light, scene)) {
-			color += BlinnPhongObject(position, obj->getNormal(position, ray->direction), obj->getColor(), obj->getColor(), ray->origin, light->location, light->color, mat.roughness == 0 ? 0.0f : 2 / pow(mat.roughness, 2) - 2, mat.diffuse, mat.specular);
+			color += BlinnPhongObject(position, obj->getNormal(position, ray.direction), obj->getColor(), obj->getColor(), ray.origin, light->location, light->color, mat.roughness == 0 ? 0.0f : 2 / pow(mat.roughness, 2) - 2, mat.diffuse, mat.specular);
 		}
 	}
 	color += calcAmbientLight();
@@ -165,7 +165,7 @@ std::string Fragment::toString()
 {
 	std::string str = "";
 	if (isHit()) {
-		float ior1 = ray->ior;
+		float ior1 = ray.ior;
 		float ior2 = mat.ior;
 		//Remove this if/else if objects in other objects is supported
 		//May need to account for floating point precision
@@ -174,11 +174,11 @@ std::string Fragment::toString()
 			//If moving from an object into air, ior2 = 1.0.
 			ior2 = 1.0f;
 		}
-		vec3 normal = obj->getNormal(position, ray->direction);
+		vec3 normal = obj->getNormal(position, ray.direction);
 		float localAmount = (1 - mat.reflection) * (1 - mat.refraction);
 		float reflectionAmount = mat.reflection  * (1 - mat.refraction);
 		float refractionAmount = mat.refraction;
-		str += "             Ray: " + Parser::vec3ToString(ray->origin) + " -> " + Parser::vec3ToString(ray->direction) + "\n";
+		str += "             Ray: " + Parser::vec3ToString(ray.origin) + " -> " + Parser::vec3ToString(ray.direction) + "\n";
 		str += "      Hit Object: " + obj->getName() + "\n";
 		str += "    Intersection: " + Parser::vec3ToString(position) + " at T = " + formatted_to_string(t) + "\n";
 		str += "          Normal: " + Parser::vec3ToString(normal) + "\n";
@@ -186,10 +186,10 @@ std::string Fragment::toString()
 		str += "         Ambient: " + Parser::vec3ToString(vec3(mat.ambient)) + "\n";
 		str += "         Diffuse: " + Parser::vec3ToString(vec3(mat.diffuse)) + "\n";
 		str += "        Specular: " + Parser::vec3ToString(vec3(mat.specular)) + "\n";
-		str += "      Reflection: " + Parser::vec3ToString(normalize(reflect(ray->direction, normal))) + "\n";
-		str += "      Refraction: " + Parser::vec3ToString(normalize(calcRefractionVector(ray->direction, normal, ray->ior, mat.ior))) + "\n";
+		str += "      Reflection: " + Parser::vec3ToString(normalize(reflect(ray.direction, normal))) + "\n";
+		str += "      Refraction: " + Parser::vec3ToString(normalize(calcRefractionVector(ray.direction, normal, ray.ior, mat.ior))) + "\n";
 		str += "   Contrabutions: " + formatted_to_string(localAmount) + " Local, " + formatted_to_string(reflectionAmount) + " Reflection, " + formatted_to_string(refractionAmount) + " Transmission\n";
-		str += "         Ray IOR: " + formatted_to_string(ray->ior) + " Material IOR: " + formatted_to_string(mat.ior) + " IOR2: " + formatted_to_string(ior2) + "\n";
+		str += "         Ray IOR: " + formatted_to_string(ray.ior) + " Material IOR: " + formatted_to_string(mat.ior) + " IOR2: " + formatted_to_string(ior2) + "\n";
 	}
 	else {
 		str = "No intersection.\n";
@@ -257,26 +257,25 @@ vec3 Fragment::calcLocalColor(Scene * scene, LIGHTMODE lightMode)
 
 vec3 Fragment::calcReflectionColor(Scene * scene, LIGHTMODE lightMode, int maxBounces, bool verbose)
 {
-	vec3 normal = obj->getNormal(position, ray->direction);
+	vec3 normal = obj->getNormal(position, ray.direction);
 
 	//glm function that calculates the reflection vector given a direction and normal
-	vec3 reflectionVector = normalize(reflect(ray->direction, normal));
+	vec3 reflectionVector = normalize(reflect(ray.direction, normal));
 	//Offset the position so the ray does not collide with the current object
-	Ray* ray = new Ray(position + EPS * normal, reflectionVector);
+	Ray newRay(position + EPS * normal, reflectionVector);
 
 	//Do the cast and color for the new fragment
-	Hit hit = collide(scene, ray);
-	Fragment reflectFrag(hit, scene, ray);
+	Hit hit = collide(scene, newRay);
+	Fragment reflectFrag(hit, scene, newRay);
 	reflectFrag.colorFrag(scene, lightMode, maxBounces, verbose);
 
-	delete(ray);
 	return obj->getColor() * reflectFrag.fragColor;
 }
 
 vec3 Fragment::calcRefractionColor(Scene * scene, LIGHTMODE lightMode, int maxBounces, bool verbose)
 {
-	vec3 normal = obj->getNormal(position, ray->direction);
-	float ior1 = ray->ior;
+	vec3 normal = obj->getNormal(position, ray.direction);
+	float ior1 = ray.ior;
 	float ior2 = mat.ior;
 
 	//Remove this if/else if objects in other objects is supported
@@ -288,19 +287,18 @@ vec3 Fragment::calcRefractionColor(Scene * scene, LIGHTMODE lightMode, int maxBo
 	}
 
 	//glm function that calculates the reflection vector given a direction and normal
-	vec3 refractionVector = calcRefractionVector(ray->direction, normal, ior1, ior2);
+	vec3 refractionVector = calcRefractionVector(ray.direction, normal, ior1, ior2);
 
 	//If the ray is still in the object, set ior2 back to mat.ior since it is still into object
 
 	//Offset the position so the ray does not collide with the current object. Offset should be away from the ray's direction which is why it is negative
-	Ray* ray = new Ray(position - EPS * normal, refractionVector, ior2);
+	Ray newRay(position - EPS * normal, refractionVector, ior2);
 
 	//Do the cast and color for the new fragment
-	Hit hit = collide(scene, ray);
-	Fragment refractFrag(hit, scene, ray);
+	Hit hit = collide(scene, newRay);
+	Fragment refractFrag(hit, scene, newRay);
 	refractFrag.colorFrag(scene, lightMode, maxBounces, verbose);
 
-	delete(ray);
 	return refractFrag.fragColor;
 }
 

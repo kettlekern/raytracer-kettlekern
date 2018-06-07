@@ -42,7 +42,7 @@ Hit setHit(float t, Object* obj, Ray* ray) {
 	return hitVal;
 }
 
-Hit collide(Scene* scene, Ray* ray) {
+Hit collide(Scene* scene, Ray ray) {
 	Hit hitVal, temphit;
 	hitVal.isHit = false;
 	float t;
