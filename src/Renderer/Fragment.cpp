@@ -273,6 +273,7 @@ vec3 Fragment::calcReflectionColor(Scene * scene, LIGHTMODE lightMode, int maxBo
 
 vec3 Fragment::calcRefractionColor(Scene * scene, LIGHTMODE lightMode, int maxBounces, bool verbose)
 {
+	vec3 retColor;
 	vec3 normal = obj->getNormal(position, ray.direction);
 	float ior1 = ray.ior;
 	float ior2 = mat.ior;
@@ -289,24 +290,36 @@ vec3 Fragment::calcRefractionColor(Scene * scene, LIGHTMODE lightMode, int maxBo
 	vec3 refractionVector = calcRefractionVector(ray.direction, normal, ior1, ior2);
 
 	//If the ray is still in the object, set ior2 back to mat.ior since it is still into object
+	if (refractionVector == vec3(0.0f)) {
+		ior2 = mat.ior;
+		retColor = calcReflectionColor(scene, lightMode, maxBounces, verbose);
+	}
+	else {
+		//Offset the position so the ray does not collide with the current object. Offset should be away from the ray's direction which is why it is negative
+		Ray newRay(position - EPS * normal, refractionVector, ior2);
 
-	//Offset the position so the ray does not collide with the current object. Offset should be away from the ray's direction which is why it is negative
-	Ray newRay(position - EPS * normal, refractionVector, ior2);
-
-	//Do the cast and color for the new fragment
-	Hit hit = collide(scene, newRay);
-	Fragment refractFrag(hit, scene, newRay);
-	refractFrag.colorFrag(scene, lightMode, maxBounces, verbose);
-
-	return refractFrag.fragColor;
+		//Do the cast and color for the new fragment
+		Hit hit = collide(scene, newRay);
+		Fragment refractFrag = Fragment(hit, scene, newRay);
+		refractFrag.colorFrag(scene, lightMode, maxBounces, verbose);
+		retColor = refractFrag.fragColor;
+	}
+	return retColor;
 }
 
 glm::vec3 Fragment::calcRefractionVector(glm::vec3 direction, glm::vec3 normal, float ior1, float ior2)
 {
+	vec3 result;
 	float n1overn2 = ior1 / ior2;
 	float DdotN = glm::dot(direction, normal);
-	//This square root can be negative, check for that
-	vec3 result = n1overn2 * (direction - DdotN * normal) - normal * glm::sqrt(1 - n1overn2 * n1overn2 * (1 - DdotN * DdotN));
+	float radicand = 1 - n1overn2 * n1overn2 * (1 - DdotN * DdotN);
+	//If the radicand is < 0, there is total internal reflection, so return a zero vector to account for that.
+	if (radicand < 0) {
+		result = vec3(0.0f);
+	}
+	else {
+		result = n1overn2 * (direction - DdotN * normal) - normal * glm::sqrt(radicand);
+	}
 	return normalize(result);
 }
 
