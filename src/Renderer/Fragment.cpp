@@ -131,7 +131,7 @@ vec3 Fragment::clampColor(vec3 color) {
 bool Fragment::inShadow(Light* light, Scene* scene) {
 	bool shadow = false;
 	vec3 direction = normalize(light->location - position);
-	Ray* ray = new Ray(position + EPS * direction, direction);
+	Ray ray = Ray(position + EPS * direction, direction);
 	Hit hit = collide(scene, ray);
 	//The length of this vector is the number of itterations of the direction it takes to reach the light from the fragment
 	//Because the direction vector has length = 1, this value is the t value to the light from the fragment
@@ -139,7 +139,6 @@ bool Fragment::inShadow(Light* light, Scene* scene) {
 	if (hit.isHit && hit.t <= lightT) {
 		shadow = true;
 	}
-	delete(ray);
 	return shadow;
 }
 

@@ -3,8 +3,8 @@
 #include "../stb_image_write.h"
 #include "../Renderer/Buffer.h"
 
-std::vector<Ray*> genRays(int width, int height, Scene* scene) {
-	std::vector<Ray*> rays;
+std::vector<Ray> genRays(int width, int height, Scene* scene) {
+	std::vector<Ray> rays;
 	//The image output we use tracks positions from top left to bottom right so the rays need to be in that order
 	for (int i = height - 1; i >= 0; --i) {
 		//index + sub-pixel offset / image width - (bring image to (-.5,.5) from (0,1))
@@ -16,7 +16,7 @@ std::vector<Ray*> genRays(int width, int height, Scene* scene) {
 	return rays;
 }
 
-Ray* genRay(int width, int height, Scene* scene, int i, int j) {
+Ray genRay(int width, int height, Scene* scene, int i, int j) {
 	float focalLength = 1;
 	Camera camera = scene->getCamera();
 	float Us = (i + 0.5f) / width - 0.5f;
@@ -25,10 +25,10 @@ Ray* genRay(int width, int height, Scene* scene, int i, int j) {
 		Us * camera.right +
 		Vs * camera.up -
 		focalLength * normalize(camera.location - camera.lookat);
-	return new Ray(camera.location, normalize(direction));
+	return Ray(camera.location, normalize(direction));
 }
 
-Hit setHit(float t, Object* obj, Ray* ray) {
+Hit setHit(float t, Object* obj, Ray ray) {
 	Hit hitVal;
 	hitVal.isHit = (t > 0);
 	if (hitVal.isHit) {
@@ -37,7 +37,7 @@ Hit setHit(float t, Object* obj, Ray* ray) {
 		hitVal.obj = obj;
 		hitVal.objType = obj->getName();
 		hitVal.mat = obj->getMaterial();
-		hitVal.position = ray->origin + t * ray->direction;
+		hitVal.position = ray.origin + t * ray.direction;
 	}
 	return hitVal;
 }
@@ -65,7 +65,7 @@ Hit collide(Scene* scene, Ray ray) {
 
 void castRays(int width, int height, Scene* scene) {
 	std::vector<unsigned char> output;
-	std::vector<Ray*> rays = genRays(width, height, scene);
+	std::vector<Ray> rays = genRays(width, height, scene);
 	for (int i = 0; i < width; i++) {
 		for (int j = 0; j < height; j++) {
 			//Cast the ray into the sceen
@@ -88,7 +88,7 @@ void castRays(int width, int height, Scene* scene) {
 }
 
 void renderScene(int width, int height, Scene* scene, bool useCookTorrance) {
-	std::vector<Ray*> rays = genRays(width, height, scene);
+	std::vector<Ray> rays = genRays(width, height, scene);
 	//Create a buffer that holds the fragments
 	Buffer fragBuf(width, height);
 	Fragment* frag;

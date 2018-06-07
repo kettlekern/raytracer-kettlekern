@@ -5,11 +5,11 @@
 #include "../Ray/Ray.h"
 #include "VectorString.h"
 
-float Sphere::collide(Ray* ray) {
-	glm::vec3 PominC = (ray->origin - center);
+float Sphere::collide(Ray ray) {
+	glm::vec3 PominC = (ray.origin - center);
 	//Because the dot product of a normalized vector with itself is 1, we can simplify a to 1
-	float a = glm::dot(ray->direction, ray->direction);
-	float b = 2 * glm::dot(ray->direction, PominC);
+	float a = glm::dot(ray.direction, ray.direction);
+	float b = 2 * glm::dot(ray.direction, PominC);
 	float c = glm::dot(PominC, PominC) - radius * radius;
 	return quadraticRoot(a, b, c);
 }

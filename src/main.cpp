@@ -60,15 +60,15 @@ void parseFirstHit(int argc, char** argv, ImageCoords & image, Point & point) {
 	parsePixelray(argc, argv, image, point);
 }
 
-std::string pixelrayToString(const Hit & val, Ray* ray, const Point & rayLoc, int height) {
+std::string pixelrayToString(const Hit & val, Ray ray, const Point & rayLoc, int height) {
 	std::string retval;
 	retval += "Pixel: [" + to_string(rayLoc.x) + ", " + to_string(rayLoc.y) + "] " +
-			"Ray: {" + formatted_to_string(ray->origin.x) + " " + formatted_to_string(ray->origin.y) + " " + formatted_to_string(ray->origin.z) + "} -> {" +
-			formatted_to_string(ray->direction.x) + " " + formatted_to_string(ray->direction.y) + " " + formatted_to_string(ray->direction.z) + "}\n";
+			"Ray: {" + formatted_to_string(ray.origin.x) + " " + formatted_to_string(ray.origin.y) + " " + formatted_to_string(ray.origin.z) + "} -> {" +
+			formatted_to_string(ray.direction.x) + " " + formatted_to_string(ray.direction.y) + " " + formatted_to_string(ray.direction.z) + "}\n";
 	return retval;
 }
 
-std::string pixelcolorToString(const Hit & val, Ray* ray, Scene* scene, const Point & rayLoc, int height, bool isAltBRDF) {
+std::string pixelcolorToString(const Hit & val, Ray ray, Scene* scene, const Point & rayLoc, int height, bool isAltBRDF) {
 	std::string retval;
 	std::string BRDFType = isAltBRDF ? "Cook-Torrance" : "Blinn-Phong";
 	Fragment frag(val, scene, ray);
@@ -82,11 +82,11 @@ std::string pixelcolorToString(const Hit & val, Ray* ray, Scene* scene, const Po
 	return retval;
 }
 
-std::string firstHitToString(const Hit & val, Ray* ray, const Point & point, int height) {
+std::string firstHitToString(const Hit & val, Ray ray, const Point & point, int height) {
 	std::string retval;
 	retval += "Pixel: [" + to_string(point.x) + ", " + to_string(point.y) + "] " + 
-		"Ray: {" + formatted_to_string(ray->origin.x) + " " + formatted_to_string(ray->origin.y) + " " + formatted_to_string(ray->origin.z) + "} -> {" +
-		formatted_to_string(ray->direction.x) + " " + formatted_to_string(ray->direction.y) + " " + formatted_to_string(ray->direction.z) + "}\n";
+		"Ray: {" + formatted_to_string(ray.origin.x) + " " + formatted_to_string(ray.origin.y) + " " + formatted_to_string(ray.origin.z) + "} -> {" +
+		formatted_to_string(ray.direction.x) + " " + formatted_to_string(ray.direction.y) + " " + formatted_to_string(ray.direction.z) + "}\n";
 	if (val.isHit) {
 		retval += "T = " + formatted_to_string(val.t) + "\n";
 		retval += "Object Type: " + val.objType + "\n";
@@ -120,7 +120,7 @@ int runCommand(int argc, char** argv) {
 	else if (command == "pixelcolor") {
 		bool isAltBRDF = false;
 		parsePixelcolor(argc, argv, image, point, &isAltBRDF);
-		Ray* ray = genRay(image.width, image.height, scene, point.x, point.y);
+		Ray ray = genRay(image.width, image.height, scene, point.x, point.y);
 		Hit value = collide(scene, ray);
 		cout << pixelcolorToString(value, ray, scene, point, image.height, isAltBRDF);
 	}
@@ -129,13 +129,13 @@ int runCommand(int argc, char** argv) {
 	}
 	else if (command == "pixelray") {
 		parsePixelray(argc, argv, image, point);
-		Ray* ray = genRay(image.width, image.height, scene, point.x, point.y);
+		Ray ray = genRay(image.width, image.height, scene, point.x, point.y);
 		Hit value = collide(scene, ray);
 		cout << pixelrayToString(value, ray, point, image.height);
 	}
 	else if (command == "printrays") {
 		parsePixelray(argc, argv, image, point);
-		Ray* ray = genRay(image.width, image.height, scene, point.x, point.y);
+		Ray ray = genRay(image.width, image.height, scene, point.x, point.y);
 		Hit value = collide(scene, ray);
 		Fragment frag(value, scene, ray);
 		cout << pixelcolorToString(value, ray, scene, point, image.height, false);
@@ -143,7 +143,7 @@ int runCommand(int argc, char** argv) {
 	}
 	else if (command == "firsthit") {
 		parseFirstHit(argc, argv, image, point);
-		Ray* ray = genRay(image.width, image.height, scene, point.x, point.y);
+		Ray ray = genRay(image.width, image.height, scene, point.x, point.y);
 		Hit value = collide(scene, ray);
 		cout << firstHitToString(value, ray, point, image.height);
 	}
