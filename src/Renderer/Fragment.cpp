@@ -223,16 +223,24 @@ void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode, int maxBounces, bool
 		vec3 refractionColor = vec3(0.0f);
 		float localAmount, reflectionAmount, refractionAmount;
 		maxBounces--;
-		localColor = calcLocalColor(scene, lightMode);
-		if (mat.reflection > 0.0f) {
-			reflectionColor = calcReflectionColor(scene, lightMode, maxBounces, verbose);
-		}
-		if (mat.refraction > 0.0f) {
-			refractionColor = calcRefractionColor(scene, lightMode, maxBounces, verbose);
-		}
 		localAmount = (1 - mat.reflection) * (1 - mat.refraction);
 		reflectionAmount = mat.reflection * (1 - mat.refraction);
 		refractionAmount = mat.refraction;
+		//Calculate the local shading
+		localColor = calcLocalColor(scene, lightMode);
+		//Calculate shading from refraction
+		if (refractionAmount > 0.0f) {
+			refractionColor = calcRefractionColor(scene, lightMode, maxBounces, verbose);
+			//If there is total internal reflection, do this
+			if (refractionColor.x < 0) {
+				reflectionAmount += refractionAmount;
+				refractionAmount = 0.0f;
+			}
+		}
+		//Calculate shading from reflection
+		if (reflectionAmount > 0.0f) {
+			reflectionColor = calcReflectionColor(scene, lightMode, maxBounces, verbose);
+		}
 		fragColor = localColor * localAmount + reflectionColor * reflectionAmount + refractionColor * refractionAmount;
 	}
 	if (verbose) {
@@ -292,7 +300,8 @@ vec3 Fragment::calcRefractionColor(Scene * scene, LIGHTMODE lightMode, int maxBo
 	//If the ray is still in the object, set ior2 back to mat.ior since it is still into object
 	if (refractionVector == vec3(0.0f)) {
 		ior2 = mat.ior;
-		retColor = calcReflectionColor(scene, lightMode, maxBounces, verbose);
+		//Send back a vector that is normally not possible so we know to add refraction amount to reflection amount
+		retColor = vec3(-1.0f);
 	}
 	else {
 		//Offset the position so the ray does not collide with the current object. Offset should be away from the ray's direction which is why it is negative
