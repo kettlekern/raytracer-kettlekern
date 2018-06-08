@@ -221,11 +221,17 @@ void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode, int maxBounces, bool
 		vec3 localColor = vec3(0.0f);
 		vec3 reflectionColor = vec3(0.0f);
 		vec3 refractionColor = vec3(0.0f);
-		float localAmount, reflectionAmount, refractionAmount;
+		float localAmount, reflectionAmount, refractionAmount, fresnelAmount;
 		maxBounces--;
+		if (fresnel) {
+			fresnel = schlicksApproximation(obj->getMaterial().ior, obj->getNormal(position, ray.direction), normalize(ray.origin - position));
+		}
+		else {
+			fresnelAmount = 0;
+		}
 		localAmount = (1 - mat.reflection) * (1 - mat.refraction);
-		reflectionAmount = mat.reflection * (1 - mat.refraction);
-		refractionAmount = mat.refraction;
+		reflectionAmount = mat.reflection * (1 - mat.refraction) + mat.refraction * fresnelAmount;
+		refractionAmount = mat.refraction * (1 - fresnelAmount);
 		//Calculate the local shading
 		localColor = calcLocalColor(scene, lightMode);
 		//Calculate shading from refraction
@@ -333,6 +339,14 @@ glm::vec3 Fragment::calcRefractionVector(glm::vec3 direction, glm::vec3 normal, 
 		result = n1overn2 * (direction - DdotN * normal) - normal * glm::sqrt(radicand);
 	}
 	return normalize(result);
+}
+
+float Fragment::schlicksApproximation(float ior, glm::vec3 normal, glm::vec3 view)
+{
+	float retval;
+	float Fo = (ior - 1.0f) * (ior - 1.0f) / ((ior + 1.0f) * (ior + 1.0f));
+	retval = Fo + (1 - Fo) * glm::pow(1 - glm::dot(normal, view), 5);
+	return retval;
 }
 
 void Fragment::clampColor()

@@ -17,12 +17,14 @@ enum LIGHTMODE {
 };
 
 class Fragment {
+private:
 	glm::vec3 position;
 	glm::vec3 fragColor;
 	Material mat;
 	float t;
 	Object* obj;
 	Ray ray;
+	bool fresnel = false;
 
 	glm::vec3 clampColor(glm::vec3 color);
 	void clampColor();
@@ -58,6 +60,7 @@ class Fragment {
 	//The second vector needs more support to function for all cases, for now we will just assume air + object collisions
 	glm::vec3 calcRefractionVector(glm::vec3 direction, glm::vec3 normal, float ior1, float ior2);
 	bool entering() { return ray.ior < mat.ior; }
+	float schlicksApproximation(float ior, glm::vec3 normal, glm::vec3 view);
 
 public:
 	Fragment(const Hit & hit, Scene* scene, Ray ray);
@@ -65,6 +68,7 @@ public:
 	//This should only be called externally, and only once. Use the bounce counting version for all other calls.
 	void colorFrag(Scene* scene, LIGHTMODE lightingType);
 	void colorFrag(Scene* scene, LIGHTMODE lightingType, bool verbose);
+	void activateFresnel() { fresnel = true; }
 
 	bool isHit() { return obj != nullptr; }
 	glm::vec3 getColor() { return fragColor; }

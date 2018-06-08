@@ -1,5 +1,5 @@
-Reflections now color properly, needed to weight reflections by the current object's color
-Refractions seem to color properly
+Added support for fresnel
+Pull parse code for tags?
 
 TODO:
 	Implement boxes
