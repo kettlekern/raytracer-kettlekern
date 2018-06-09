@@ -319,7 +319,12 @@ vec3 Fragment::calcRefractionColor(Scene * scene, LIGHTMODE lightMode, int maxBo
 		refractFrag.colorFrag(scene, lightMode, maxBounces, verbose);
 		retColor = refractFrag.fragColor;
 		if (entering()) {
-			retColor *= obj->getColor();
+			if (beers) {
+				retColor *= beersLaw(glm::length(position - refractFrag.position), obj->getColor());
+			}
+			else {
+				retColor *= obj->getColor();
+			}
 		}
 	}
 	return retColor;
@@ -347,6 +352,16 @@ float Fragment::schlicksApproximation(float ior, glm::vec3 normal, glm::vec3 vie
 	float Fo = (ior - 1.0f) * (ior - 1.0f) / ((ior + 1.0f) * (ior + 1.0f));
 	retval = Fo + (1 - Fo) * glm::pow(1 - glm::dot(normal, view), 5);
 	return retval;
+}
+
+glm::vec3 Fragment::beersLaw(float distance, glm::vec3 color)
+{
+	glm::vec3 absorbance;
+	float alpha = 0.15f;
+	float e = 2.71828f;
+	absorbance = (vec3(1.0f) - color) * alpha * -distance;
+	glm::vec3 amount = glm::vec3(glm::pow(e, absorbance.r), glm::pow(e, absorbance.g), glm::pow(e, absorbance.b));
+	return amount;
 }
 
 void Fragment::clampColor()
