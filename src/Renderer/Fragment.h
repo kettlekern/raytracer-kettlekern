@@ -25,6 +25,8 @@ private:
 	Object* obj;
 	Ray ray;
 	bool fresnel = false;
+	bool beers = false;
+	int ssCount = 1;
 
 	glm::vec3 clampColor(glm::vec3 color);
 	void clampColor();
@@ -69,6 +71,8 @@ public:
 	void colorFrag(Scene* scene, LIGHTMODE lightingType);
 	void colorFrag(Scene* scene, LIGHTMODE lightingType, bool verbose);
 	void activateFresnel() { fresnel = true; }
+	void activateBeers() { beers = true; }
+	void activateSuperSamling(int count) { ssCount = count; }
 
 	bool isHit() { return obj != nullptr; }
 	glm::vec3 getColor() { return fragColor; }

@@ -224,7 +224,7 @@ void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode, int maxBounces, bool
 		float localAmount, reflectionAmount, refractionAmount, fresnelAmount;
 		maxBounces--;
 		if (fresnel) {
-			fresnel = schlicksApproximation(obj->getMaterial().ior, obj->getNormal(position, ray.direction), normalize(ray.origin - position));
+			fresnelAmount = schlicksApproximation(mat.ior, obj->getNormal(position, ray.direction), normalize(ray.origin - position));
 		}
 		else {
 			fresnelAmount = 0;

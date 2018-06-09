@@ -87,13 +87,13 @@ void castRays(int width, int height, Scene* scene) {
 	stbi_write_png("output.png", width, height, 3, output.data(), sizeof(char) * 3 * width);
 }
 
-void renderScene(int width, int height, Scene* scene, bool useCookTorrance) {
+void renderScene(int width, int height, Scene* scene, Flags flags) {
 	std::vector<Ray> rays = genRays(width, height, scene);
 	//Create a buffer that holds the fragments
 	Buffer fragBuf(width, height);
 	Fragment* frag;
 	auto lightMode = BLINN_PHONG;
-	if (useCookTorrance) {
+	if (flags.isAltBRDF) {
 		lightMode = COOK_TORRANCE;
 	}
 
@@ -104,6 +104,15 @@ void renderScene(int width, int height, Scene* scene, bool useCookTorrance) {
 			//Fragment is a more robust hit object, mostly a wrapper for old code
 			Hit val = collide(scene, rays[rayIndex]);
 			frag = new Fragment(val, scene, rays[rayIndex]);
+			if (flags.useFresnel) {
+				frag->activateFresnel();
+			}
+			if (flags.useBeers) {
+				frag->activateBeers();
+			}
+			if (flags.superSampleCount > 1) {
+				frag->activateSuperSamling(flags.superSampleCount);
+			}
 			frag->colorFrag(scene, lightMode);
 			fragBuf.push_back(frag);
 		}

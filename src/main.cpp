@@ -5,6 +5,8 @@
 #include "Parser.h"
 #include "Ray/RayManager.h"
 #include "Renderer/Fragment.h"
+#include "main.h"
+#include "Flags.h"
 
 using namespace std;
 
@@ -28,15 +30,44 @@ void parseRaycast(int argc, char** argv, ImageCoords & image) {
 	image.height = stoi(argv[4]);
 }
 
-void parseRender(int argc, char** argv, ImageCoords & image, bool* isAltBRDF) {
-	image.width = stoi(argv[3]);
-	image.height = stoi(argv[4]);
-	string str = "-altbrdf";
-	if (argc > 5) {
-		if (str.compare(argv[5]) == 0) {
-			*isAltBRDF = true;
+void parseFlags(int argc, char ** argv, Flags & flags)
+{
+	string altBRDF = "-altbrdf";
+	string Beers = "-beers";
+	string Fresnel = "-fresnel";
+	string superSample = "-ss=";
+	string temp;
+	int argcOffset = 5;
+	argc -= argcOffset;
+	while (argc > 0) {
+		temp = argv[argcOffset];
+		if (altBRDF.compare(temp) == 0) {
+			flags.isAltBRDF = true;
+			argc--;
+			argcOffset++;
+		}
+		else if (Beers.compare(temp) == 0) {
+			flags.useBeers = true;
+			argc--;
+			argcOffset++;
+		}
+		else if (Fresnel.compare(temp) == 0) {
+			flags.useFresnel = true;
+			argc--;
+			argcOffset++;
+		}
+		else if (superSample.compare(temp.substr(0,4)) == 0) {
+			flags.superSampleCount = stoi(temp.substr(4, temp.length()));
+			argc--;
+			argcOffset++;
 		}
 	}
+}
+
+void parseRender(int argc, char** argv, ImageCoords & image, Flags & flags) {
+	image.width = stoi(argv[3]);
+	image.height = stoi(argv[4]);
+	parseFlags(argc, argv, flags);
 }
 
 void parsePixelray(int argc, char** argv, ImageCoords & image, Point & point) {
@@ -108,14 +139,14 @@ int runCommand(int argc, char** argv) {
 	}
 	ImageCoords image;
 	Point point;
+	Flags flags;
 	if (command == "raycast") {
 		parseRaycast(argc, argv, image);
 		castRays(image.width, image.height, scene);
 	}
 	else if (command == "render") {
-		bool isAltBRDF = false;
-		parseRender(argc, argv, image, &isAltBRDF);
-		renderScene(image.width, image.height, scene, isAltBRDF);
+		parseRender(argc, argv, image, flags);
+		renderScene(image.width, image.height, scene, flags);
 	}
 	else if (command == "pixelcolor") {
 		bool isAltBRDF = false;
