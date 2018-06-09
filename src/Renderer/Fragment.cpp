@@ -1,7 +1,7 @@
 #include "Fragment.h"
 #include "../Ray/RayManager.h"
 #include "../Scene/VectorString.h"
-#define EPS 0.0001f
+#define EPS 0.0005f
 #define PI 3.14159265f
 #define MAX_BOUNCES 6
 #define CLEAR_COLOR glm::vec3(0.0f, 0.0f, 0.0f)
