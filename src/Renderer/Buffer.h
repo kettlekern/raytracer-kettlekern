@@ -4,20 +4,18 @@
 #include <glm/glm.hpp>
 #include <vector>
 #include <memory>
-#include "Fragment.h"
+#include "FragmentOutput.h"
 
 class Buffer {
-	std::vector<Fragment *> fragBuffer;
+	std::vector<FragmentOutput> fragBuffer;
 	int width, height;
 
 public:
-	//TODO: rule of 5 this
+	//TODO: rule of 5 this?
 	Buffer(int width, int height) : width(width), height(height) {
 	}
 
-	Fragment* getFragment(int width, int height);
-	void setFragment(int width, int height, Fragment* frag);
-	void push_back(Fragment* frag);
+	void push_back(FragmentOutput & frag);
 
 	//This returns a malloc'ed array with the colors of the fragments in order. Must call free on the pointer this returns after it is used.
 	unsigned char* toArray();

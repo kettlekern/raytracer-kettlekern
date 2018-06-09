@@ -1,13 +1,11 @@
-Added support for fresnel
-Pull parse code for tags?
+
 
 TODO:
-	Implement boxes
+	Fix Fresnel3
 	Implement transforms/scales/rotations
-	Implement beers/Fresnel/super sampling
 	
+	Implement boxes
 	Implement spacial data structure
-	Implement AA
 	
 	Implement Global Illumination
 	

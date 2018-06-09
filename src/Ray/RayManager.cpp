@@ -88,33 +88,36 @@ void castRays(int width, int height, Scene* scene) {
 }
 
 void renderScene(int width, int height, Scene* scene, Flags flags) {
-	std::vector<Ray> rays = genRays(width, height, scene);
+	std::vector<Ray> rays = genRays(width * flags.superSampleCount, height * flags.superSampleCount, scene);
 	//Create a buffer that holds the fragments
 	Buffer fragBuf(width, height);
-	Fragment* frag;
 	auto lightMode = BLINN_PHONG;
 	if (flags.isAltBRDF) {
 		lightMode = COOK_TORRANCE;
 	}
 
-	for (int i = 0; i < width; i++) {
-		for (int j = 0; j < height; j++) {
-			//Cast the ray into the sceen
-			int rayIndex = i * height + j;
-			//Fragment is a more robust hit object, mostly a wrapper for old code
-			Hit val = collide(scene, rays[rayIndex]);
-			frag = new Fragment(val, scene, rays[rayIndex]);
-			if (flags.useFresnel) {
-				frag->activateFresnel();
+	for (int j = 0; j < height * flags.superSampleCount; j += flags.superSampleCount) {
+		for (int i = 0; i < width * flags.superSampleCount; i += flags.superSampleCount) {
+			std::vector<Fragment> superSampleBuf;
+			for (int ssx = 0; ssx < flags.superSampleCount; ssx++) {
+				for (int ssy = 0; ssy < flags.superSampleCount; ssy++) {
+					//Cast the ray into the sceen
+					int rayIndex = (j + ssx) * width * flags.superSampleCount + (i + ssy);
+					//Fragment is a more robust hit object, mostly a wrapper for old code
+					Hit val = collide(scene, rays[rayIndex]);
+					Fragment frag(val, scene, rays[rayIndex]);
+					if (flags.useFresnel) {
+						frag.activateFresnel();
+					}
+					if (flags.useBeers) {
+						frag.activateBeers();
+					}
+					frag.colorFrag(scene, lightMode);
+					superSampleBuf.push_back(frag);
+				}
 			}
-			if (flags.useBeers) {
-				frag->activateBeers();
-			}
-			if (flags.superSampleCount > 1) {
-				frag->activateSuperSamling(flags.superSampleCount);
-			}
-			frag->colorFrag(scene, lightMode);
-			fragBuf.push_back(frag);
+			FragmentOutput fragOut(superSampleBuf);
+			fragBuf.push_back(fragOut);
 		}
 	}
 	//Draw the image	

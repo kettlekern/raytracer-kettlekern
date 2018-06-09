@@ -6,7 +6,7 @@ struct Flags {
 	bool isAltBRDF = false;
 	bool useFresnel = false;
 	bool useBeers = false;
-	int superSampleCount = 0;
+	int superSampleCount = 1;
 };
 
 #endif

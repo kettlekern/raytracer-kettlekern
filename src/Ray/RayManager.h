@@ -10,6 +10,7 @@
 #include "Ray.h"
 #include "../Scene/Scene.h"
 #include "../Flags.h"
+#include "../Renderer/FragmentOutput.h"
 
 std::vector<Ray> genRays(int width, int height, Scene* scene);
 Ray genRay(int width, int height, Scene* scene, int i, int j);
