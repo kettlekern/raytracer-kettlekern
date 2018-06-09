@@ -21,7 +21,7 @@ public:
 	float collide(Ray ray);
 
 	glm::vec3 getNormal(glm::vec3 position, glm::vec3 rayDirection) {
-		return normal;
+		return glm::dot(normal, rayDirection) < 0 ? normal : -normal;
 	}
 };
 

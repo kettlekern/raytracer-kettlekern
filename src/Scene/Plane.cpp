@@ -6,14 +6,7 @@
 #include "VectorString.h"
 
 float Plane::collide(Ray ray) {
-	float t;
-	//Throw out values greater than or equal to 0
-	if (glm::dot(ray.direction, normal) < 0.0f) {
-		t = (distance - glm::dot(ray.origin, normal))/glm::dot(ray.direction, normal);
-	}
-	else {
-		t = -1.0f;
-	}
+	float t = (distance - glm::dot(ray.origin, normal))/glm::dot(ray.direction, normal);
 	return t;
 }
 
