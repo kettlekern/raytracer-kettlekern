@@ -20,6 +20,10 @@ public:
 		return center;
 	}
 
+	void addTranslate(const glm::vec3 & translate);
+	void addRotate(const glm::vec3 & rotate);
+	void addScale(const glm::vec3 & scale);
+
 	std::string toStringLocal();
 	float collide(Ray ray);
 	glm::vec3 getNormal(glm::vec3 position, glm::vec3 rayDirection);

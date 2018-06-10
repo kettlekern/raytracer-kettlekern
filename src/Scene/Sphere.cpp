@@ -14,6 +14,26 @@ float Sphere::collide(Ray ray) {
 	return quadraticRoot(a, b, c);
 }
 
+void Sphere::addTranslate(const glm::vec3 & translate)
+{
+	center += translate;
+}
+
+void Sphere::addRotate(const glm::vec3 & rotate)
+{
+}
+
+void Sphere::addScale(const glm::vec3 & scale)
+{
+	//If it is a uniform scale, use this optimization
+	if (scale.x == scale.y && scale.y == scale.z) {
+		radius *= scale.x;
+	}
+	else {
+
+	}
+}
+
 std::string Sphere::toStringLocal() {
 	return " - Center: " + Parser::vec3ToString(center) + "\n" +
 		   " - Radius: " + formatted_to_string(radius) + "\n";

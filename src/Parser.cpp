@@ -126,6 +126,8 @@ void parseLightSource(Tokenizer & tokenizer, Scene* scene) {
 
 void parseSphere(Tokenizer & tokenizer, Scene* scene) {
 	string tok;
+	glm::vec3 translate, scale, rotate;
+	Sphere* object = nullptr;
 	tok = tokenizer.getToken();
 	if (tok != "{") {
 		cout << "Bad Sphere in file\n";
@@ -144,14 +146,41 @@ void parseSphere(Tokenizer & tokenizer, Scene* scene) {
 		else if (tok == "finish") {
 			material = parseFinish(tokenizer, color.a);
 		}
+		//The object must be fully defined before adding transforms
+		else if (tok == "translate") {
+			if (object == nullptr) {
+				object = new Sphere(color, material, center, radius);
+			}
+			translate = parseTranslate(tokenizer);
+			object->addTranslate(translate);
+		}
+		else if (tok == "scale") {
+			if (object == nullptr) {
+				object = new Sphere(color, material, center, radius);
+			}
+			scale = parseScale(tokenizer);
+			object->addScale(translate);
+		}
+		else if (tok == "rotate") {
+			if (object == nullptr) {
+				object = new Sphere(color, material, center, radius);
+			}
+			rotate = parseRotate(tokenizer);
+			object->addRotate(translate);
+		}
 		else { //unknown token
 		}
 	}
-	scene->addObject(new Sphere(color, material, center, radius));
+	if (object == nullptr) {
+		object = new Sphere(color, material, center, radius);
+	}
+	scene->addObject(object);
 }
 
 void parsePlane(Tokenizer & tokenizer, Scene* scene) {
 	string tok;
+	glm::vec3 translate, scale, rotate;
+	Plane* object = nullptr;
 	tok = tokenizer.getToken();
 	if (tok != "{") {
 		cout << "Bad Plane in file\n";
@@ -170,15 +199,41 @@ void parsePlane(Tokenizer & tokenizer, Scene* scene) {
 		else if (tok == "finish") {
 			material = parseFinish(tokenizer, color.a);
 		}
+		//The object must be fully defined before adding transforms
+		else if (tok == "translate") {
+			if (object == nullptr) {
+				object = new Plane(color, material, normal, offset);
+			}
+			translate = parseTranslate(tokenizer);
+			object->addTranslate(translate);
+		}
+		else if (tok == "scale") {
+			if (object == nullptr) {
+				object = new Plane(color, material, normal, offset);
+			}
+			scale = parseScale(tokenizer);
+			object->addScale(translate);
+		}
+		else if (tok == "rotate") {
+			if (object == nullptr) {
+				object = new Plane(color, material, normal, offset);
+			}
+			rotate = parseRotate(tokenizer);
+			object->addRotate(translate);
+		}
 		else { //unknown token
 		}
 	}
-	scene->addObject(new Plane(color, material, normal, offset));
+	if (object == nullptr) {
+		object = new Plane(color, material, normal, offset);
+	}
+	scene->addObject(object);
 }
 
 void parseTriangle(Tokenizer & tokenizer, Scene* scene) {
 	string tok;
 	tok = tokenizer.getToken();
+	Triangle* object = nullptr;
 	if (tok != "{") {
 		cout << "Bad Triangle in file\n";
 		return;
@@ -186,6 +241,7 @@ void parseTriangle(Tokenizer & tokenizer, Scene* scene) {
 	glm::vec3 pointA = parseVec3(tokenizer);
 	glm::vec3 pointB = parseVec3(tokenizer);
 	glm::vec3 pointC = parseVec3(tokenizer);
+	glm::vec3 translate, scale, rotate;
 	glm::vec4 color;
 	Material material;
 	while (tok != "}") {
@@ -196,10 +252,35 @@ void parseTriangle(Tokenizer & tokenizer, Scene* scene) {
 		else if (tok == "finish") {
 			material = parseFinish(tokenizer, color.a);
 		}
+		//The object must be fully defined before adding transforms
+		else if (tok == "translate") {
+			if (object == nullptr) {
+				object = new Triangle(color, material, pointA, pointB, pointC);
+			}
+			translate = parseTranslate(tokenizer);
+			object->addTranslate(translate);
+		}
+		else if (tok == "scale") {
+			if (object == nullptr) {
+				object = new Triangle(color, material, pointA, pointB, pointC);
+			}
+			scale = parseScale(tokenizer);
+			object->addScale(translate);
+		}
+		else if (tok == "rotate") {
+			if (object == nullptr) {
+				object = new Triangle(color, material, pointA, pointB, pointC);
+			}
+			rotate = parseRotate(tokenizer);
+			object->addRotate(translate);
+		}
 		else { //unknown token
 		}
 	}
-	scene->addObject(new Triangle(color, material, pointA, pointB, pointC));
+	if (object == nullptr) {
+		object = new Triangle(color, material, pointA, pointB, pointC);
+	}
+	scene->addObject(object);
 }
 
 
@@ -233,6 +314,21 @@ glm::vec4 parsePigment(Tokenizer & tokenizer) {
 
 Material parseFinish(Tokenizer & tokenizer) {
 	return parseFinish(tokenizer, 0.0f);
+}
+
+glm::vec3 parseTranslate(Tokenizer & fileStream)
+{
+	return glm::vec3();
+}
+
+glm::vec3 parseScale(Tokenizer & fileStream)
+{
+	return glm::vec3();
+}
+
+glm::vec3 parseRotate(Tokenizer & fileStream)
+{
+	return glm::vec3();
 }
 
 Material parseFinish(Tokenizer & tokenizer, float refraction) {

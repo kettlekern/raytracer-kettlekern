@@ -1,5 +1,6 @@
 #include "Triangle.h"
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <vector>
 #include <string>
 #include "../Ray/Ray.h"
@@ -42,6 +43,33 @@ float Triangle::collide(Ray ray) {
 		t = -1.0f;
 	}
 	return t;
+}
+
+void Triangle::addTranslate(const glm::vec3 & translate)
+{
+	pointA += translate;
+	pointB += translate;
+	pointC += translate;
+}
+
+void Triangle::addRotate(const glm::vec3 & rotate)
+{
+	glm::mat4 Rotation = glm::mat4(1.f);
+
+	Rotation = glm::rotate(glm::mat4(1.f), glm::radians(rotate.z), glm::vec3(0, 0, 1)) * Rotation;
+	Rotation = glm::rotate(glm::mat4(1.f), glm::radians(rotate.y), glm::vec3(0, 1, 0)) * Rotation;
+	Rotation = glm::rotate(glm::mat4(1.f), glm::radians(rotate.x), glm::vec3(1, 0, 0)) * Rotation;
+
+	pointA = glm::vec3(glm::vec4(pointA, 0.0) * Rotation);
+	pointB = glm::vec3(glm::vec4(pointB, 0.0) * Rotation);
+	pointC = glm::vec3(glm::vec4(pointC, 0.0) * Rotation);
+}
+
+void Triangle::addScale(const glm::vec3 & scale)
+{
+	pointA *= scale;
+	pointB *= scale;
+	pointC *= scale;
 }
 
 std::string Triangle::toStringLocal() {

@@ -20,6 +20,9 @@ void parsePlane(Tokenizer & fileStream, Scene* scene);
 glm::vec4 parsePigment(Tokenizer & fileStream);
 Material parseFinish(Tokenizer & fileStream, float refraction);
 Material parseFinish(Tokenizer & fileStream);
+glm::vec3 parseTranslate(Tokenizer & fileStream);
+glm::vec3 parseScale(Tokenizer & fileStream);
+glm::vec3 parseRotate(Tokenizer & fileStream);
 
 
 

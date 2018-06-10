@@ -25,14 +25,14 @@ plane {<1, 0, 0>, -8
 }
 
 // back wall
-plane {<0, 0, -1>, 30
+plane {<0, 0, 1>, -30
   pigment {color rgb <0.8, 0.4, 0.2>}
   finish {ambient 0.4 diffuse 0.2 reflection 0.2}
   rotate <0, 30, 0>
 }
 
 // back wall on the right
-plane {<0, 0, -1>, 30
+plane {<0, 0, 1>, -30
   pigment {color rgb <0.0, 0.2, 0.2>}
   finish {ambient 0.4 diffuse 0.8 reflection 0.2}
   rotate <0, -20, 0>
@@ -41,25 +41,25 @@ plane {<0, 0, -1>, 30
 // pyramid of spheres
 sphere { <-2, -1.74305, -1.74305>, 2
   pigment { color rgbf <1.0, 0.0, 1.0, 0.4>}
-  finish {ambient 0.2 diffuse 0.4 reflection 0.6}
+  finish {ambient 0.2 diffuse 0.4 reflection 0.6 ior 1.0}
   translate <-4, -3, 2>
 }
 
 sphere { <2, -1.74305, -1.74305>, 2
   pigment { color rgbf <1.0, 0.0, 1.0, 0.4>}
-  finish {ambient 0.2 diffuse 0.4 reflection 0.6}
+  finish {ambient 0.2 diffuse 0.4 reflection 0.6 ior 1.0}
   translate <-4, -3, 2>
 }
 
 sphere { <0, -1.74305, 1.74305>, 2
   pigment { color rgbf <1.0, 0.0, 1.0, 0.4>}
-  finish {ambient 0.2 diffuse 0.4 reflection 0.6}
+  finish {ambient 0.2 diffuse 0.4 reflection 0.6 ior 1.0}
   translate <-4, -3, 2>
 }
 
 sphere { <0, 1.74305, 0>, 2
   pigment { color rgbf <1.0, 0.0, 1.0, 0.4>}
-  finish {ambient 0.2 diffuse 0.4 reflection 0.6}
+  finish {ambient 0.2 diffuse 0.4 reflection 0.6 ior 1.0}
   translate <-4, -3, 2>
 }
 

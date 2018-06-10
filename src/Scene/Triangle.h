@@ -12,6 +12,11 @@ public:
 	Triangle(glm::vec3 color, Material mat, glm::vec3 pointA, glm::vec3 pointB, glm::vec3 pointC) : Object(color, mat), pointA(pointA), pointB(pointB), pointC(pointC) { name = "Triangle"; }
 	Triangle(glm::vec4 color, Material mat, glm::vec3 pointA, glm::vec3 pointB, glm::vec3 pointC) : Object(color, mat), pointA(pointA), pointB(pointB), pointC(pointC) { name = "Triangle"; }
 
+	//Triangles don't need a matrix stack, you can just modify the points by the transformaion
+	void addTranslate(const glm::vec3 & translate);
+	void addRotate(const glm::vec3 & rotate);
+	void addScale(const glm::vec3 & scale);
+
 	std::string toStringLocal();
 	float collide(Ray ray);
 	glm::vec3 getNormal(glm::vec3 position, glm::vec3 rayDirection);

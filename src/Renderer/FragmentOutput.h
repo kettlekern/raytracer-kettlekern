@@ -14,7 +14,7 @@ public:
 		for (Fragment & frag : fragBuffer){
 			color += frag.getColor();
 		}
-		color /= glm::vec3(fragBuffer.size());
+		color /= glm::vec3((float) fragBuffer.size());
 	}
 
 	glm::vec3 getColor() { return color; }

@@ -5,6 +5,8 @@
 #include <glm/glm.hpp>
 #include <vector>
 #include <string>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/mat4x4.hpp>
 #include "Material.h"
 #include "../Ray/Ray.h"
 #include "../FormattedToString.h"
@@ -31,6 +33,10 @@ public:
 	Material getMaterial() {
 		return mat;
 	}
+
+	virtual void addTranslate(const glm::vec3 & translate) = 0;
+	virtual void addRotate(const glm::vec3 & rotate) = 0;
+	virtual void addScale(const glm::vec3 & scale) = 0;
 
 	std::string toString();
 	virtual std::string toStringLocal() = 0;
