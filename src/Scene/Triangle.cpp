@@ -60,9 +60,9 @@ void Triangle::addRotate(const glm::vec3 & rotate)
 	Rotation = glm::rotate(glm::mat4(1.f), glm::radians(rotate.y), glm::vec3(0, 1, 0)) * Rotation;
 	Rotation = glm::rotate(glm::mat4(1.f), glm::radians(rotate.x), glm::vec3(1, 0, 0)) * Rotation;
 
-	pointA = glm::vec3(glm::vec4(pointA, 0.0) * Rotation);
-	pointB = glm::vec3(glm::vec4(pointB, 0.0) * Rotation);
-	pointC = glm::vec3(glm::vec4(pointC, 0.0) * Rotation);
+	pointA = glm::vec3(Rotation * glm::vec4(pointA, 0.0));
+	pointB = glm::vec3(Rotation * glm::vec4(pointB, 0.0));
+	pointC = glm::vec3(Rotation * glm::vec4(pointC, 0.0));
 }
 
 void Triangle::addScale(const glm::vec3 & scale)
