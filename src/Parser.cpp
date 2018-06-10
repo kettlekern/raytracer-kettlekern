@@ -159,14 +159,14 @@ void parseSphere(Tokenizer & tokenizer, Scene* scene) {
 				object = new Sphere(color, material, center, radius);
 			}
 			scale = parseScale(tokenizer);
-			object->addScale(translate);
+			object->addScale(scale);
 		}
 		else if (tok == "rotate") {
 			if (object == nullptr) {
 				object = new Sphere(color, material, center, radius);
 			}
 			rotate = parseRotate(tokenizer);
-			object->addRotate(translate);
+			object->addRotate(rotate);
 		}
 		else { //unknown token
 		}
@@ -212,14 +212,14 @@ void parsePlane(Tokenizer & tokenizer, Scene* scene) {
 				object = new Plane(color, material, normal, offset);
 			}
 			scale = parseScale(tokenizer);
-			object->addScale(translate);
+			object->addScale(scale);
 		}
 		else if (tok == "rotate") {
 			if (object == nullptr) {
 				object = new Plane(color, material, normal, offset);
 			}
 			rotate = parseRotate(tokenizer);
-			object->addRotate(translate);
+			object->addRotate(rotate);
 		}
 		else { //unknown token
 		}
@@ -265,14 +265,14 @@ void parseTriangle(Tokenizer & tokenizer, Scene* scene) {
 				object = new Triangle(color, material, pointA, pointB, pointC);
 			}
 			scale = parseScale(tokenizer);
-			object->addScale(translate);
+			object->addScale(scale);
 		}
 		else if (tok == "rotate") {
 			if (object == nullptr) {
 				object = new Triangle(color, material, pointA, pointB, pointC);
 			}
 			rotate = parseRotate(tokenizer);
-			object->addRotate(translate);
+			object->addRotate(rotate);
 		}
 		else { //unknown token
 		}
@@ -316,19 +316,19 @@ Material parseFinish(Tokenizer & tokenizer) {
 	return parseFinish(tokenizer, 0.0f);
 }
 
-glm::vec3 parseTranslate(Tokenizer & fileStream)
+glm::vec3 parseTranslate(Tokenizer & tokenizer)
 {
-	return glm::vec3();
+	return parseVec3(tokenizer);
 }
 
-glm::vec3 parseScale(Tokenizer & fileStream)
+glm::vec3 parseScale(Tokenizer & tokenizer)
 {
-	return glm::vec3();
+	return parseVec3(tokenizer);
 }
 
-glm::vec3 parseRotate(Tokenizer & fileStream)
+glm::vec3 parseRotate(Tokenizer & tokenizer)
 {
-	return glm::vec3();
+	return parseVec3(tokenizer);
 }
 
 Material parseFinish(Tokenizer & tokenizer, float refraction) {

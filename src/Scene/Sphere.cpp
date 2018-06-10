@@ -14,14 +14,6 @@ float Sphere::collide(Ray ray) {
 	return quadraticRoot(a, b, c);
 }
 
-void Sphere::addTranslate(const glm::vec3 & translate)
-{
-	center += translate;
-}
-
-void Sphere::addRotate(const glm::vec3 & rotate)
-{
-}
 
 void Sphere::addScale(const glm::vec3 & scale)
 {
@@ -30,7 +22,8 @@ void Sphere::addScale(const glm::vec3 & scale)
 		radius *= scale.x;
 	}
 	else {
-
+		glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), scale);
+		model = scaleMatrix * model;
 	}
 }
 

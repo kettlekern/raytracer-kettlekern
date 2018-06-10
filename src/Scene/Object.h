@@ -17,6 +17,7 @@ protected:
 	glm::vec3 color;
 	Material mat;
 	std::string name;
+	glm::mat4 model = glm::mat4(1.0f);
 	//returns the smallest positive root of the equation given by -b+-sqrt(b^2-4ac)/2a, or a negative number if neither is positive
 	float quadraticRoot(float a, float b, float c);
 
@@ -24,19 +25,14 @@ public:
 	Object(glm::vec3 color, Material mat) : color(color), mat(mat) {}
 	Object(glm::vec4 color, Material mat) : color(glm::vec3(color)), mat(mat) {}
 
-	glm::vec3 getColor() {
-		return color;
-	}
-
+	glm::vec3 getColor() { return color; }
 	std::string getName() { return name; }
+	Material getMaterial() { return mat; }
 
-	Material getMaterial() {
-		return mat;
-	}
-
-	virtual void addTranslate(const glm::vec3 & translate) = 0;
-	virtual void addRotate(const glm::vec3 & rotate) = 0;
-	virtual void addScale(const glm::vec3 & scale) = 0;
+	virtual void addTranslate(const glm::vec3 & translate);
+	virtual void addRotate(const glm::vec3 & rotate);
+	virtual void addScale(const glm::vec3 & scale);
+	virtual Ray translateRay(const Ray & ray);
 
 	std::string toString();
 	virtual std::string toStringLocal() = 0;
