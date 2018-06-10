@@ -41,8 +41,8 @@ void Object::addScale(const glm::vec3 & scale)
 Ray Object::transformRay(const Ray & ray) 
 {
 	Ray returnRay;
-	returnRay.origin = model * glm::vec4(ray.origin, 1.0f);
-	returnRay.direction = model * glm::vec4(ray.direction, 0.0f);
+	returnRay.origin = glm::vec3(model * glm::vec4(ray.origin, 1.0f));
+	returnRay.direction = glm::vec3(model * glm::vec4(ray.direction, 0.0f));
 	returnRay.ior = ray.ior;
 
 	return returnRay;
@@ -51,7 +51,7 @@ Ray Object::transformRay(const Ray & ray)
 glm::vec3 Object::transformNormal(const glm::vec3 & normal)
 {
 	glm::mat4 normalMatrix = glm::transpose(model);
-	glm::vec3 newNormal = normalMatrix * glm::vec4(normal, 0.0f);
+	glm::vec3 newNormal = glm::vec3(normalMatrix * glm::vec4(normal, 0.0f));
 	return normalize(newNormal);
 }
 

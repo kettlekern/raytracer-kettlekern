@@ -34,8 +34,9 @@ std::string Sphere::toStringLocal() {
 
 glm::vec3 Sphere::getNormal(glm::vec3 position, glm::vec3 rayDirection) {
 	glm::vec3 normal = glm::normalize(position - center);
+	normal = transformNormal(normal);
 	if (glm::dot(normal, rayDirection) > 0) {
 		normal = -normal;
 	}
-	return transformNormal(normal);
+	return normal;
 }
