@@ -32,7 +32,9 @@ public:
 	virtual void addTranslate(const glm::vec3 & translate);
 	virtual void addRotate(const glm::vec3 & rotate);
 	virtual void addScale(const glm::vec3 & scale);
-	virtual Ray translateRay(const Ray & ray);
+	virtual Ray transformRay(const Ray & ray);
+	virtual glm::vec3 transformNormal(const glm::vec3 & normal);
+	void invertModel();
 
 	std::string toString();
 	virtual std::string toStringLocal() = 0;

@@ -38,14 +38,25 @@ void Object::addScale(const glm::vec3 & scale)
 	model = scaleMatrix * model;
 }
 
-Ray Object::translateRay(const Ray & ray) 
+Ray Object::transformRay(const Ray & ray) 
 {
 	Ray returnRay;
 	returnRay.origin = model * glm::vec4(ray.origin, 1.0f);
-	returnRay.direction = model * glm::vec4(ray.direction, 1.0f);
+	returnRay.direction = model * glm::vec4(ray.direction, 0.0f);
 	returnRay.ior = ray.ior;
 
 	return returnRay;
+}
+
+glm::vec3 Object::transformNormal(const glm::vec3 & normal)
+{
+	glm::mat4 normalMatrix = glm::transpose(model);
+	return normalMatrix * glm::vec4(normal, 0.0f);
+}
+
+void Object::invertModel()
+{
+	model = glm::inverse(model);
 }
 
 float Object::quadraticRoot(float a, float b, float c) 

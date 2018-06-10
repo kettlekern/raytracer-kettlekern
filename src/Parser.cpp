@@ -174,6 +174,7 @@ void parseSphere(Tokenizer & tokenizer, Scene* scene) {
 	if (object == nullptr) {
 		object = new Sphere(color, material, center, radius);
 	}
+	object->invertModel();
 	scene->addObject(object);
 }
 
@@ -227,6 +228,7 @@ void parsePlane(Tokenizer & tokenizer, Scene* scene) {
 	if (object == nullptr) {
 		object = new Plane(color, material, normal, offset);
 	}
+	object->invertModel();
 	scene->addObject(object);
 }
 
@@ -280,6 +282,7 @@ void parseTriangle(Tokenizer & tokenizer, Scene* scene) {
 	if (object == nullptr) {
 		object = new Triangle(color, material, pointA, pointB, pointC);
 	}
+	object->invertModel();
 	scene->addObject(object);
 }
 

@@ -6,6 +6,7 @@
 #include "VectorString.h"
 
 float Sphere::collide(Ray ray) {
+	ray = transformRay(ray);
 	glm::vec3 PominC = (ray.origin - center);
 	//Because the dot product of a normalized vector with itself is 1, we can simplify a to 1
 	float a = glm::dot(ray.direction, ray.direction);
@@ -22,8 +23,7 @@ void Sphere::addScale(const glm::vec3 & scale)
 		radius *= scale.x;
 	}
 	else {
-		glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), scale);
-		model = scaleMatrix * model;
+		__super::addScale(scale);
 	}
 }
 
@@ -37,5 +37,5 @@ glm::vec3 Sphere::getNormal(glm::vec3 position, glm::vec3 rayDirection) {
 	if (glm::dot(normal, rayDirection) > 0) {
 		normal = -normal;
 	}
-	return normal;
+	return transformNormal(normal);
 }
