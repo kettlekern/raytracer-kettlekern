@@ -27,6 +27,11 @@ void Sphere::addScale(const glm::vec3 & scale)
 	}
 }
 
+void Sphere::addTranslate(const glm::vec3 & translate)
+{
+	center = glm::vec3(glm::translate(glm::mat4(1.0f), translate) * model * glm::vec4(center, 1.0f));
+}
+
 std::string Sphere::toStringLocal() {
 	return " - Center: " + Parser::vec3ToString(center) + "\n" +
 		   " - Radius: " + formatted_to_string(radius) + "\n";
@@ -34,6 +39,7 @@ std::string Sphere::toStringLocal() {
 
 glm::vec3 Sphere::getNormal(glm::vec3 position, glm::vec3 rayDirection) {
 	glm::vec3 normal = glm::normalize(position - center);
+	rayDirection = glm::vec3(model * glm::vec4(rayDirection, 0.0f));
 	normal = transformNormal(normal);
 	if (glm::dot(normal, rayDirection) > 0) {
 		normal = -normal;

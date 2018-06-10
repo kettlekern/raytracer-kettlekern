@@ -13,15 +13,11 @@ public:
 	Sphere(glm::vec3 color, Material mat, glm::vec3 center, float radius) : Object(color, mat), center(center), radius(radius) { name = "Sphere"; }
 	Sphere(glm::vec4 color, Material mat, glm::vec3 center, float radius) : Object(color, mat), center(center), radius(radius) { name = "Sphere"; }
 
-	float getRadius() {
-		return radius;
-	}
-
-	glm::vec3 getCenter() {
-		return center;
-	}
+	float getRadius() { return radius; }
+	glm::vec3 getCenter() { return center; }
 
 	void addScale(const glm::vec3 & scale);
+	void addTranslate(const glm::vec3 & translate);
 
 	std::string toStringLocal();
 	float collide(Ray ray);
