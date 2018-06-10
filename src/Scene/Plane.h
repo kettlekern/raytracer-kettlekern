@@ -13,17 +13,12 @@ public:
 	Plane(glm::vec3 color, Material mat, glm::vec3 normal, float distance) : Object(color, mat), normal(normal), distance(distance) { name = "Plane"; }
 	Plane(glm::vec4 color, Material mat, glm::vec3 normal, float distance) : Object(color, mat), normal(normal), distance(distance) { name = "Plane"; }
 
-	float getDistance() {
-		return distance;
-	}
-
-
-	void addTranslate(const glm::vec3 & translate);
-	void addRotate(const glm::vec3 & rotate);
-	void addScale(const glm::vec3 & scale);
+	float getDistance() { return distance; }
 
 	std::string toStringLocal();
 	float collide(Ray ray);
+	void addTranslate(const glm::vec3 & translate);
+	void invertModel();
 
 	glm::vec3 getNormal(glm::vec3 position, glm::vec3 rayDirection) {
 		return glm::dot(normal, rayDirection) < 0 ? normal : -normal;

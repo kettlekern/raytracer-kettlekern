@@ -51,7 +51,24 @@ Ray Object::transformRay(const Ray & ray)
 glm::vec3 Object::transformNormal(const glm::vec3 & normal)
 {
 	glm::mat4 normalMatrix = glm::transpose(model);
-	return normalMatrix * glm::vec4(normal, 0.0f);
+	glm::vec3 newNormal = normalMatrix * glm::vec4(normal, 0.0f);
+	return normalize(newNormal);
+}
+
+//This is here so planes can be translated easily
+glm::vec3 Object::transformNormal(const glm::vec3 & normal, bool invertModel)
+{
+	glm::vec3 ret;
+	if (invertModel) {
+		glm::mat4 temp = model;
+		Object::invertModel();
+		ret = transformNormal(normal);
+		model = temp;
+	}
+	else {
+		ret = transformNormal(normal);
+	}
+	return ret;
 }
 
 void Object::invertModel()

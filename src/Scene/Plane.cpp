@@ -13,27 +13,13 @@ float Plane::collide(Ray ray) {
 
 void Plane::addTranslate(const glm::vec3 & translate)
 {
-	distance += glm::dot(normal, translate);
+	distance += glm::dot(transformNormal(normal, true), translate);
 }
 
-void Plane::addRotate(const glm::vec3 & rotate)
+void Plane::invertModel()
 {
-	glm::mat4 Rotation = glm::mat4(1.f);
-
-	Rotation = glm::rotate(glm::mat4(1.f), glm::radians(rotate.z), glm::vec3(0, 0, 1)) * Rotation;
-	Rotation = glm::rotate(glm::mat4(1.f), glm::radians(rotate.y), glm::vec3(0, 1, 0)) * Rotation;
-	Rotation = glm::rotate(glm::mat4(1.f), glm::radians(rotate.x), glm::vec3(1, 0, 0)) * Rotation;
-
-	if (Rotation != glm::mat4(1.0f)) {
-		glm::vec4 temp = glm::vec4(normal, 0.0f);
-		temp = temp * glm::transpose(glm::inverse(Rotation));
-		normal = glm::vec3(temp.x, temp.y, temp.z);
-	}
-}
-
-void Plane::addScale(const glm::vec3 & scale)
-{
-	distance *= glm::dot(normal, scale);
+	__super::invertModel();
+	normal = transformNormal(normal);
 }
 
 std::string Plane::toStringLocal() {
