@@ -19,6 +19,7 @@ float Sphere::collide(Ray ray) {
 Ray Sphere::transformRay(const Ray & ray)
 {
 	Ray returnRay;
+	//Because we already modev the center, the ray does not need to be translated.
 	returnRay.origin = glm::vec3(model * glm::vec4(ray.origin, 0.0f));
 	returnRay.direction = glm::vec3(model * glm::vec4(ray.direction, 0.0f));
 	returnRay.ior = ray.ior;
@@ -39,6 +40,7 @@ void Sphere::addScale(const glm::vec3 & scale)
 
 void Sphere::invertModel()
 {
+	//Pre-compute the new center for the sphere before inverting the matrix to save ops down the line
 	center = glm::vec3(model * glm::vec4(center, 1.0f));
 	Object::invertModel();
 }
@@ -49,6 +51,7 @@ std::string Sphere::toStringLocal() {
 }
 
 glm::vec3 Sphere::getNormal(glm::vec3 position, glm::vec3 rayDirection) {
+	//Because the sphere is moved in world space, it does not need to be translated here as well
 	glm::vec3 objectSpacePosition = glm::vec3(model * glm::vec4(position, 0.0f));
 	glm::vec3 normal = objectSpacePosition - center;
 	normal = transformNormal(normal);

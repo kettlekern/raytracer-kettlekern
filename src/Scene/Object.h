@@ -34,9 +34,9 @@ public:
 	virtual void addRotate(const glm::vec3 & rotate);
 	virtual void addScale(const glm::vec3 & scale);
 	virtual Ray transformRay(const Ray & ray);
-	virtual glm::vec3 transformNormal(const glm::vec3 & normal);
-	virtual glm::vec3 transformNormal(const glm::vec3 & normal, bool invertModel);
 	virtual void invertModel();
+	glm::vec3 transformNormal(const glm::vec3 & normal);
+	glm::vec3 transformNormal(const glm::vec3 & normal, bool invertModel);
 
 	std::string toString();
 	virtual std::string toStringLocal() = 0;

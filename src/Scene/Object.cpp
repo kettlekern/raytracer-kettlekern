@@ -21,6 +21,7 @@ void Object::addTranslate(const glm::vec3 & translate)
 	model = glm::translate(glm::mat4(1.0f), translate) * model;
 }
 
+//.pov files give transforms in z,y,x order, so compute them in that order.
 void Object::addRotate(const glm::vec3 & rotate)
 {
 	glm::mat4 Rotation = glm::mat4(1.f);
@@ -42,6 +43,7 @@ Ray Object::transformRay(const Ray & ray)
 {
 	Ray returnRay;
 	returnRay.origin = glm::vec3(model * glm::vec4(ray.origin, 1.0f));
+	//This is a direction, not a position, so do not translate it.
 	returnRay.direction = glm::vec3(model * glm::vec4(ray.direction, 0.0f));
 	returnRay.ior = ray.ior;
 
@@ -71,6 +73,7 @@ glm::vec3 Object::transformNormal(const glm::vec3 & normal, bool invertModel)
 
 void Object::invertModel()
 {
+	//Pre-compute the inverted matrix for the model matrix and the normal matrix, since these do not change 
 	model = glm::inverse(model);
 	normalMatrix = glm::transpose(model);
 }
