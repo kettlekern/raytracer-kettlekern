@@ -37,6 +37,7 @@ void parseFlags(int argc, char ** argv, Flags & flags)
 	string Fresnel = "-fresnel";
 	string superSample = "-ss=";
 	string SDS = "-sds";
+	string globalIllumination = "-gi";
 	string temp;
 	int argcOffset = 5;
 	argc -= argcOffset;
@@ -53,6 +54,9 @@ void parseFlags(int argc, char ** argv, Flags & flags)
 		}
 		else if (SDS.compare(temp) == 0) {
 			flags.useSDS = true;
+		}
+		else if (globalIllumination.compare(temp) == 0) {
+			flags.useGI = true;
 		}
 		else if (superSample.compare(temp.substr(0,4)) == 0) {
 			flags.superSampleCount = stoi(temp.substr(4, temp.length()));
