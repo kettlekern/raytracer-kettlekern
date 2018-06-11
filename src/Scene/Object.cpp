@@ -50,9 +50,7 @@ Ray Object::transformRay(const Ray & ray)
 
 glm::vec3 Object::transformNormal(const glm::vec3 & normal)
 {
-	glm::mat4 normalMatrix = glm::transpose(model);
-	glm::vec3 newNormal = glm::vec3(normalMatrix * glm::vec4(normal, 0.0f));
-	return normalize(newNormal);
+	return normalize(glm::vec3(normalMatrix * glm::vec4(normal, 0.0f)));
 }
 
 //This is here so planes can be translated easily
@@ -74,6 +72,7 @@ glm::vec3 Object::transformNormal(const glm::vec3 & normal, bool invertModel)
 void Object::invertModel()
 {
 	model = glm::inverse(model);
+	normalMatrix = glm::transpose(model);
 }
 
 float Object::quadraticRoot(float a, float b, float c) 

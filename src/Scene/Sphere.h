@@ -16,8 +16,9 @@ public:
 	float getRadius() { return radius; }
 	glm::vec3 getCenter() { return center; }
 
+	Ray transformRay(const Ray & ray);
 	void addScale(const glm::vec3 & scale);
-	void addTranslate(const glm::vec3 & translate);
+	void invertModel();
 
 	std::string toStringLocal();
 	float collide(Ray ray);

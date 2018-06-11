@@ -17,6 +17,7 @@ protected:
 	glm::vec3 color;
 	Material mat;
 	std::string name;
+	glm::mat4 normalMatrix = glm::mat4(1.0f);
 	glm::mat4 model = glm::mat4(1.0f);
 	//returns the smallest positive root of the equation given by -b+-sqrt(b^2-4ac)/2a, or a negative number if neither is positive
 	float quadraticRoot(float a, float b, float c);
