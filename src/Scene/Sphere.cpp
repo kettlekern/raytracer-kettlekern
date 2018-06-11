@@ -23,7 +23,7 @@ void Sphere::addScale(const glm::vec3 & scale)
 		radius *= scale.x;
 	}
 	else {
-		__super::addScale(scale);
+		Object::addScale(scale);
 	}
 }
 
@@ -38,7 +38,8 @@ std::string Sphere::toStringLocal() {
 }
 
 glm::vec3 Sphere::getNormal(glm::vec3 position, glm::vec3 rayDirection) {
-	glm::vec3 normal = glm::normalize(position - center);
+	glm::vec3 newCenter = glm::vec3(model * glm::vec4(center, 1.0f));
+	glm::vec3 normal = glm::normalize(position - newCenter);
 	rayDirection = glm::vec3(model * glm::vec4(rayDirection, 0.0f));
 	normal = transformNormal(normal);
 	if (glm::dot(normal, rayDirection) > 0) {

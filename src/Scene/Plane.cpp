@@ -18,7 +18,7 @@ void Plane::addTranslate(const glm::vec3 & translate)
 
 void Plane::invertModel()
 {
-	__super::invertModel();
+	Object::invertModel();
 	normal = transformNormal(normal);
 }
 
