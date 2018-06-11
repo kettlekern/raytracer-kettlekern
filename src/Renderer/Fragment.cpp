@@ -224,7 +224,7 @@ void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode, int maxBounces, bool
 		float localAmount, reflectionAmount, refractionAmount, fresnelAmount;
 		maxBounces--;
 		if (fresnel) {
-			fresnelAmount = schlicksApproximation(mat.ior, obj->getNormal(position, ray.direction), normalize(ray.origin - position));
+			fresnelAmount = schlicksApproximation(mat.ior, obj->getNormal(position, ray.direction), -ray.direction);
 		}
 		else {
 			fresnelAmount = 0;
@@ -237,7 +237,7 @@ void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode, int maxBounces, bool
 		//Calculate shading from refraction
 		if (refractionAmount > 0.0f) {
 			refractionColor = calcRefractionColor(scene, lightMode, maxBounces, verbose);
-			//If there is total internal reflection, do this
+			//If there is total internal reflection, do calculate the reflection only once by doing this
 			if (refractionColor.x < 0) {
 				reflectionAmount += refractionAmount;
 				refractionAmount = 0.0f;
