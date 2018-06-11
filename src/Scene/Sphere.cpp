@@ -40,7 +40,7 @@ void Sphere::addScale(const glm::vec3 & scale)
 void Sphere::invertModel()
 {
 	center = glm::vec3(model * glm::vec4(center, 1.0f));
-	model = glm::inverse(model);
+	Object::invertModel();
 }
 
 std::string Sphere::toStringLocal() {
@@ -49,7 +49,7 @@ std::string Sphere::toStringLocal() {
 }
 
 glm::vec3 Sphere::getNormal(glm::vec3 position, glm::vec3 rayDirection) {
-	glm::vec3 objectSpacePosition = glm::vec3(model * glm::vec4(position, 1.0f));
+	glm::vec3 objectSpacePosition = glm::vec3(model * glm::vec4(position, 0.0f));
 	glm::vec3 normal = objectSpacePosition - center;
 	normal = transformNormal(normal);
 	if (glm::dot(normal, rayDirection) > 0) {
