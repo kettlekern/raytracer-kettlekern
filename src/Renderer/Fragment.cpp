@@ -8,7 +8,7 @@
 
 using namespace glm;
 
-Fragment::Fragment(const Hit & hit, Scene* scene, Ray ray) {
+Fragment::Fragment(const Hit & hit, Scene* scene, const Ray & ray) {
 	if (hit.isHit) {
 		position = hit.position;
 		//Compute this later
@@ -44,14 +44,14 @@ glm::vec3 Fragment::CookTorranceDiffuse(float Kd, vec3 normal, vec3 lightDir, ve
 float Fragment::CookTorranceFresnel(float ior, const glm::vec3 &viewDir, const glm::vec3 &H)
 {
 	float Fo = pow(ior - 1.0f, 2) / pow(ior + 1.0f, 2);
-	return Fo + (1 - Fo) * pow(1 - cdot(viewDir, H), 5);
+	return Fo + (1.0f - Fo) * pow(1.0f - cdot(viewDir, H), 5);
 }
 
 //This is using GGX
 float Fragment::CookTorranceD(float alphasq, const glm::vec3 & normal, const glm::vec3 & H)
 {
 	float NoH = cdot(normal, H);
-	float denom = NoH * NoH * (alphasq - 1) + 1;
+	float denom = NoH * NoH * (alphasq - 1.0f) + 1.0f;
 	return chiPos(NoH) * alphasq / (PI * denom * denom);
 }
 
@@ -61,7 +61,7 @@ float Fragment::CookTorranceG(float alphasq, const glm::vec3 & normal, const glm
 	float VorLoH = cdot(VorL, H);
 	int chi = chiPos(VorLoH / cdot(VorL, normal));
 	float VoH2 = VorLoH * VorLoH;
-	return chi * 2 / (1 + sqrt(1 + alphasq * (1 - VoH2) / VoH2));
+	return chi * 2.0f / (1.0f + sqrt(1.0f + alphasq * (1.0f - VoH2) / VoH2));
 }
 
 glm::vec3 Fragment::CookTorranceSpecular(float Ks, vec3 normal, vec3 lightDir, vec3 viewDir, vec3 specularColor, vec3 lightColor, glm::vec3 H, float ior, float roughness) {
@@ -348,10 +348,8 @@ glm::vec3 Fragment::calcRefractionVector(glm::vec3 direction, glm::vec3 normal, 
 
 float Fragment::schlicksApproximation(float ior, glm::vec3 normal, glm::vec3 view)
 {
-	float retval;
-	float Fo = (ior - 1.0f) * (ior - 1.0f) / ((ior + 1.0f) * (ior + 1.0f));
-	retval = Fo + (1 - Fo) * glm::pow(1 - glm::dot(normal, view), 5);
-	return retval;
+	float Fo = pow(ior - 1.0f, 2) / pow(ior + 1.0f, 2);
+	return Fo + (1.0f - Fo) * pow(1.0f - glm::abs(cdot(normal, view)), 5);
 }
 
 glm::vec3 Fragment::beersLaw(float distance, glm::vec3 color)

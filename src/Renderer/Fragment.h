@@ -66,7 +66,7 @@ private:
 	glm::vec3 beersLaw(float distance, glm::vec3 color);
 
 public:
-	Fragment(const Hit & hit, Scene* scene, Ray ray);
+	Fragment(const Hit & hit, Scene* scene, const Ray & ray);
 
 	//This should only be called externally, and only once. Use the bounce counting version for all other calls.
 	void colorFrag(Scene* scene, LIGHTMODE lightingType);
