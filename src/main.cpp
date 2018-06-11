@@ -36,6 +36,7 @@ void parseFlags(int argc, char ** argv, Flags & flags)
 	string Beers = "-beers";
 	string Fresnel = "-fresnel";
 	string superSample = "-ss=";
+	string SDS = "-sds";
 	string temp;
 	int argcOffset = 5;
 	argc -= argcOffset;
@@ -43,24 +44,21 @@ void parseFlags(int argc, char ** argv, Flags & flags)
 		temp = argv[argcOffset];
 		if (altBRDF.compare(temp) == 0) {
 			flags.isAltBRDF = true;
-			argc--;
-			argcOffset++;
 		}
 		else if (Beers.compare(temp) == 0) {
 			flags.useBeers = true;
-			argc--;
-			argcOffset++;
 		}
 		else if (Fresnel.compare(temp) == 0) {
 			flags.useFresnel = true;
-			argc--;
-			argcOffset++;
+		}
+		else if (SDS.compare(temp) == 0) {
+			flags.useSDS = true;
 		}
 		else if (superSample.compare(temp.substr(0,4)) == 0) {
 			flags.superSampleCount = stoi(temp.substr(4, temp.length()));
-			argc--;
-			argcOffset++;
 		}
+		argc--;
+		argcOffset++;
 	}
 }
 
