@@ -24,190 +24,214 @@ sphere { <0, 0, 0>, 2.0
   pigment { color rgb <1.0, 1.0, 1.0> }
   finish {roughness 0.02 ior 1.6 reflection 1.0}
   scale <1, 2, 1>
-  rotate <0, 0, -25>
+  rotate <0, 0, 25>
   translate <-1.2, 0, 0>
 }
 
 // Green
-sphere { <-2.5, -3, 4>, 1.0
+sphere { <0, 0, 0>, 1.0
   pigment { color rgb <0.4, 1.0, 0.4> }
   finish {ambient 0.2 diffuse 0.6 specular 0.7 roughness 0.02 ior 1.6 reflection 0.6}
   scale <1, 2, 1>
   rotate <0, 0, -25>
   translate <.6, 0, 0>
+  translate <-2.5, -3, 4>
 }
-sphere { <-2.5, -3, 4>, 1.0
+sphere { <0, 0, 0>, 1.0
   pigment { color rgb <0.4, 1.0, 0.4> }
   finish {ambient 0.2 diffuse 0.6 specular 0.7 roughness 0.02 ior 1.6 reflection 0.6}
   scale <1, 2, 1>
-  rotate <0, 0, -25>
+  rotate <0, 0, 25>
   translate <-.6, 0, 0>
+  translate <-2.5, -3, 4>
 }
 
 // Red
-sphere { <2.5, -3, 4>, 1.0
+sphere { <0, 0, 0>, 1.0
   pigment { color rgb <1.0, 0.3, 0.3> }
   finish {ambient 0.2 diffuse 0.6 specular 0.7 roughness 0.02 ior 1.6 reflection 0.6}
   scale <1, 2, 1>
   rotate <0, 0, -25>
   translate <.6, 0, 0>
+  translate <2.5, -3, 4>
 }
-sphere { <2.5, -3, 4>, 1.0
+sphere { <0, 0, 0>, 1.0
   pigment { color rgb <1.0, 0.3, 0.3> }
   finish {ambient 0.2 diffuse 0.6 specular 0.7 roughness 0.02 ior 1.6 reflection 0.6}
   scale <1, 2, 1>
-  rotate <0, 0, -25>
+  rotate <0, 0, 25>
   translate <-.6, 0, 0>
+  translate <2.5, -3, 4>
 }
 
 // Purple
-sphere { <5, -2, 0>, 1.0
+sphere { <0, 0, 0>, 1.0
   pigment { color rgb <0.8, 0.4, 1.0> }
   finish {ambient 0.2 diffuse 0.6 specular 0.7 roughness 0.02 ior 1.6 reflection 0.6}
   scale <1, 2, 1>
   rotate <0, 0, -25>
   translate <.6, 0, 0>
+  translate <5, -2, 0>
 }
-sphere { <5, -2, 0>, 1.0
+sphere { <0, 0, 0>, 1.0
   pigment { color rgb <0.8, 0.4, 1.0> }
   finish {ambient 0.2 diffuse 0.6 specular 0.7 roughness 0.02 ior 1.6 reflection 0.6}
   scale <1, 2, 1>
-  rotate <0, 0, -25>
+  rotate <0, 0, 25>
   translate <-.6, 0, 0>
+  translate <5, -2, 0>
 }
 
 // Yellow
-sphere { <-5, -2, 0>, 1.0
+sphere { <0, 0, 0>, 1.0
   pigment { color rgb <1.0, 1.0, 0.4> }
   finish {ambient 0.2 diffuse 0.6 specular 0.7 roughness 0.02 ior 1.6 reflection 0.6}
   scale <1, 2, 1>
   rotate <0, 0, -25>
   translate <.6, 0, 0>
+  translate <-5, -2, 0>
 }
-sphere { <-5, -2, 0>, 1.0
+sphere { <0, 0, 0>, 1.0
   pigment { color rgb <1.0, 1.0, 0.4> }
   finish {ambient 0.2 diffuse 0.6 specular 0.7 roughness 0.02 ior 1.6 reflection 0.6}
   scale <1, 2, 1>
-  rotate <0, 0, -25>
+  rotate <0, 0, 25>
   translate <-.6, 0, 0>
+  translate <-5, -2, 0>
 }
 
 // Blue
-sphere { <-6.5, 0, 4>, 1.0
+sphere { <0, 0, 0>, 1.0
   pigment { color rgb <0.4, 0.6, 1.0> }
   finish {ambient 0.2 diffuse 0.6 specular 0.7 roughness 0.02 ior 1.6 reflection 0.6}
   scale <1, 2, 1>
   rotate <0, 0, -25>
   translate <.6, 0, 0>
+  translate <-6.5, 0, 4>
 }
-sphere { <-6.5, 0, 4>, 1.0
+sphere { <0, 0, 0>, 1.0
   pigment { color rgb <0.4, 0.6, 1.0> }
   finish {ambient 0.2 diffuse 0.6 specular 0.7 roughness 0.02 ior 1.6 reflection 0.6}
   scale <1, 2, 1>
-  rotate <0, 0, -25>
+  rotate <0, 0, 25>
   translate <-.6, 0, 0>
+  translate <-6.5, 0, 4>
 }
 
 // Orange
-sphere { <6.5, 0, 4>, 1.0
+sphere { <0, 0, 0>, 1.0
   pigment { color rgb <1.0, 0.65, 0.0> }
   finish {ambient 0.2 diffuse 0.6 specular 0.7 roughness 0.02 ior 1.6 reflection 0.6}
   scale <1, 2, 1>
   rotate <0, 0, -25>
   translate <.6, 0, 0>
+  translate <6.5, 0, 4>
 }
-sphere { <6.5, 0, 4>, 1.0
+sphere { <0, 0, 0>, 1.0
   pigment { color rgb <1.0, 0.65, 0.0> }
   finish {ambient 0.2 diffuse 0.6 specular 0.7 roughness 0.02 ior 1.6 reflection 0.6}
   scale <1, 2, 1>
-  rotate <0, 0, -25>
+  rotate <0, 0, 25>
   translate <-.6, 0, 0>
+  translate <6.5, 0, 4>
 }
 
 
-sphere { <2.5, -3, 14>, 1.0
+sphere { <0, 0, 0>, 1.0
   pigment { color rgb <1.0, 0.3, 0.3> }
   finish {ambient 0.2 diffuse 0.6 specular 0.7 roughness 0.02 ior 1.6 reflection 0.6}
   scale <1, 2, 1>
   rotate <0, 0, -25>
   translate <.6, 0, 0>
+  translate <2.5, -3, 14>
 }
-sphere { <2.5, -3, 14>, 1.0
+sphere { <0, 0, 0>, 1.0
   pigment { color rgb <1.0, 0.3, 0.3> }
   finish {ambient 0.2 diffuse 0.6 specular 0.7 roughness 0.02 ior 1.6 reflection 0.6}
   scale <1, 2, 1>
-  rotate <0, 0, -25>
+  rotate <0, 0, 25>
   translate <-.6, 0, 0>
+  translate <2.5, -3, 14>
 }
-sphere { <-2.5, -3, 14>, 1.0
+sphere { <0, 0, 0>, 1.0
   pigment { color rgb <0.4, 1.0, 0.4> }
   finish {ambient 0.2 diffuse 0.6 specular 0.7 roughness 0.02 ior 1.6 reflection 0.6}
   scale <1, 2, 1>
   rotate <0, 0, -25>
   translate <.6, 0, 0>
+  translate <-2.5, -3, 14>
 }
-sphere { <-2.5, -3, 14>, 1.0
+sphere { <0, 0, 0>, 1.0
   pigment { color rgb <0.4, 1.0, 0.4> }
   finish {ambient 0.2 diffuse 0.6 specular 0.7 roughness 0.02 ior 1.6 reflection 0.6}
   scale <1, 2, 1>
-  rotate <0, 0, -25>
+  rotate <0, 0, 25>
   translate <-.6, 0, 0>
+  translate <-2.5, -3, 14>
 }
-sphere { <5, -2, 12>, 1.0
+sphere { <0, 0, 0>, 1.0
   pigment { color rgb <0.8, 0.4, 1.0> }
   finish {ambient 0.2 diffuse 0.6 specular 0.7 roughness 0.02 ior 1.6 reflection 0.6}
   scale <1, 2, 1>
   rotate <0, 0, -25>
   translate <.6, 0, 0>
+  translate <5, -2, 12>
 }
-sphere { <5, -2, 12>, 1.0
+sphere { <0, 0, 0>, 1.0
   pigment { color rgb <0.8, 0.4, 1.0> }
   finish {ambient 0.2 diffuse 0.6 specular 0.7 roughness 0.02 ior 1.6 reflection 0.6}
   scale <1, 2, 1>
-  rotate <0, 0, -25>
+  rotate <0, 0, 25>
   translate <-.6, 0, 0>
+  translate <5, -2, 12>
 }
-sphere { <-5, -2, 12>, 1.0
+sphere { <0, 0, 0>, 1.0
   pigment { color rgb <1.0, 1.0, 0.4> }
   finish {ambient 0.2 diffuse 0.6 specular 0.7 roughness 0.02 ior 1.6 reflection 0.6}
   scale <1, 2, 1>
   rotate <0, 0, -25>
   translate <.6, 0, 0>
+  translate <-5, -2, 12>
 }
-sphere { <-5, -2, 12>, 1.0
+sphere { <0, 0, 0>, 1.0
   pigment { color rgb <1.0, 1.0, 0.4> }
   finish {ambient 0.2 diffuse 0.6 specular 0.7 roughness 0.02 ior 1.6 reflection 0.6}
   scale <1, 2, 1>
-  rotate <0, 0, -25>
+  rotate <0, 0, 25>
   translate <-.6, 0, 0>
+  translate <-5, -2, 12>
 }
-sphere { <-6.5, 0, 12>, 1.0
+sphere { <0, 0, 0>, 1.0
   pigment { color rgb <0.4, 0.6, 1.0> }
   finish {ambient 0.2 diffuse 0.6 specular 0.7 roughness 0.02 ior 1.6 reflection 0.6}
   scale <1, 2, 1>
   rotate <0, 0, -25>
   translate <.6, 0, 0>
+  translate <-6.5, 0, 12>
 }
-sphere { <-6.5, 0, 12>, 1.0
+sphere { <0, 0, 0>, 1.0
   pigment { color rgb <0.4, 0.6, 1.0> }
   finish {ambient 0.2 diffuse 0.6 specular 0.7 roughness 0.02 ior 1.6 reflection 0.6}
   scale <1, 2, 1>
-  rotate <0, 0, -25>
+  rotate <0, 0, 25>
   translate <-.6, 0, 0>
+  translate <-6.5, 0, 12>
 }
-sphere { <6.5, 0, 12>, 1.0
+sphere { <0, 0, 0>, 1.0
   pigment { color rgb <1.0, 0.5, 0.2> }
   finish {ambient 0.2 diffuse 0.6 specular 0.7 roughness 0.02 ior 1.6 reflection 0.6}
   scale <1, 2, 1>
   rotate <0, 0, -25>
   translate <.6, 0, 0>
+  translate <6.5, 0, 12>
 }
-sphere { <6.5, 0, 12>, 1.0
+sphere { <0, 0, 0>, 1.0
   pigment { color rgb <1.0, 0.5, 0.2> }
   finish {ambient 0.2 diffuse 0.6 specular 0.7 roughness 0.02 ior 1.6 reflection 0.6}
   scale <1, 2, 1>
-  rotate <0, 0, -25>
+  rotate <0, 0, 25>
   translate <-.6, 0, 0>
+  translate <6.5, 0, 12>
 }
 
 // Floor
