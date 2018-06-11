@@ -15,18 +15,6 @@ float Sphere::collide(Ray ray) {
 	return quadraticRoot(a, b, c);
 }
 
-
-Ray Sphere::transformRay(const Ray & ray)
-{
-	Ray returnRay;
-	//Because we already modev the center, the ray does not need to be translated.
-	returnRay.origin = glm::vec3(model * glm::vec4(ray.origin, 0.0f));
-	returnRay.direction = glm::vec3(model * glm::vec4(ray.direction, 0.0f));
-	returnRay.ior = ray.ior;
-
-	return returnRay;
-}
-
 void Sphere::addScale(const glm::vec3 & scale)
 {
 	//If it is a uniform scale, use this optimization
@@ -38,21 +26,13 @@ void Sphere::addScale(const glm::vec3 & scale)
 	}
 }
 
-void Sphere::invertModel()
-{
-	//Pre-compute the new center for the sphere before inverting the matrix to save ops down the line
-	center = glm::vec3(model * glm::vec4(center, 1.0f));
-	Object::invertModel();
-}
-
 std::string Sphere::toStringLocal() {
 	return " - Center: " + Parser::vec3ToString(center) + "\n" +
 		   " - Radius: " + formatted_to_string(radius) + "\n";
 }
 
 glm::vec3 Sphere::getNormal(glm::vec3 position, glm::vec3 rayDirection) {
-	//Because the sphere is moved in world space, it does not need to be translated here as well
-	glm::vec3 objectSpacePosition = glm::vec3(model * glm::vec4(position, 0.0f));
+	glm::vec3 objectSpacePosition = glm::vec3(model * glm::vec4(position, 1.0f));
 	glm::vec3 normal = objectSpacePosition - center;
 	normal = transformNormal(normal);
 	if (glm::dot(normal, rayDirection) > 0) {

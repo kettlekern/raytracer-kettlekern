@@ -17,6 +17,7 @@ public:
 
 	std::string toStringLocal();
 	float collide(Ray ray);
+
 	void addTranslate(const glm::vec3 & translate);
 	void invertModel();
 

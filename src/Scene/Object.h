@@ -33,7 +33,7 @@ public:
 	virtual void addTranslate(const glm::vec3 & translate);
 	virtual void addRotate(const glm::vec3 & rotate);
 	virtual void addScale(const glm::vec3 & scale);
-	virtual Ray transformRay(const Ray & ray);
+	Ray transformRay(const Ray & ray);
 	virtual void invertModel();
 	glm::vec3 transformNormal(const glm::vec3 & normal);
 	glm::vec3 transformNormal(const glm::vec3 & normal, bool invertModel);
