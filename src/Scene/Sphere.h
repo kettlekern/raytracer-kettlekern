@@ -10,8 +10,8 @@ protected:
 	glm::vec3 center;
 
 public:
-	Sphere(glm::vec3 color, Material mat, glm::vec3 center, float radius) : Object(color, mat), center(center), radius(radius) { name = "Sphere"; }
-	Sphere(glm::vec4 color, Material mat, glm::vec3 center, float radius) : Object(color, mat), center(center), radius(radius) { name = "Sphere"; }
+	Sphere(glm::vec3 color, Material mat, int id, glm::vec3 center,  float radius) : Object(color, mat, id), center(center), radius(radius) { name = "Sphere"; }
+	Sphere(glm::vec4 color, Material mat, int id, glm::vec3 center,  float radius) : Object(color, mat, id), center(center), radius(radius) { name = "Sphere"; }
 
 	float getRadius() { return radius; }
 	glm::vec3 getCenter() { return center; }

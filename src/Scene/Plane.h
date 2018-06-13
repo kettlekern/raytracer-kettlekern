@@ -10,8 +10,8 @@ protected:
 	glm::vec3 normal;
 
 public:
-	Plane(glm::vec3 color, Material mat, glm::vec3 normal, float distance) : Object(color, mat), normal(normal), distance(distance) { name = "Plane"; }
-	Plane(glm::vec4 color, Material mat, glm::vec3 normal, float distance) : Object(color, mat), normal(normal), distance(distance) { name = "Plane"; }
+	Plane(glm::vec3 color, Material mat, int id, glm::vec3 normal, float distance) : Object(color, mat, id), normal(normal), distance(distance) { name = "Plane"; }
+	Plane(glm::vec4 color, Material mat, int id, glm::vec3 normal, float distance) : Object(color, mat, id), normal(normal), distance(distance) { name = "Plane"; }
 
 	float getDistance() { return distance; }
 

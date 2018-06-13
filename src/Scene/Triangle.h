@@ -9,8 +9,8 @@ protected:
 	glm::vec3 pointA, pointB, pointC;
 	float checkDeterminant(Ray ray, float detA, glm::vec3 first, glm::vec3 second, glm::vec3 third);
 public:
-	Triangle(glm::vec3 color, Material mat, glm::vec3 pointA, glm::vec3 pointB, glm::vec3 pointC) : Object(color, mat), pointA(pointA), pointB(pointB), pointC(pointC) { name = "Triangle"; }
-	Triangle(glm::vec4 color, Material mat, glm::vec3 pointA, glm::vec3 pointB, glm::vec3 pointC) : Object(color, mat), pointA(pointA), pointB(pointB), pointC(pointC) { name = "Triangle"; }
+	Triangle(glm::vec3 color, Material mat, int id, glm::vec3 pointA, glm::vec3 pointB, glm::vec3 pointC) : Object(color, mat, id), pointA(pointA), pointB(pointB), pointC(pointC) { name = "Triangle"; }
+	Triangle(glm::vec4 color, Material mat, int id, glm::vec3 pointA, glm::vec3 pointB, glm::vec3 pointC) : Object(color, mat, id), pointA(pointA), pointB(pointB), pointC(pointC) { name = "Triangle"; }
 
 	//Triangles don't need a matrix stack, you can just modify the points by the transformaion
 	void addTranslate(const glm::vec3 & translate);
