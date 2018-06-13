@@ -16,6 +16,7 @@ std::vector<Ray> genRays(int width, int height, Scene* scene) {
 	return rays;
 }
 
+//This is used when creating the camera, it should only be called for the initial ray cast
 Ray genRay(int width, int height, Scene* scene, int i, int j) {
 	float focalLength = 1;
 	Camera camera = scene->getCamera();
@@ -28,7 +29,7 @@ Ray genRay(int width, int height, Scene* scene, int i, int j) {
 	return Ray(camera.location, normalize(direction));
 }
 
-Hit setHit(float t, Object* obj, Ray ray) {
+Hit setHit(float t, Object* obj, const Ray & ray) {
 	Hit hitVal;
 	hitVal.isHit = (t > 0);
 	if (hitVal.isHit) {
@@ -42,7 +43,7 @@ Hit setHit(float t, Object* obj, Ray ray) {
 	return hitVal;
 }
 
-Hit collide(Scene* scene, Ray ray) {
+Hit collide(Scene* scene, const Ray & ray) {
 	Hit hitVal, temphit;
 	hitVal.isHit = false;
 	float t;

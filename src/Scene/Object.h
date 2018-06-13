@@ -29,6 +29,7 @@ public:
 
 	glm::vec3 getColor() { return color; }
 	std::string getName() { return name; }
+	int getID() { return id; }
 	Material getMaterial() { return mat; }
 
 	void setMaterial(Material mat) { this->mat = mat; }

@@ -275,7 +275,7 @@ vec3 Fragment::calcReflectionColor(Scene * scene, LIGHTMODE lightMode, int maxBo
 	//glm function that calculates the reflection vector given a direction and normal
 	vec3 reflectionVector = normalize(reflect(ray.direction, normal));
 	//Offset the position so the ray does not collide with the current object
-	Ray newRay(position + EPS * normal, reflectionVector);
+	Ray newRay(position + EPS * normal, reflectionVector, ray.ior, ray.entering, ray.objID, &ray);
 
 	//Do the cast and color for the new fragment
 	Hit hit = collide(scene, newRay);
@@ -310,15 +310,16 @@ vec3 Fragment::calcRefractionColor(Scene * scene, LIGHTMODE lightMode, int maxBo
 		retColor = vec3(-1.0f);
 	}
 	else {
+		bool enter = entering(obj->getID());
 		//Offset the position so the ray does not collide with the current object. Offset should be away from the ray's direction which is why it is negative
-		Ray newRay(position - EPS * normal, refractionVector, ior2);
+		Ray newRay(position - EPS * normal, refractionVector, ior2, enter, enter ? obj->getID() : ray.objID, &ray);
 
 		//Do the cast and color for the new fragment
 		Hit hit = collide(scene, newRay);
 		Fragment refractFrag = Fragment(hit, scene, newRay);
 		refractFrag.colorFrag(scene, lightMode, maxBounces, verbose);
 		retColor = refractFrag.fragColor;
-		if (entering()) {
+		if (enter) {
 			if (beers) {
 				retColor *= beersLaw(glm::length(position - refractFrag.position), obj->getColor());
 			}
@@ -344,6 +345,18 @@ glm::vec3 Fragment::calcRefractionVector(glm::vec3 direction, glm::vec3 normal, 
 		result = n1overn2 * (direction - DdotN * normal) - normal * glm::sqrt(radicand);
 	}
 	return normalize(result);
+}
+
+bool Fragment::entering(int objID)
+{
+	Ray* temp = &ray;
+	while (temp != nullptr) {
+		if (ray.objID == objID && ray.entering) {
+			return false;
+		}
+		temp = ray.fromRay;
+	}
+	return true;
 }
 
 float Fragment::schlicksApproximation(float ior, glm::vec3 normal, glm::vec3 view)

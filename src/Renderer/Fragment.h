@@ -61,7 +61,7 @@ private:
 	//The second vector needs more support to function for all cases, for now we will just assume air + object collisions
 	glm::vec3 calcRefractionVector(glm::vec3 direction, glm::vec3 normal, float ior1, float ior2);
 	//This should probably be a variable on ray rather than this calculation, but because we assume no touching objects this is fine for now.
-	bool entering() { return ray.ior < mat.ior; }
+	bool entering(int objID);
 	float schlicksApproximation(float ior, glm::vec3 normal, glm::vec3 view);
 	glm::vec3 beersLaw(float distance, glm::vec3 color);
 

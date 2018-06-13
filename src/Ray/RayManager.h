@@ -14,9 +14,9 @@
 
 std::vector<Ray> genRays(int width, int height, Scene* scene);
 Ray genRay(int width, int height, Scene* scene, int i, int j);
-Hit collide(Scene* scene, Ray ray);
+Hit collide(Scene* scene, const Ray & ray);
 void castRays(int width, int height, Scene* scene);
-Hit setHit(float t, Object* obj, Ray ray);
+Hit setHit(float t, Object* obj, const Ray & ray);
 void renderScene(int width, int height, Scene* scene, Flags flags);
 
 #endif
