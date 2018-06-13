@@ -56,12 +56,12 @@ private:
 	void colorFrag(Scene* scene, LIGHTMODE lightingType, int maxBounces);
 	void colorFrag(Scene* scene, LIGHTMODE lightingType, int maxBounces, bool verbose);
 	glm::vec3 calcLocalColor(Scene * scene, LIGHTMODE lightMode);
-	glm::vec3 calcReflectionColor(Scene * scene, LIGHTMODE lightMode, bool TotalInternalReflection, int maxBounces, bool verbose);
+	glm::vec3 calcReflectionColor(Scene * scene, LIGHTMODE lightMode, int maxBounces, bool verbose);
 	glm::vec3 calcRefractionColor(Scene * scene, LIGHTMODE lightMode, int maxBounces, bool verbose);
 	//The second vector needs more support to function for all cases, for now we will just assume air + object collisions
 	glm::vec3 calcRefractionVector(glm::vec3 direction, glm::vec3 normal, float ior1, float ior2);
-	//This should probably be a variable on ray rather than this calculation, but because we assume no touching objects this is fine for now.
 	bool entering(int objID, Ray* newRay);
+	float findRayIOR(float ior);
 	float schlicksApproximation(float ior, glm::vec3 normal, glm::vec3 view);
 	glm::vec3 beersLaw(float distance, glm::vec3 color);
 

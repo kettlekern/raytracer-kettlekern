@@ -221,7 +221,6 @@ void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode, int maxBounces, bool
 		vec3 localColor = vec3(0.0f);
 		vec3 reflectionColor = vec3(0.0f);
 		vec3 refractionColor = vec3(0.0f);
-		bool totalInternalReflection = false;
 		float localAmount, reflectionAmount, refractionAmount, fresnelAmount;
 		maxBounces--;
 		if (fresnel) {
@@ -242,12 +241,11 @@ void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode, int maxBounces, bool
 			if (refractionColor.x < 0) {
 				reflectionAmount += refractionAmount;
 				refractionAmount = 0.0f;
-				totalInternalReflection = true;
 			}
 		}
 		//Calculate shading from reflection
 		if (reflectionAmount > 0.0f) {
-			reflectionColor = calcReflectionColor(scene, lightMode, totalInternalReflection, maxBounces, verbose);
+			reflectionColor = calcReflectionColor(scene, lightMode, maxBounces, verbose);
 		}
 		fragColor = localColor * localAmount + reflectionColor * reflectionAmount + refractionColor * refractionAmount;
 	}
@@ -270,14 +268,15 @@ vec3 Fragment::calcLocalColor(Scene * scene, LIGHTMODE lightMode)
 	return color;
 }
 
-vec3 Fragment::calcReflectionColor(Scene * scene, LIGHTMODE lightMode, bool TIR, int maxBounces, bool verbose)
+vec3 Fragment::calcReflectionColor(Scene * scene, LIGHTMODE lightMode,  int maxBounces, bool verbose)
 {
 	vec3 normal = obj->getNormal(position, ray.direction);
 
 	//glm function that calculates the reflection vector given a direction and normal
 	vec3 reflectionVector = normalize(reflect(ray.direction, normal));
 	//Offset the position so the ray does not collide with the current object
-	Ray newRay(position + EPS * normal, reflectionVector, ray.ior, TIR, obj->getID(), &ray);
+	Ray newRay(position + EPS * normal, reflectionVector, ray.ior, true, obj->getID(), &ray);
+	newRay.entering = ray.entering;
 
 	//Do the cast and color for the new fragment
 	Hit hit = collide(scene, newRay);
@@ -299,7 +298,7 @@ vec3 Fragment::calcRefractionColor(Scene * scene, LIGHTMODE lightMode, int maxBo
 	if (ior1 == ior2) {
 		//In the current system, we can assume this will occur only when exiting an object into air.
 		//If moving from an object into air, ior2 = 1.0.
-		ior2 = 1.0f;
+		ior2 = findRayIOR(ior1);
 	}
 
 	//glm function that calculates the reflection vector given a direction and normal
@@ -315,6 +314,7 @@ vec3 Fragment::calcRefractionColor(Scene * scene, LIGHTMODE lightMode, int maxBo
 		//Offset the position so the ray does not collide with the current object. Offset should be away from the ray's direction which is why it is negative
 		Ray newRay(position - EPS * normal, refractionVector, ior2, false, obj->getID(), &ray);
 		bool enter = entering(obj->getID(), &newRay);
+		newRay.entering = enter;
 		//Do the cast and color for the new fragment
 		Hit hit = collide(scene, newRay);
 		Fragment refractFrag = Fragment(hit, scene, newRay);
@@ -348,16 +348,42 @@ glm::vec3 Fragment::calcRefractionVector(glm::vec3 direction, glm::vec3 normal, 
 	return normalize(result);
 }
 
+//This isn't correct, but its a simplification
 bool Fragment::entering(int objID, Ray* newRay)
 {
 	Ray* temp = newRay;
-	while (temp) {
-		if (!ray.TotalInternalReflection && ray.objID == objID) {
+	while (temp != nullptr) {
+		if (!ray.reflection && ray.objID == objID) {
 			return false;
 		}
 		temp = temp->fromRay;
 	}
 	return true;
+}
+
+//This does not support touching objects or overlaped objects
+float Fragment::findRayIOR(float ior)
+{
+	//If the ray is entering, then the object's ior is the ior of the ray
+	if (ray.entering) {
+		return ior;
+	}
+
+	Ray* temp = &ray;
+	//This ray must be exiting, so we start the counter at 1
+	int exitCount = 1;
+	while (exitCount > 0) {
+		if (!temp->reflection) {
+			if (temp->entering) {
+				--exitCount;
+			}
+			else {
+				++exitCount;
+			}
+		}
+		temp = temp->fromRay;
+	}
+	return temp ? temp->ior : 1.0f;
 }
 
 float Fragment::schlicksApproximation(float ior, glm::vec3 normal, glm::vec3 view)
