@@ -312,10 +312,7 @@ vec3 Fragment::calcRefractionColor(Scene * scene, LIGHTMODE lightMode, int maxBo
 		retColor = vec3(-1.0f);
 	}
 	else {
-		bool enter = entering(obj->getID());
 		//Offset the position so the ray does not collide with the current object. Offset should be away from the ray's direction which is why it is negative
-		Ray newRay(position - EPS * normal, refractionVector, ior2, enter, enter ? obj->getID() : ray.objID, &ray);
-
 		Ray newRay(position - EPS * normal, refractionVector, ior2, false, obj->getID(), &ray);
 		bool enter = entering(obj->getID(), &newRay);
 		//Do the cast and color for the new fragment
@@ -351,14 +348,13 @@ glm::vec3 Fragment::calcRefractionVector(glm::vec3 direction, glm::vec3 normal, 
 	return normalize(result);
 }
 
-bool Fragment::entering(int objID)
+bool Fragment::entering(int objID, Ray* newRay)
 {
 	Ray* temp = newRay;
 	while (temp) {
 		if (!ray.TotalInternalReflection && ray.objID == objID) {
 			return false;
 		}
-		temp = ray.fromRay;
 		temp = temp->fromRay;
 	}
 	return true;
