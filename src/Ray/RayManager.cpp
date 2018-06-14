@@ -2,9 +2,10 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "../stb_image_write.h"
 #include "../Renderer/Buffer.h"
+#include "../Renderer/Volumetric.h"
+#include "../Renderer/Simplex Noise/OpenSimplexNoise.hh"
 
-#define FOG_COLOR glm::vec3(1.0f, 1.0f, 1.0f)
-#define FOG_AMOUNT 0.01f
+#define FOG_COLOR glm::vec3(0.6f, 0.0f, 0.0f)
 
 std::vector<Ray> genRays(int width, int height, Scene* scene) {
 	std::vector<Ray> rays;
@@ -96,7 +97,8 @@ void renderScene(int width, int height, Scene* scene, Flags flags) {
 	//Create a buffer that holds the fragments
 	Buffer fragBuf(width, height);
 	auto lightMode = BLINN_PHONG;
-	Volumetric fog(FOG_COLOR);
+	auto noise = new OSN::Noise<3>(324);
+	Volumetric fog(FOG_COLOR, noise);
 	if (flags.isAltBRDF) {
 		lightMode = COOK_TORRANCE;
 	}
@@ -110,16 +112,7 @@ void renderScene(int width, int height, Scene* scene, Flags flags) {
 					int rayIndex = (j + ssx) * width * flags.superSampleCount + (i + ssy);
 					//Fragment is a more robust hit object, mostly a wrapper for old code
 					Hit val = collide(scene, rays[rayIndex]);
-					Fragment frag(val, scene, rays[rayIndex]);
-					if (flags.useFresnel) {
-						frag.activateFresnel();
-					}
-					if (flags.useBeers) {
-						frag.activateBeers();
-					}
-					if (flags.useFog) {
-						frag.activateFog(&fog);
-					}
+					Fragment frag(val, scene, rays[rayIndex], flags, &fog);
 					frag.colorFrag(scene, lightMode);
 					superSampleBuf.push_back(frag);
 				}
@@ -128,6 +121,7 @@ void renderScene(int width, int height, Scene* scene, Flags flags) {
 			fragBuf.push_back(fragOut);
 		}
 	}
+	delete(noise);
 	//Draw the image	
 	stbi_write_png("output.png", width, height, 3, fragBuf.toArray(), sizeof(char) * 3 * width);
 }

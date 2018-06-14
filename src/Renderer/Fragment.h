@@ -9,6 +9,7 @@
 #include "../Hit.h"
 #include "../Ray/Ray.h"
 #include "Volumetric.h"
+#include "../Flags.h"
 
 //May want to hide this in a namespace
 enum LIGHTMODE {
@@ -26,9 +27,7 @@ private:
 	Object* obj;
 	Volumetric* fogCloud = nullptr;
 	Ray ray;
-	bool fresnel = false;
-	bool useFog = false;
-	bool beers = false;
+	Flags flags;
 
 	glm::vec3 clampColor(glm::vec3 color);
 	void clampColor();
@@ -69,14 +68,11 @@ private:
 	glm::vec3 beersLaw(float distance, glm::vec3 color);
 
 public:
-	Fragment(const Hit & hit, Scene* scene, const Ray & ray);
+	Fragment(const Hit & hit, Scene* scene, const Ray & ray, const Flags & flags, Volumetric* fog);
 
 	//This should only be called externally, and only once. Use the bounce counting version for all other calls.
 	void colorFrag(Scene* scene, LIGHTMODE lightingType);
 	void colorFrag(Scene* scene, LIGHTMODE lightingType, bool verbose);
-	void activateFresnel() { fresnel = true; }
-	void activateBeers() { beers = true; }
-	void activateFog(Volumetric* fog) { useFog = true; fogCloud = fog; }
 
 	bool isHit() { return obj != nullptr; }
 	glm::vec3 getColor() { return fragColor; }

@@ -10,6 +10,9 @@ struct Flags {
 	bool useGI = false;
 	bool useFog = false;
 	int superSampleCount = 1;
+	Flags() {}
+	Flags(const Flags & flags) : isAltBRDF(flags.isAltBRDF), useFresnel(flags.useFresnel), useBeers(flags.useBeers), 
+		useSDS(flags.useSDS), useGI(flags.useGI), useFog(flags.useFog), superSampleCount(flags.superSampleCount) {}
 };
 
 #endif

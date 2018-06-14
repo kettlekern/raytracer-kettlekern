@@ -20,6 +20,7 @@ protected:
 	glm::mat4 normalMatrix = glm::mat4(1.0f);
 	glm::mat4 model = glm::mat4(1.0f);
 	int id;
+	bool foggy;
 	//returns the smallest positive root of the equation given by -b+-sqrt(b^2-4ac)/2a, or a negative number if neither is positive
 	float quadraticRoot(float a, float b, float c);
 
@@ -30,6 +31,7 @@ public:
 	glm::vec3 getColor() { return color; }
 	std::string getName() { return name; }
 	int getID() { return id; }
+	bool isFoggy() { return foggy; }
 	Material getMaterial() { return mat; }
 
 	void setMaterial(Material mat) { this->mat = mat; }

@@ -76,25 +76,20 @@ void parseRender(int argc, char** argv, ImageCoords & image, Flags & flags) {
 	parseFlags(argc, argv, flags);
 }
 
-void parsePixelray(int argc, char** argv, ImageCoords & image, Point & point) {
+void parsePixelray(int argc, char** argv, ImageCoords & image, Point & point, Flags & flags) {
 	image.width = stoi(argv[3]);
 	image.height = stoi(argv[4]);
 	point.x = stoi(argv[5]);
 	point.y = stoi(argv[6]);
+	parseFlags(argc, argv, flags);
 }
 
-void parsePixelcolor(int argc, char** argv, ImageCoords & image, Point & point, bool* isAltBRDF) {
-	parsePixelray(argc, argv, image, point);
-	string str = "-altbrdf";
-	if (argc > 7) {
-		if (str.compare(argv[7]) == 0) {
-			*isAltBRDF = true;
-		}
-	}
+void parsePixelcolor(int argc, char** argv, ImageCoords & image, Point & point, Flags & flags) {
+	parsePixelray(argc, argv, image, point, flags);
 }
 
-void parseFirstHit(int argc, char** argv, ImageCoords & image, Point & point) {
-	parsePixelray(argc, argv, image, point);
+void parseFirstHit(int argc, char** argv, ImageCoords & image, Point & point, Flags & flags) {
+	parsePixelray(argc, argv, image, point, flags);
 }
 
 std::string pixelrayToString(const Hit & val, Ray ray, const Point & rayLoc, int height) {
@@ -105,11 +100,11 @@ std::string pixelrayToString(const Hit & val, Ray ray, const Point & rayLoc, int
 	return retval;
 }
 
-std::string pixelcolorToString(const Hit & val, Ray ray, Scene* scene, const Point & rayLoc, int height, bool isAltBRDF) {
+std::string pixelcolorToString(const Hit & val, Ray ray, Scene* scene, const Point & rayLoc, int height, Flags & flags) {
 	std::string retval;
-	std::string BRDFType = isAltBRDF ? "Cook-Torrance" : "Blinn-Phong";
-	Fragment frag(val, scene, ray);
-	frag.colorFrag(scene, isAltBRDF ? COOK_TORRANCE : BLINN_PHONG);
+	std::string BRDFType = flags.isAltBRDF ? "Cook-Torrance" : "Blinn-Phong";
+	Fragment frag(val, scene, ray, flags, nullptr);
+	frag.colorFrag(scene, flags.isAltBRDF ? COOK_TORRANCE : BLINN_PHONG);
 	retval += pixelrayToString(val, ray, rayLoc, height);
 	retval += "T = " + formatted_to_string(val.t) + "\n";
 	retval += "Object Type: " + val.objType + "\n";
@@ -156,31 +151,31 @@ int runCommand(int argc, char** argv) {
 	}
 	else if (command == "pixelcolor") {
 		bool isAltBRDF = false;
-		parsePixelcolor(argc, argv, image, point, &isAltBRDF);
+		parsePixelcolor(argc, argv, image, point, flags);
 		Ray ray = genRay(image.width, image.height, scene, point.x, point.y);
 		Hit value = collide(scene, ray);
-		cout << pixelcolorToString(value, ray, scene, point, image.height, isAltBRDF);
+		cout << pixelcolorToString(value, ray, scene, point, image.height, flags);
 	}
 	else if (command == "sceneinfo") {
 		scene->printScene();
 	}
 	else if (command == "pixelray") {
-		parsePixelray(argc, argv, image, point);
+		parsePixelray(argc, argv, image, point, flags);
 		Ray ray = genRay(image.width, image.height, scene, point.x, point.y);
 		Hit value = collide(scene, ray);
 		cout << pixelrayToString(value, ray, point, image.height);
 	}
 	else if (command == "printrays") {
-		parsePixelray(argc, argv, image, point);
+		parsePixelray(argc, argv, image, point, flags);
 		Ray ray = genRay(image.width, image.height, scene, point.x, point.y);
 		Hit value = collide(scene, ray);
-		Fragment frag(value, scene, ray);
-		cout << pixelcolorToString(value, ray, scene, point, image.height, false);
+		Fragment frag(value, scene, ray, flags, nullptr);
+		cout << pixelcolorToString(value, ray, scene, point, image.height, flags);
 		//Verbose mode doesn't really do anything helpful right now
 		frag.colorFrag(scene, BLINN_PHONG, false);
 	}
 	else if (command == "firsthit") {
-		parseFirstHit(argc, argv, image, point);
+		parseFirstHit(argc, argv, image, point, flags);
 		Ray ray = genRay(image.width, image.height, scene, point.x, point.y);
 		Hit value = collide(scene, ray);
 		cout << firstHitToString(value, ray, point, image.height);

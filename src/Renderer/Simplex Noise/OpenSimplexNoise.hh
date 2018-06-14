@@ -19,10 +19,11 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-
+#pragma once
 #ifndef OPENSIMPLEXNOISE_HH
 #define OPENSIMPLEXNOISE_HH
 
+#include <algorithm>
 #include <cmath>
 
   #define OSN_USE_CSTDINT
