@@ -1,7 +1,6 @@
 
 
 TODO:
-Add foggy shadows
 Add BRDF shading with fog
 fix refraction in fog cloud
 fix fog cloud bugs

@@ -2,7 +2,6 @@
 #ifndef __VOLUMETRIC_473_
 #define __VOLUMETRIC_473_
 #include <glm/glm.hpp>
-#include "../Scene/Object.h"
 #include "Simplex Noise/OpenSimplexNoise.hh"
 
 #define FOG_WEIGHT 0.1f
@@ -14,6 +13,8 @@ class Volumetric {
 	//Ideally this would be a random function that is easy to take an integral of, but for now is just one constant value
 	OSN::Noise<3>* noise;
 	glm::vec3 color;
+	float fogWeight = FOG_WEIGHT;
+	int fogSamples = FOG_SAMPLES;
 	float calcDensityFromTo(const glm::vec3 & from, const glm::vec3 & to);
 	float evalPoint(glm::vec3 point);
 	//float calcDensityFromTo(glm::vec3 from, glm::vec3 to) { return 0.01f; }
@@ -28,6 +29,7 @@ public:
 	float fogGathered(glm::vec3 from, glm::vec3 to);
 	glm::vec3 fogColorGathered(float fogAmount);
 	glm::vec3 getColor() { return color; }
+	void setWeight(float density) { fogWeight = density; }
 
 };
 

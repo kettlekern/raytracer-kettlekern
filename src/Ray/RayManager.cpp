@@ -98,7 +98,7 @@ void renderScene(int width, int height, Scene* scene, Flags flags) {
 	Buffer fragBuf(width, height);
 	auto lightMode = BLINN_PHONG;
 	auto noise = new OSN::Noise<3>(324);
-	Volumetric fog(FOG_COLOR, noise);
+	Volumetric* fog = new Volumetric(FOG_COLOR, noise);
 	if (flags.isAltBRDF) {
 		lightMode = COOK_TORRANCE;
 	}
@@ -112,7 +112,7 @@ void renderScene(int width, int height, Scene* scene, Flags flags) {
 					int rayIndex = (j + ssx) * width * flags.superSampleCount + (i + ssy);
 					//Fragment is a more robust hit object, mostly a wrapper for old code
 					Hit val = collide(scene, rays[rayIndex]);
-					Fragment frag(val, scene, rays[rayIndex], flags, &fog);
+					Fragment frag(val, scene, rays[rayIndex], flags, fog);
 					frag.colorFrag(scene, lightMode);
 					superSampleBuf.push_back(frag);
 				}

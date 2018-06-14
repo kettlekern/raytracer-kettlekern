@@ -31,7 +31,8 @@ private:
 
 	glm::vec3 clampColor(glm::vec3 color);
 	void clampColor();
-	bool inShadow(Light* light, Scene* scene);
+	float shadowAmount(Light* light, Scene* scene);
+	float shadowAmount(Light* light, Scene* scene, const Ray & ray);
 	//Color the fragment using the Cook-Torrance lighting approximation 
 	glm::vec3 CookTorrance(Scene* scene);
 	glm::vec3 CookTorranceDiffuse(float Kd, glm::vec3 normal, glm::vec3 lightDir, glm::vec3 diffuseColor, glm::vec3 lightColor);

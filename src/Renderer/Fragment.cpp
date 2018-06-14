@@ -1,5 +1,6 @@
 #include "Fragment.h"
 #include <limits>
+#include <algorithm>
 #include "../Ray/RayManager.h"
 #include "../Scene/VectorString.h"
 #define EPS 0.0005f
@@ -87,8 +88,9 @@ glm::vec3 Fragment::CookTorranceObject(glm::vec3 position, glm::vec3 normal, glm
 glm::vec3 Fragment::CookTorrance(Scene* scene) {
 	vec3 color = CLEAR_COLOR;
 	for (Light* light : scene->getLights()) {
-		if (!inShadow(light, scene)) {
-			color += CookTorranceObject(position, obj->getNormal(position, ray.direction), obj->getColor(), obj->getColor(), ray.origin, light->location, light->color, mat.roughness, mat.ior, mat.specular, mat.diffuse);
+		float shadowMult = 1 - shadowAmount(light, scene);
+		if (shadowMult > 0.0f) {
+			color += shadowMult * CookTorranceObject(position, obj->getNormal(position, ray.direction), obj->getColor(), obj->getColor(), ray.origin, light->location, light->color, mat.roughness, mat.ior, mat.specular, mat.diffuse);
 		}
 	}
 	color += calcAmbientLight();
@@ -129,16 +131,45 @@ vec3 Fragment::clampColor(vec3 color) {
 	return color;
 }
 
-bool Fragment::inShadow(Light* light, Scene* scene) {
-	bool shadow = false;
+float Fragment::shadowAmount(Light* light, Scene* scene) {
+	float shadow = 0.0f;
 	vec3 direction = normalize(light->location - position);
 	Ray ray = Ray(position + EPS * direction, direction);
+	shadow = shadowAmount(light, scene, ray);
+	return shadow;
+}
+
+float Fragment::shadowAmount(Light* light, Scene* scene, const Ray & ray) {
+	float shadow = 0.0f;
 	Hit hit = collide(scene, ray);
 	//The length of this vector is the number of itterations of the direction it takes to reach the light from the fragment
 	//Because the direction vector has length = 1, this value is the t value to the light from the fragment
-	float lightT = length(light->location - position);
+	float lightT = length(light->location - ray.origin);
 	if (hit.isHit && hit.t <= lightT) {
-		shadow = true;
+		if (hit.obj->isFoggy()) {
+			//Cast a ray thrgouh the object and assume no refraction. 
+			Ray shadowRay = Ray(hit.position + EPS * ray.direction, ray.direction);
+			Hit shadowHit = collide(scene, shadowRay);
+			//Check to see if the ray hit an object while in the fog cloud
+			if (shadowHit.obj == hit.obj) {
+				//The fog amount is the amount of shadow that you gather.
+				shadow = hit.obj->getFogCloud()->fogGathered(shadowRay.origin, shadowHit.position);
+				//Another ray must be cast toward the light source after the fog amount is calculated to make sure there is nothing else causing a shadow
+				Ray newRay = Ray(shadowHit.position + EPS * ray.direction, ray.direction);
+				//Add the extra shadow from the new object to this shadow
+				shadow += shadowAmount(light, scene, newRay);
+				//Shadow has a max value of 1, because then it is blocking all non-ambient light, so enforce that here.
+				if (shadow > 1.0f) {
+					shadow = 1.0f;
+				}
+			}
+			else {
+				shadow = 1.0f;
+			}
+		}
+		else {
+			shadow = 1.0f;
+		}
 	}
 	return shadow;
 }
@@ -148,8 +179,9 @@ vec3 Fragment::BlinnPhong(Scene* scene)
 	vec3 color = CLEAR_COLOR;
 	vec3 ambient = CLEAR_COLOR;
 	for (Light* light : scene->getLights()) {
-		if (!inShadow(light, scene)) {
-			color += BlinnPhongObject(position, obj->getNormal(position, ray.direction), obj->getColor(), obj->getColor(), ray.origin, light->location, light->color, mat.roughness == 0 ? 0.0f : 2 / pow(mat.roughness, 2) - 2, mat.diffuse, mat.specular);
+		float shadowMult = 1 - shadowAmount(light, scene);
+		if (shadowMult > 0.0f) {
+			color += shadowMult * BlinnPhongObject(position, obj->getNormal(position, ray.direction), obj->getColor(), obj->getColor(), ray.origin, light->location, light->color, mat.roughness == 0 ? 0.0f : 2 / pow(mat.roughness, 2) - 2, mat.diffuse, mat.specular);
 		}
 	}
 	color += calcAmbientLight();
@@ -233,7 +265,7 @@ void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode, int maxBounces, bool
 			fresnelAmount = 0;
 		}
 		if (obj->isFoggy()) {
-			fogAmount = fogCloud->fogGathered(ray.origin, position);
+			fogAmount = obj->getFogCloud()->fogGathered(ray.origin, position);
 			fogColor = obj->getColor();
 		}
 		else if (flags.useFog && ray.inAir) {
