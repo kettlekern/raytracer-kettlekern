@@ -27,6 +27,11 @@ triangle {
   finish { ambient 0.25 diffuse 1 reflection 0.5}
 }
 
+sphere { <1, 0, 0>, 2
+  pigment { color rgbf <1.0, 1.0, 1.0, 1.0>}
+  finish {ambient 0.2 diffuse 0.4  refraction 1.0 ior 1.0}
+  fog 0.1
+}
 
 sphere {<0, 0, 0>, 1
   rotate <0, 48.7, 0>

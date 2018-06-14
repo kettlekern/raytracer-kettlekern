@@ -184,7 +184,10 @@ void parseSphere(Tokenizer & tokenizer, Scene* scene, int id) {
 			object->addRotate(rotate);
 		}
 		else if (tok == "fog") {
-			auto noise = new OSN::Noise<3>(324);
+			if (object == nullptr) {
+				object = new Sphere(color, material, id, center, radius);
+			}
+			auto noise = new OSN::Noise<4>(324);
 			Volumetric* fog = new Volumetric(object->getColor(), noise);
 			tok = tokenizer.getToken();
 			float fogDensity = stof(tok);

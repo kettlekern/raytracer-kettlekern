@@ -15,6 +15,13 @@ sphere { <0, 0, 0>, 3
   fog 0.2
 }
 
+sphere { <0, 0, 0>, 5
+  pigment { color rgbf <0.6, 0.2, 0.6, 1.0>}
+  finish {ambient 0.2 diffuse 0.4  refraction 1.0 ior 1.0}
+  translate <0, 0, 0>
+  fog 0.05
+}
+
 sphere { <0, 0, 0>, 2
   pigment { color rgbf <1.0, 0.6, 0.2, 0.75>}
   finish {ambient 0.2 diffuse 0.4  refraction 1.0 ior 1.2}

@@ -14,7 +14,7 @@ float Volumetric::calcDensityFromTo(const glm::vec3 & from, const glm::vec3 & to
 
 float Volumetric::evalPoint(glm::vec3 point)
 {
-	float val = noise->eval(point.x, point.y, point.z);
+	float val = noise->eval(point.x, point.y, point.z, time);
 	return ((val + 1) / 2 ) * fogWeight;
 }
 

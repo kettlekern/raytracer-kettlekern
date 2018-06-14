@@ -36,6 +36,9 @@ void parseFlags(int argc, char ** argv, Flags & flags)
 	string Beers = "-beers";
 	string Fresnel = "-fresnel";
 	string superSample = "-ss=";
+	string FPS = "-fps=";
+	string duration = "-duration=";
+	string time = "-time=";
 	string SDS = "-sds";
 	string globalIllumination = "-gi";
 	string fog = "-fog";
@@ -64,6 +67,15 @@ void parseFlags(int argc, char ** argv, Flags & flags)
 		}
 		else if (superSample.compare(temp.substr(0,4)) == 0) {
 			flags.superSampleCount = stoi(temp.substr(4, temp.length()));
+		}
+		else if (time.compare(temp.substr(0, 6)) == 0) {
+			flags.time = stof(temp.substr(6, temp.length()));
+		}
+		else if (FPS.compare(temp.substr(0, 5)) == 0) {
+			flags.framesPerSecond = stoi(temp.substr(5, temp.length()));
+		}
+		else if (duration.compare(temp.substr(0, 10)) == 0) {
+			flags.duration = stoi(temp.substr(10, temp.length()));
 		}
 		argc--;
 		argcOffset++;
@@ -148,6 +160,14 @@ int runCommand(int argc, char** argv) {
 	else if (command == "render") {
 		parseRender(argc, argv, image, flags);
 		renderScene(image.width, image.height, scene, flags);
+	}
+	else if (command == "composite") {
+		parseRender(argc, argv, image, flags);
+		for (int i = 0; i < flags.framesPerSecond * flags.duration; i++) {
+			flags.time = i / (float)flags.framesPerSecond;
+			flags.frameNumber = i;
+			renderScene(image.width, image.height, scene, flags);
+		}
 	}
 	else if (command == "pixelcolor") {
 		bool isAltBRDF = false;

@@ -150,7 +150,7 @@ float Fragment::shadowAmount(Light* light, Scene* scene, const Ray & ray) {
 			Ray shadowRay = Ray(hit.position + EPS * ray.direction, ray.direction);
 			Hit shadowHit = collide(scene, shadowRay);
 			//Check to see if the ray hit an object while in the fog cloud
-			if (shadowHit.obj == hit.obj) {
+			if (shadowHit.obj == hit.obj || shadowHit.obj->isFoggy()) {
 				//The fog amount is the amount of shadow that you gather.
 				shadow = hit.obj->getFogCloud()->fogGathered(shadowRay.origin, shadowHit.position);
 				//Another ray must be cast toward the light source after the fog amount is calculated to make sure there is nothing else causing a shadow
@@ -375,7 +375,9 @@ vec3 Fragment::calcRefractionColor(Scene * scene, LIGHTMODE lightMode, int maxBo
 				retColor *= beersLaw(glm::length(position - refractFrag.position), obj->getColor());
 			}
 			else {
-				retColor *= obj->getColor();
+				if (!obj->isFoggy()) {
+					retColor *= obj->getColor();
+				}
 			}
 		}
 	}

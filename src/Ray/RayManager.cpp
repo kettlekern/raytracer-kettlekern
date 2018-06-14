@@ -97,7 +97,7 @@ void renderScene(int width, int height, Scene* scene, Flags flags) {
 	//Create a buffer that holds the fragments
 	Buffer fragBuf(width, height);
 	auto lightMode = BLINN_PHONG;
-	auto noise = new OSN::Noise<3>(324);
+	auto noise = new OSN::Noise<4>(324);
 	Volumetric* fog = new Volumetric(FOG_COLOR, noise);
 	if (flags.isAltBRDF) {
 		lightMode = COOK_TORRANCE;
@@ -123,5 +123,12 @@ void renderScene(int width, int height, Scene* scene, Flags flags) {
 	}
 	delete(noise);
 	//Draw the image	
-	stbi_write_png("output.png", width, height, 3, fragBuf.toArray(), sizeof(char) * 3 * width);
+	std::string imgName = "output.png";
+	if (flags.framesPerSecond * flags.duration > 1) {
+		imgName = "output_" + std::to_string(flags.frameNumber) + ".png";
+	}
+	//This returns an malloc'd array, so free it after calling it
+	auto arr = fragBuf.toArray();
+	stbi_write_png(imgName.c_str(), width, height, 3, arr, sizeof(char) * 3 * width);
+	free(arr);
 }
