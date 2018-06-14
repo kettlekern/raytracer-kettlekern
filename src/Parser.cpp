@@ -186,6 +186,9 @@ void parseSphere(Tokenizer & tokenizer, Scene* scene, int id) {
 		else if (tok == "fog") {
 			auto noise = new OSN::Noise<3>(324);
 			Volumetric* fog = new Volumetric(object->getColor(), noise);
+			tok = tokenizer.getToken();
+			float fogDensity = stof(tok);
+			fog->setWeight(fogDensity);
 			object->activateFog(fog);
 		}
 		else { //unknown token

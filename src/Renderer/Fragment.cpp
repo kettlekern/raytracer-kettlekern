@@ -1,6 +1,5 @@
 #include "Fragment.h"
 #include <limits>
-#include <algorithm>
 #include "../Ray/RayManager.h"
 #include "../Scene/VectorString.h"
 #define EPS 0.0005f
