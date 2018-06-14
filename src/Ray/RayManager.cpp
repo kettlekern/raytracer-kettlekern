@@ -3,6 +3,9 @@
 #include "../stb_image_write.h"
 #include "../Renderer/Buffer.h"
 
+#define FOG_COLOR glm::vec3(1.0f, 1.0f, 1.0f)
+#define FOG_AMOUNT 0.01f
+
 std::vector<Ray> genRays(int width, int height, Scene* scene) {
 	std::vector<Ray> rays;
 	//The image output we use tracks positions from top left to bottom right so the rays need to be in that order
@@ -93,6 +96,7 @@ void renderScene(int width, int height, Scene* scene, Flags flags) {
 	//Create a buffer that holds the fragments
 	Buffer fragBuf(width, height);
 	auto lightMode = BLINN_PHONG;
+	Volumetric fog(FOG_COLOR);
 	if (flags.isAltBRDF) {
 		lightMode = COOK_TORRANCE;
 	}
@@ -112,6 +116,9 @@ void renderScene(int width, int height, Scene* scene, Flags flags) {
 					}
 					if (flags.useBeers) {
 						frag.activateBeers();
+					}
+					if (flags.useFog) {
+						frag.activateFog(&fog);
 					}
 					frag.colorFrag(scene, lightMode);
 					superSampleBuf.push_back(frag);

@@ -1,4 +1,5 @@
 #include "Fragment.h"
+#include <limits>
 #include "../Ray/RayManager.h"
 #include "../Scene/VectorString.h"
 #define EPS 0.0005f
@@ -211,6 +212,7 @@ void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode, bool verbose)
 void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode, int maxBounces)
 {
 	colorFrag(scene, lightMode, maxBounces, false);
+	clampColor();
 }
 
 void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode, int maxBounces, bool verbose)
@@ -221,7 +223,8 @@ void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode, int maxBounces, bool
 		vec3 localColor = vec3(0.0f);
 		vec3 reflectionColor = vec3(0.0f);
 		vec3 refractionColor = vec3(0.0f);
-		float localAmount, reflectionAmount, refractionAmount, fresnelAmount;
+		vec3 fogColor = vec3(0.0f);
+		float localAmount, reflectionAmount, refractionAmount, fresnelAmount, fogAmount;
 		maxBounces--;
 		if (fresnel) {
 			fresnelAmount = schlicksApproximation(mat.ior, obj->getNormal(position, ray.direction), -ray.direction);
@@ -229,9 +232,17 @@ void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode, int maxBounces, bool
 		else {
 			fresnelAmount = 0;
 		}
-		localAmount = (1 - mat.reflection) * (1 - mat.refraction);
-		reflectionAmount = mat.reflection * (1 - mat.refraction) + mat.refraction * fresnelAmount;
-		refractionAmount = mat.refraction * (1 - fresnelAmount);
+		if (useFog && ray.inAir) {
+			fogAmount = fogCloud->calcFogAmount(t, fogCloud->calcDensity(ray.origin, ray.direction, t));
+			fogColor = fogCloud->fogColorGathered(fogAmount);
+			fogColor = clampColor(fogColor);
+		}
+		else {
+			fogAmount = 0.0f;
+		}
+		localAmount = (1 - mat.reflection) * (1 - mat.refraction) * (1 - fogAmount);
+		reflectionAmount = (mat.reflection * (1 - mat.refraction) + mat.refraction * fresnelAmount) * (1 - fogAmount);
+		refractionAmount = mat.refraction * (1 - fresnelAmount) * (1 - fogAmount);
 		//Calculate the local shading
 		localColor = calcLocalColor(scene, lightMode);
 		//Calculate shading from refraction
@@ -247,7 +258,11 @@ void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode, int maxBounces, bool
 		if (reflectionAmount > 0.0f) {
 			reflectionColor = calcReflectionColor(scene, lightMode, maxBounces, verbose);
 		}
-		fragColor = localColor * localAmount + reflectionColor * reflectionAmount + refractionColor * refractionAmount;
+		fragColor = localColor * localAmount + reflectionColor * reflectionAmount + refractionColor * refractionAmount + fogColor * fogAmount;
+		fragColor = clampColor(fragColor);
+	}
+	else if (useFog) {
+		fragColor = fogCloud->getColor();
 	}
 	if (verbose) {
 		std::cout << toString();
@@ -281,6 +296,9 @@ vec3 Fragment::calcReflectionColor(Scene * scene, LIGHTMODE lightMode,  int maxB
 	//Do the cast and color for the new fragment
 	Hit hit = collide(scene, newRay);
 	Fragment reflectFrag(hit, scene, newRay);
+	if (useFog) {
+		reflectFrag.activateFog(fogCloud);
+	}
 	reflectFrag.colorFrag(scene, lightMode, maxBounces, verbose);
 
 	return obj->getColor() * reflectFrag.fragColor;
@@ -318,6 +336,9 @@ vec3 Fragment::calcRefractionColor(Scene * scene, LIGHTMODE lightMode, int maxBo
 		//Do the cast and color for the new fragment
 		Hit hit = collide(scene, newRay);
 		Fragment refractFrag = Fragment(hit, scene, newRay);
+		if (useFog) {
+			refractFrag.activateFog(fogCloud);
+		}
 		refractFrag.colorFrag(scene, lightMode, maxBounces, verbose);
 		retColor = refractFrag.fragColor;
 		if (enter) {

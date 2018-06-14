@@ -8,6 +8,7 @@
 #include "../Scene/Scene.h"
 #include "../Hit.h"
 #include "../Ray/Ray.h"
+#include "Volumetric.h"
 
 //May want to hide this in a namespace
 enum LIGHTMODE {
@@ -23,8 +24,10 @@ private:
 	Material mat;
 	float t;
 	Object* obj;
+	Volumetric* fogCloud = nullptr;
 	Ray ray;
 	bool fresnel = false;
+	bool useFog = false;
 	bool beers = false;
 
 	glm::vec3 clampColor(glm::vec3 color);
@@ -73,6 +76,7 @@ public:
 	void colorFrag(Scene* scene, LIGHTMODE lightingType, bool verbose);
 	void activateFresnel() { fresnel = true; }
 	void activateBeers() { beers = true; }
+	void activateFog(Volumetric* fog) { useFog = true; fogCloud = fog; }
 
 	bool isHit() { return obj != nullptr; }
 	glm::vec3 getColor() { return fragColor; }

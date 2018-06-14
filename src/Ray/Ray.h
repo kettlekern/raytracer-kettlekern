@@ -15,6 +15,7 @@ public:
 	float ior = 1.0f;
 	bool reflection = false;
 	bool entering = true;
+	bool inAir = true;
 	int objID = -1;
 	Ray* fromRay = nullptr;
 };

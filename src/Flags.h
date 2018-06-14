@@ -8,6 +8,7 @@ struct Flags {
 	bool useBeers = false;
 	bool useSDS = false;
 	bool useGI = false;
+	bool useFog = false;
 	int superSampleCount = 1;
 };
 
