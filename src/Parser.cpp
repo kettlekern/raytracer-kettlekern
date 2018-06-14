@@ -183,6 +183,9 @@ void parseSphere(Tokenizer & tokenizer, Scene* scene, int id) {
 			rotate = parseRotate(tokenizer);
 			object->addRotate(rotate);
 		}
+		else if (tok == "fog") {
+			object->activateFog();
+		}
 		else { //unknown token
 		}
 	}

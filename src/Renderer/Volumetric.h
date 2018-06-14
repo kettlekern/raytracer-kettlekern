@@ -25,7 +25,7 @@ public:
 	//From and to are two points in the world that are in fog
 	float calcFogAmount(float timeInFog, float density) { return capAmount(timeInFog * density); }
 	float calcDensity(glm::vec3 from, glm::vec3 direction, float t) { return calcDensityFromTo(from, t * direction + from); }
-	glm::vec3 fogColorGathered(glm::vec3 from, glm::vec3 to);
+	float fogGathered(glm::vec3 from, glm::vec3 to);
 	glm::vec3 fogColorGathered(float fogAmount);
 	glm::vec3 getColor() { return color; }
 

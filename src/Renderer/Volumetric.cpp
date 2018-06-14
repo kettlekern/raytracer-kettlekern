@@ -18,14 +18,14 @@ float Volumetric::evalPoint(glm::vec3 point)
 	return ((val + 1) / 2 )* FOG_WEIGHT;
 }
 
-glm::vec3 Volumetric::fogColorGathered(glm::vec3 from, glm::vec3 to)
+float Volumetric::fogGathered(glm::vec3 from, glm::vec3 to)
 {
 	glm::vec3 direction = from - to;
 	//Get the distance the ray travels in fog
 	float t = direction.length();
 	//Normalize
 	direction /= t;
-	return color * calcFogAmount(t, calcDensityFromTo(from, to));
+	return calcFogAmount(t, calcDensityFromTo(from, to));
 }
 
 

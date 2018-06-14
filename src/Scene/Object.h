@@ -36,6 +36,7 @@ public:
 
 	void setMaterial(Material mat) { this->mat = mat; }
 	void setColor(glm::vec4 color) { this->color = color; }
+	void activateFog() { foggy = true; }
 
 	virtual void addTranslate(const glm::vec3 & translate);
 	virtual void addRotate(const glm::vec3 & rotate);

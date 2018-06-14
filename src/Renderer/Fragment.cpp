@@ -232,7 +232,11 @@ void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode, int maxBounces, bool
 		else {
 			fresnelAmount = 0;
 		}
-		if (obj->isFoggy() || flags.useFog && ray.inAir) {
+		if (obj->isFoggy()) {
+			fogAmount = fogCloud->fogGathered(ray.origin, position);
+			fogColor = obj->getColor();
+		}
+		else if (flags.useFog && ray.inAir) {
 			fogAmount = fogCloud->calcFogAmount(t, fogCloud->calcDensity(ray.origin, ray.direction, t));
 			fogColor = fogCloud->fogColorGathered(fogAmount);
 			fogColor = clampColor(fogColor);

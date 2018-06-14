@@ -9,9 +9,10 @@ light_source {<-100, 100, 100> color rgb <1.5, 1.5, 1.5>}
 
 
 sphere { <0, 0, 0>, 3
-  pigment { color rgbf <0.2, 0.5, 1.0, 0.75>}
-  finish {ambient 0.2 diffuse 0.4  refraction 1.0 ior 1.33}
+  pigment { color rgbf <0.2, 0.5, 1.0, 1.0>}
+  finish {ambient 0.2 diffuse 0.4  refraction 1.0 ior 1.0}
   translate <0, 0, 0>
+  fog
 }
 
 sphere { <0, 0, 0>, 1
