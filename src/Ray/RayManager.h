@@ -18,5 +18,6 @@ Hit collide(Scene* scene, const Ray & ray);
 void castRays(int width, int height, Scene* scene);
 Hit setHit(float t, Object* obj, const Ray & ray);
 void renderScene(int width, int height, Scene* scene, Flags flags);
+void setTime(Scene* scene, float time);
 
 #endif

@@ -102,7 +102,8 @@ void renderScene(int width, int height, Scene* scene, Flags flags) {
 	if (flags.isAltBRDF) {
 		lightMode = COOK_TORRANCE;
 	}
-
+	setTime(scene, flags.time);
+	fog->setTime(flags.time);
 	for (int j = 0; j < height * flags.superSampleCount; j += flags.superSampleCount) {
 		for (int i = 0; i < width * flags.superSampleCount; i += flags.superSampleCount) {
 			std::vector<Fragment> superSampleBuf;
@@ -131,4 +132,13 @@ void renderScene(int width, int height, Scene* scene, Flags flags) {
 	auto arr = fragBuf.toArray();
 	stbi_write_png(imgName.c_str(), width, height, 3, arr, sizeof(char) * 3 * width);
 	free(arr);
+}
+
+void setTime(Scene * scene, float time)
+{
+	for (Object* obj : scene->getObjects()) {
+		if (obj->isFoggy()) {
+			obj->getFogCloud()->setTime(time);
+		}
+	}
 }

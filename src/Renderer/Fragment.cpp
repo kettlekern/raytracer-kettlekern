@@ -263,11 +263,7 @@ void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode, int maxBounces, bool
 		else {
 			fresnelAmount = 0;
 		}
-		if (obj->isFoggy()) {
-			fogAmount = obj->getFogCloud()->fogGathered(ray.origin, position);
-			fogColor = obj->getColor();
-		}
-		else if (flags.useFog && ray.inAir) {
+		if (flags.useFog && ray.inAir) {
 			fogAmount = fogCloud->calcFogAmount(t, fogCloud->calcDensity(ray.origin, ray.direction, t));
 			fogColor = fogCloud->fogColorGathered(fogAmount);
 			fogColor = clampColor(fogColor);
@@ -370,12 +366,22 @@ vec3 Fragment::calcRefractionColor(Scene * scene, LIGHTMODE lightMode, int maxBo
 		Fragment refractFrag = Fragment(hit, scene, newRay, flags, fogCloud);
 		refractFrag.colorFrag(scene, lightMode, maxBounces, verbose);
 		retColor = refractFrag.fragColor;
-		if (enter) {
-			if (flags.useBeers) {
-				retColor *= beersLaw(glm::length(position - refractFrag.position), obj->getColor());
-			}
-			else {
-				if (!obj->isFoggy()) {
+		if (hit.isHit && obj->isFoggy() && newRay.entering){
+			float fogAmount = obj->getFogCloud()->fogGathered(newRay.origin, hit.position);
+			glm::vec3 fogColor = obj->getColor();
+			retColor = fogAmount * fogColor + (1 - fogAmount) * retColor;
+		}
+		else if(hit.isHit && refractFrag.obj->isFoggy() && !newRay.entering) {
+			float fogAmount = refractFrag.obj->getFogCloud()->fogGathered(newRay.origin, hit.position);
+			glm::vec3 fogColor = refractFrag.obj->getColor();
+			retColor = fogAmount * fogColor + (1 - fogAmount) * retColor;
+		}
+		else {
+			if (enter) {
+				if (flags.useBeers) {
+					retColor *= beersLaw(glm::length(position - refractFrag.position), obj->getColor());
+				}
+				else {
 					retColor *= obj->getColor();
 				}
 			}
