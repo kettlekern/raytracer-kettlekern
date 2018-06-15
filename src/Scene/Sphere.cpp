@@ -28,6 +28,7 @@ void Sphere::addScale(const glm::vec3 & scale)
 
 std::string Sphere::toStringLocal() {
 	return " - Center: " + Parser::vec3ToString(center) + "\n" +
+		   " -    Fog: " + std::to_string(foggy) + "\n" +
 		   " - Radius: " + formatted_to_string(radius) + "\n";
 }
 

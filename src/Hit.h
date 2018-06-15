@@ -8,7 +8,7 @@
 #include "Scene/Object.h"
 
 struct Hit {
-	bool isHit;
+	bool isHit = false;
 	glm::vec3 color;
 	glm::vec3 position;
 	Object* obj;

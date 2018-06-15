@@ -20,7 +20,7 @@ protected:
 	std::string name;
 	glm::mat4 normalMatrix = glm::mat4(1.0f);
 	glm::mat4 model = glm::mat4(1.0f);
-	int id;
+	int id = 0;
 	bool foggy = false;
 	Volumetric* fogCloud;
 	//returns the smallest positive root of the equation given by -b+-sqrt(b^2-4ac)/2a, or a negative number if neither is positive

@@ -23,8 +23,6 @@ float Volumetric::fogGathered(glm::vec3 from, glm::vec3 to)
 	glm::vec3 direction = from - to;
 	//Get the distance the ray travels in fog
 	float t = direction.length();
-	//Normalize
-	direction /= t;
 	return calcFogAmount(t, calcDensityFromTo(from, to));
 }
 

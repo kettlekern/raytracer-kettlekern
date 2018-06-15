@@ -150,16 +150,21 @@ float Fragment::shadowAmount(Light* light, Scene* scene, const Ray & ray) {
 			Ray shadowRay = Ray(hit.position + EPS * ray.direction, ray.direction);
 			Hit shadowHit = collide(scene, shadowRay);
 			//Check to see if the ray hit an object while in the fog cloud
-			if (shadowHit.obj == hit.obj || shadowHit.obj->isFoggy()) {
-				//The fog amount is the amount of shadow that you gather.
-				shadow = hit.obj->getFogCloud()->fogGathered(shadowRay.origin, shadowHit.position);
-				//Another ray must be cast toward the light source after the fog amount is calculated to make sure there is nothing else causing a shadow
-				Ray newRay = Ray(shadowHit.position + EPS * ray.direction, ray.direction);
-				//Add the extra shadow from the new object to this shadow
-				shadow += shadowAmount(light, scene, newRay);
-				//Shadow has a max value of 1, because then it is blocking all non-ambient light, so enforce that here.
-				if (shadow > 1.0f) {
-					shadow = 1.0f;
+			if (!shadowHit.isHit || shadowHit.obj == hit.obj || shadowHit.isHit && shadowHit.obj->isFoggy()) {
+				if (!shadowHit.isHit) {
+					shadow = hit.obj->getFogCloud()->fogGathered(ray.origin, hit.position);
+				}
+				else {
+					//The fog amount is the amount of shadow that you gather.
+					shadow = hit.obj->getFogCloud()->fogGathered(shadowRay.origin, shadowHit.position);
+					//Another ray must be cast toward the light source after the fog amount is calculated to make sure there is nothing else causing a shadow
+					Ray newRay = Ray(shadowHit.position + EPS * ray.direction, ray.direction);
+					//Add the extra shadow from the new object to this shadow
+					shadow += shadowAmount(light, scene, newRay);
+					//Shadow has a max value of 1, because then it is blocking all non-ambient light, so enforce that here.
+					if (shadow > 1.0f) {
+						shadow = 1.0f;
+					}
 				}
 			}
 			else {
