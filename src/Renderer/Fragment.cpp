@@ -138,29 +138,29 @@ float Fragment::shadowAmount(Light* light, Scene* scene) {
 	return shadow;
 }
 
-float Fragment::shadowAmount(Light* light, Scene* scene, const Ray & ray) {
+float Fragment::shadowAmount(Light* light, Scene* scene, const Ray & localRay) {
 	float shadow = 0.0f;
-	Hit hit = collide(scene, ray);
+	Hit hit = collide(scene, localRay);
 	//The length of this vector is the number of itterations of the direction it takes to reach the light from the fragment
 	//Because the direction vector has length = 1, this value is the t value to the light from the fragment
-	float lightT = length(light->location - ray.origin);
+	float lightT = length(light->location - localRay.origin);
 	if (hit.isHit && hit.t <= lightT) {
 		if (hit.obj->isFoggy()) {
 			//Cast a ray thrgouh the object and assume no refraction. 
-			Ray shadowRay = Ray(hit.position + EPS * ray.direction, ray.direction);
+			Ray shadowRay = Ray(hit.position + EPS * localRay.direction, localRay.direction);
 			Hit shadowHit = collide(scene, shadowRay);
 			//Check to see if the ray hit an object while in the fog cloud
 			if (!shadowHit.isHit || shadowHit.obj == hit.obj || shadowHit.isHit && shadowHit.obj->isFoggy()) {
 				if (!shadowHit.isHit) {
-					shadow = hit.obj->getFogCloud()->fogGathered(ray.origin, hit.position);
+					shadow = hit.obj->getFogCloud()->fogGathered(localRay.origin, hit.position);
 				}
 				else {
 					//The fog amount is the amount of shadow that you gather.
 					shadow = hit.obj->getFogCloud()->fogGathered(shadowRay.origin, shadowHit.position);
 					//Another ray must be cast toward the light source after the fog amount is calculated to make sure there is nothing else causing a shadow
-					Ray newRay = Ray(shadowHit.position + EPS * ray.direction, ray.direction);
+					//Ray newRay = Ray(shadowHit.position + EPS * shadowRay.direction, shadowRay.direction);
 					//Add the extra shadow from the new object to this shadow
-					shadow += shadowAmount(light, scene, newRay);
+					shadow += shadowAmount(light, scene, shadowRay);
 					//Shadow has a max value of 1, because then it is blocking all non-ambient light, so enforce that here.
 					if (shadow > 1.0f) {
 						shadow = 1.0f;

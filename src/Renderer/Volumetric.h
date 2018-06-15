@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 #include "Simplex Noise/OpenSimplexNoise.hh"
 
-#define FOG_WEIGHT 0.08f
+#define FOG_WEIGHT 0.12f
 #define FOG_SAMPLES 20
 
 class Volumetric {
