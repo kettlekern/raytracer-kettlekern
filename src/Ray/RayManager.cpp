@@ -97,8 +97,7 @@ void renderScene(int width, int height, Scene* scene, Flags flags) {
 	//Create a buffer that holds the fragments
 	Buffer fragBuf(width, height);
 	auto lightMode = BLINN_PHONG;
-	auto noise = new OSN::Noise<4>(324);
-	Volumetric* fog = new Volumetric(FOG_COLOR, noise);
+	Volumetric* fog = new Volumetric(FOG_COLOR, flags.noise);
 	if (flags.isAltBRDF) {
 		lightMode = COOK_TORRANCE;
 	}
@@ -122,7 +121,6 @@ void renderScene(int width, int height, Scene* scene, Flags flags) {
 			fragBuf.push_back(fragOut);
 		}
 	}
-	delete(noise);
 	//Draw the image	
 	std::string imgName = "output.png";
 	if (flags.framesPerSecond * flags.duration > 1) {

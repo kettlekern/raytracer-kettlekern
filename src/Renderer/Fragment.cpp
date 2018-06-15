@@ -268,6 +268,7 @@ void Fragment::colorFrag(Scene* scene, LIGHTMODE lightMode, int maxBounces, bool
 		else {
 			fresnelAmount = 0;
 		}
+		//ray.inAir is currently never updated, but defaults to true.
 		if (flags.useFog && ray.inAir) {
 			fogAmount = fogCloud->calcFogAmount(t, fogCloud->calcDensity(ray.origin, ray.direction, t));
 			fogColor = fogCloud->fogColorGathered(fogAmount);

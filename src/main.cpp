@@ -145,14 +145,16 @@ std::string firstHitToString(const Hit & val, Ray ray, const Point & point, int 
 int runCommand(int argc, char** argv) {
 	string command = argv[1];
 	string filename = argv[2];
-	cout.precision(4);
-	Scene* scene = parseFile(filename);
-	if (scene == nullptr) {
-		cout << "Could not parse file\n";
-	}
 	ImageCoords image;
 	Point point;
 	Flags flags;
+	auto noise = new OSN::Noise<4>(324);
+	flags.noise = noise;
+	cout.precision(4);
+	Scene* scene = parseFile(filename, flags);
+	if (scene == nullptr) {
+		cout << "Could not parse file\n";
+	}
 	if (command == "raycast") {
 		parseRaycast(argc, argv, image);
 		castRays(image.width, image.height, scene);

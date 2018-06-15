@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 #include "Simplex Noise/OpenSimplexNoise.hh"
 
-#define FOG_WEIGHT 0.05f
+#define FOG_WEIGHT 0.08f
 #define FOG_SAMPLES 20
 
 class Volumetric {
@@ -25,7 +25,7 @@ public:
 	Volumetric(glm::vec3 color, OSN::Noise<4>* noise) : color(color), noise(noise) {}
 
 	//From and to are two points in the world that are in fog
-	float calcFogAmount(float timeInFog, float density) { return capAmount(timeInFog * density); }
+	float calcFogAmount(float timeInFog, float density) { return capAmount(timeInFog * density * timeInFog * density * timeInFog * density); }
 	float calcDensity(glm::vec3 from, glm::vec3 direction, float t) { return calcDensityFromTo(from, t * direction + from); }
 	float fogGathered(glm::vec3 from, glm::vec3 to);
 	glm::vec3 fogColorGathered(float fogAmount);

@@ -6,7 +6,7 @@
 
 using namespace std;
 
-Scene* parseFile(string filename) {
+Scene* parseFile(string filename, const Flags & flags) {
 	Scene* scene = new Scene();
 	int id = 0;
 	//Open file
@@ -41,7 +41,7 @@ Scene* parseFile(string filename) {
 			parseLightSource(*tokenizer, scene);
 		}
 		else if (tok == "sphere") {
-			parseSphere(*tokenizer, scene, id++);
+			parseSphere(*tokenizer, scene, id++, flags);
 		}
 		else if (tok == "plane") {
 			parsePlane(*tokenizer, scene, id++);
@@ -129,7 +129,7 @@ void parseLightSource(Tokenizer & tokenizer, Scene* scene) {
 	scene->addLight(glm::vec3(x, y, z), glm::vec3(r, g, b));
 }
 
-void parseSphere(Tokenizer & tokenizer, Scene* scene, int id) {
+void parseSphere(Tokenizer & tokenizer, Scene* scene, int id, const Flags & flags) {
 	string tok;
 	glm::vec3 translate, scale, rotate;
 	Sphere* object = nullptr;
@@ -187,8 +187,7 @@ void parseSphere(Tokenizer & tokenizer, Scene* scene, int id) {
 			if (object == nullptr) {
 				object = new Sphere(color, material, id, center, radius);
 			}
-			auto noise = new OSN::Noise<4>(324);
-			Volumetric* fog = new Volumetric(object->getColor(), noise);
+			Volumetric* fog = new Volumetric(object->getColor(), flags.noise);
 			tok = tokenizer.getToken();
 			float fogDensity = stof(tok);
 			fog->setWeight(fogDensity);

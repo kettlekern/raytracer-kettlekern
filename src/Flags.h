@@ -1,6 +1,7 @@
 #pragma once
 #ifndef __FLAGS_H_473_
 #define __FLAGS_H_473_
+#include "Renderer/Simplex Noise/OpenSimplexNoise.hh"
 
 struct Flags {
 	bool isAltBRDF = false;
@@ -14,10 +15,12 @@ struct Flags {
 	int framesPerSecond = 1;
 	int duration = 1;
 	int frameNumber = 0;
+	OSN::Noise<4>* noise = nullptr;
 	Flags() {}
 	Flags(const Flags & flags) : isAltBRDF(flags.isAltBRDF), useFresnel(flags.useFresnel), useBeers(flags.useBeers), 
 		useSDS(flags.useSDS), useGI(flags.useGI), useFog(flags.useFog), superSampleCount(flags.superSampleCount),
-		time(flags.time), framesPerSecond(flags.framesPerSecond), duration(flags.duration), frameNumber(flags.frameNumber) {}
+		time(flags.time), framesPerSecond(flags.framesPerSecond), duration(flags.duration), frameNumber(flags.frameNumber),
+		noise(noise) {}
 };
 
 #endif
