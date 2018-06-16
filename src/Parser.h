@@ -16,6 +16,7 @@ Scene* parseFile(std::string filename, const Flags & flags);
 void parseCamera(Tokenizer & fileStream, Scene* scene);
 void parseLightSource(Tokenizer & fileStream, Scene* scene);
 void parseSphere(Tokenizer & fileStream, Scene* scene, int id, const Flags & flags);
+void parseBox(Tokenizer & fileStream, Scene* scene, int id, const Flags & flags);
 void parseCone(Tokenizer & fileStream, Scene* scene, int id);
 void parseTriangle(Tokenizer & fileStream, Scene* scene, int id);
 void parsePlane(Tokenizer & fileStream, Scene* scene, int id);

@@ -3,6 +3,7 @@
 #include "Scene/Plane.h"
 #include "Scene/Triangle.h"
 #include "Scene/Cone.h"
+#include "Scene/Box.h"
 
 using namespace std;
 
@@ -127,6 +128,79 @@ void parseLightSource(Tokenizer & tokenizer, Scene* scene) {
 	float x, y, z, r, g, b;
 	sscanf(line.c_str(), " {<%f, %f, %f> color rgb <%f, %f, %f>}", &x, &y, &z, &r, &g, &b);
 	scene->addLight(glm::vec3(x, y, z), glm::vec3(r, g, b));
+}
+
+void parseBox(Tokenizer & tokenizer, Scene* scene, int id, const Flags & flags) {
+	string tok;
+	glm::vec3 translate, scale, rotate;
+	Box* object = nullptr;
+	tok = tokenizer.getToken();
+	if (tok != "{") {
+		cout << "Bad Box in file\n";
+		return;
+	}
+	glm::vec3 point1 = parseVec3(tokenizer);
+	glm::vec3 point2 = parseVec3(tokenizer);
+	glm::vec4 color;
+	Material material;
+	while (tok != "}") {
+		tok = tokenizer.getToken();
+		if (tok == "pigment") {
+			if (object == nullptr) {
+				color = parsePigment(tokenizer);
+			}
+			else {
+				object->setColor(parsePigment(tokenizer));
+			}
+		}
+		else if (tok == "finish") {
+			if (object == nullptr) {
+				material = parseFinish(tokenizer, color.a);
+			}
+			else {
+				object->setMaterial(parseFinish(tokenizer, color.a));
+			}
+		}
+		//The object must be fully defined before adding transforms
+		else if (tok == "translate") {
+			if (object == nullptr) {
+				object = new Box(color, material, id, point1, point2);
+			}
+			translate = parseTranslate(tokenizer);
+			object->addTranslate(translate);
+		}
+		else if (tok == "scale") {
+			if (object == nullptr) {
+				object = new Box(color, material, id, point1, point2);
+			}
+			scale = parseScale(tokenizer);
+			object->addScale(scale);
+		}
+		else if (tok == "rotate") {
+			if (object == nullptr) {
+				object = new Box(color, material, id, point1, point2);
+			}
+			rotate = parseRotate(tokenizer);
+			object->addRotate(rotate);
+		}
+		else if (tok == "fog") {
+			if (object == nullptr) {
+				object = new Box(color, material, id, point1, point2);
+			}
+			Volumetric* fog = new Volumetric(object->getColor(), flags.noise);
+			tok = tokenizer.getToken();
+			float fogDensity = stof(tok);
+			fog->setWeight(fogDensity);
+			object->activateFog(fog);
+		}
+		else { //unknown token
+		}
+	}
+	if (object == nullptr) {
+		object = new Box(color, material, id, point1, point2);
+	}
+	object->invertModel();
+	scene->addObject(object);
 }
 
 void parseSphere(Tokenizer & tokenizer, Scene* scene, int id, const Flags & flags) {
