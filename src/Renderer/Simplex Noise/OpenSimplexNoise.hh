@@ -26,6 +26,7 @@
 #include <algorithm>
 #include <cmath>
 
+//This used to check the c++ version, but the rest of this program uses c++11 standard as a minimum and the flag this header was checking was not updating correctly in Visual Studio, so I removed the check
   #define OSN_USE_CSTDINT
   #define OSN_USE_STATIC_ASSERT
 
