@@ -53,6 +53,9 @@ Scene* parseFile(string filename, const Flags & flags) {
 		else if (tok == "cone") {
 			parseCone(*tokenizer, scene, id++);
 		}
+		else if (tok == "box") {
+			parseCone(*tokenizer, scene, id++);
+		}
 		else {
 			cout << "Bad file\n" << tok << "\n";
 			return scene;
