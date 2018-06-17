@@ -344,7 +344,7 @@ vec3 Fragment::calcRefractionColor(Scene * scene, LIGHTMODE lightMode, int maxBo
 	if (ior1 == ior2) {
 		//In the current system, we can assume this will occur only when exiting an object into air.
 		//If moving from an object into air, ior2 = 1.0.
-		ior2 = findRayIOR(ior1);
+		ior2 = 1.0f;// findRayIOR(ior1);
 	}
 
 	//glm function that calculates the reflection vector given a direction and normal
@@ -352,7 +352,6 @@ vec3 Fragment::calcRefractionColor(Scene * scene, LIGHTMODE lightMode, int maxBo
 
 	//If the ray is still in the object, set ior2 back to mat.ior since it is still into object
 	if (refractionVector == vec3(0.0f)) {
-		ior2 = mat.ior;
 		//Send back a vector that is normally not possible so we know to add refraction amount to reflection amount
 		retColor = vec3(-1.0f);
 	}

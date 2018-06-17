@@ -54,7 +54,7 @@ Scene* parseFile(string filename, const Flags & flags) {
 			parseCone(*tokenizer, scene, id++);
 		}
 		else if (tok == "box") {
-			parseCone(*tokenizer, scene, id++);
+			parseBox(*tokenizer, scene, id++, flags);
 		}
 		else {
 			cout << "Bad file\n" << tok << "\n";
@@ -407,10 +407,20 @@ void parseTriangle(Tokenizer & tokenizer, Scene* scene, int id) {
 	while (tok != "}") {
 		tok = tokenizer.getToken();
 		if (tok == "pigment") {
-			color = parsePigment(tokenizer);
+			if (object == nullptr) {
+				color = parsePigment(tokenizer);
+			}
+			else {
+				object->setColor(parsePigment(tokenizer));
+			}
 		}
 		else if (tok == "finish") {
-			material = parseFinish(tokenizer, color.a);
+			if (object == nullptr) {
+				material = parseFinish(tokenizer, color.a);
+			}
+			else {
+				object->setMaterial(parseFinish(tokenizer, color.a));
+			}
 		}
 		//The object must be fully defined before adding transforms
 		else if (tok == "translate") {

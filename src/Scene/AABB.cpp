@@ -22,7 +22,9 @@ std::pair<float, float> AABB::getLinearIntersection(const Ray & ray, int index)
 		retVal.first = (min[index] - ray.origin[index]) / ray.direction[index];
 		retVal.second = (max[index] - ray.origin[index]) / ray.direction[index];
 		if (retVal.first > retVal.second) {
-			retVal.swap(retVal);
+			float temp = retVal.first;
+			retVal.first = retVal.second;
+			retVal.second = temp;
 		}
 	}
 	return retVal;
@@ -44,8 +46,8 @@ void AABB::addPoint(const glm::vec3 & point)
 float AABB::collide(const Ray & ray)
 {
 	float t = 0.0f;
-	float largestMin = std::numeric_limits<float>::max();
-	float smallestMax = std::numeric_limits<float>::lowest();
+	float largestMin = std::numeric_limits<float>::lowest();
+	float smallestMax = std::numeric_limits<float>::max();
 	//For each dimension you are in, calculate the t values of linear intersections on that axis
 	for (int i = 0; i < min.length(); ++i) {
 		auto times = getLinearIntersection(ray, i);
