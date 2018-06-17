@@ -38,7 +38,7 @@ public:
 	Material getMaterial() { return mat; }
 
 	void setMaterial(Material mat) { this->mat = mat; }
-	void setColor(glm::vec4 color) { this->color = color; }
+	void setColor(glm::vec4 color) { this->color = glm::vec3(color); }
 	void activateFog(Volumetric* fogCloud) { foggy = true; this->fogCloud = fogCloud; }
 
 	virtual void addTranslate(const glm::vec3 & translate);
