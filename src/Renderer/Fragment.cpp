@@ -143,7 +143,7 @@ float Fragment::shadowAmount(Light* light, Scene* scene, const Ray & localRay) {
 	Hit hit = collide(scene, localRay);
 	//The length of this vector is the number of itterations of the direction it takes to reach the light from the fragment
 	//Because the direction vector has length = 1, this value is the t value to the light from the fragment
-	float lightT = glm::distance(light->location, hit.position);
+	float lightT = length(light->location - position);
 	if (hit.isHit && hit.t <= lightT) {
 		if (hit.obj->isFoggy()) {
 			//Cast a ray thrgouh the object and assume no refraction. 
@@ -343,8 +343,7 @@ vec3 Fragment::calcRefractionColor(Scene * scene, LIGHTMODE lightMode, int maxBo
 	//May need to account for floating point precision
 	if (ior1 == ior2) {
 		//In the current system, we can assume this will occur only when exiting an object into air.
-		//If moving from an object into air, ior2 = 1.0.
-		ior2 = 1.0f;// findRayIOR(ior1);
+		ior2 = findRayIOR(ior1);
 	}
 
 	//glm function that calculates the reflection vector given a direction and normal

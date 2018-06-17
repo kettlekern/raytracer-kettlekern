@@ -8,13 +8,12 @@
 #include "Object.h"
 #include "VectorString.h"
 #include "../FormattedToString.h"
+#include "AABB.h"
 
 struct Light {
 	glm::vec3 location;
 	glm::vec3 color;
-
 	Light(glm::vec3 location, glm::vec3 color) : location(location), color(color) {}
-
 	std::string toString();
 };
 
@@ -30,13 +29,12 @@ protected:
 	std::vector<Light*> lights;
 	Camera camera;
 	std::vector<Object*> objects;
+	//std::vector<AABB *> ;
 
 public:
 	Scene() {}
 	void printScene();
-
 	std::string cameraToString();
-
 	std::string lightsToString();
 	std::string objectsToString();
 
