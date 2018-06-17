@@ -6,7 +6,6 @@
 #include <utility>
 #include "AABB.h"
 #include "Object.h"
-#include "../Ray/Ray.h"
 
 class Box : public Object {
 protected:

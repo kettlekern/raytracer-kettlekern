@@ -73,29 +73,27 @@ float AABB::collide(const Ray & ray)
 glm::vec3 AABB::getNormal(const glm::vec3 & position, const glm::vec3 & rayDirection)
 {
 	glm::vec3 normal;
-	float eps = 0.0001f;
+	float eps = 0.001f;
 	//Determins the face the given point is on, then return the normal for that face
-	if (glm::epsilonEqual(position.z, min.z, eps)) {
-		normal = glm::vec3(0.0f, 0.0f, -1.0f);
-	}
-	if (glm::epsilonEqual(position.z, max.z, eps)) {
-		normal = glm::vec3(0.0f, 0.0f, 1.0f);
-	}
-	if (glm::epsilonEqual(position.y, min.y, eps)) {
-		normal = glm::vec3(0.0f, -1.0f, 0.0f);
-	}
-	if (glm::epsilonEqual(position.y, max.y, eps)) {
-		normal = glm::vec3(0.0f, 1.0f, 0.0f);
-	}
 	if (glm::epsilonEqual(position.x, min.x, eps)) {
 		normal = glm::vec3(-1.0f, 0.0f, 0.0f);
 	}
-	if (glm::epsilonEqual(position.x, max.x, eps)) {
+	else if (glm::epsilonEqual(position.x, max.x, eps)) {
 		normal = glm::vec3(1.0f, 0.0f, 0.0f);
 	}
-	//Normals in this program are assumed to always face the incoming ray, so correct for that here
-	if (glm::dot(normal, rayDirection) > 0) {
-		normal = -normal;
+	else if (glm::epsilonEqual(position.y, min.y, eps)) {
+		normal = glm::vec3(0.0f, -1.0f, 0.0f);
 	}
+	else if (glm::epsilonEqual(position.y, max.y, eps)) {
+		normal = glm::vec3(0.0f, 1.0f, 0.0f);
+	}
+	else if (glm::epsilonEqual(position.z, min.z, eps)) {
+		normal = glm::vec3(0.0f, 0.0f, -1.0f);
+	}
+	else if (glm::epsilonEqual(position.z, max.z, eps)) {
+		normal = glm::vec3(0.0f, 0.0f, 1.0f);
+	}
+	else
+		normal = glm::vec3(0.0f, 1.0f, 0.0f);
 	return normal;
 }

@@ -21,9 +21,12 @@ float Box::collide(Ray ray)
 
 glm::vec3 Box::getNormal(glm::vec3 position, glm::vec3 rayDirection)
 {
+	//Transform into object space
 	glm::vec3 objectSpacePosition = glm::vec3(model * glm::vec4(position, 1.0f));
 	glm::vec3 normal = boundingBox.getNormal(objectSpacePosition, rayDirection);
+	//Transform out of object space
 	normal = transformNormal(normal);
+	//Normals in this program are assumed to always face the incoming ray, so correct for that here
 	if (glm::dot(normal, rayDirection) > 0) {
 		normal = -normal;
 	}
