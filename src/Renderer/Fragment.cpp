@@ -420,11 +420,6 @@ bool Fragment::entering(int objID, Ray* newRay)
 //This does not support touching objects or overlaped objects
 float Fragment::findRayIOR(float ior)
 {
-	//If the ray is entering, then the object's ior is the ior of the ray
-	if (ray.entering) {
-		return ior;
-	}
-
 	Ray* temp = &ray;
 	//This ray must be exiting, so we start the counter at 1
 	int exitCount = 1;
